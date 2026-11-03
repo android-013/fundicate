@@ -1,0 +1,298 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  MEMBER
+  MODERATOR
+}
+enum MembershipStatus {
+  ACTIVE
+  SUSPENDED
+  REMOVED
+  LEFT
+}
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum ProposalType {
+  FUNDING
+  FUNDRAISING
+  ADMISSION
+  REMOVAL
+  GOVERNANCE
+  SUSPENSION_REVIEW
+}
+enum ProposalStatus {
+  DRAFT
+  OPEN
+  CLOSED
+  APPROVED
+  REJECTED
+  EXECUTED
+  CANCELLED
+}
+enum VoteChoice {
+  YES
+  NO
+  ABSTAIN
+}
+enum TransactionStatus {
+  PENDING
+  SUBMITTED
+  CONFIRMED
+  FAILED
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+  email String @unique
+  username String @unique
+  displayName String
+  avatarUrl String?
+  passwordHash String
+  createdAt DateTime @default(now())
+  sessions Session[]
+  communities Community[]
+  memberships CommunityMembership[]
+  applications MembershipApplication[]
+  proposals Proposal[]
+  votes Vote[]
+  eligibility EligibleVoter[]
+  transactions LedgerTransaction[]
+  auditEvents AuditEvent[]
+  notifications Notification[]
+}
+model Session {
+  id String @id @default(uuid()) @db.Uuid
+  tokenHash String @unique
+  userId String @db.Uuid
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+  @@index([userId, expiresAt])
+}
+model Community {
+  id String @id @default(uuid()) @db.Uuid
+  slug String @unique
+  name String
+  description String
+  purpose String
+  imageUrl String?
+  color String @default("teal")
+  currency String @default("USD")
+  adminId String @db.Uuid
+  admin User @relation(fields:[adminId], references:[id], onDelete:Restrict)
+  minimumContribution BigInt @default(0)
+  createdAt DateTime @default(now())
+  policy GovernancePolicy?
+  memberships CommunityMembership[]
+  questions MembershipQuestion[]
+  applications MembershipApplication[]
+  proposals Proposal[]
+  accounts TreasuryAccount[]
+  transactions LedgerTransaction[]
+  auditEvents AuditEvent[]
+  notifications Notification[]
+  @@index([createdAt])
+}
+model GovernancePolicy {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @unique @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  quorumBps Int @default(5000)
+  thresholdBps Int @default(5001)
+  admissionPolicy String @default("VOTE")
+  allowMemberProposals Boolean @default(true)
+  votingDays Int @default(7)
+}
+model CommunityMembership {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  userId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  role Role @default(MEMBER)
+  status MembershipStatus @default(ACTIVE)
+  suspensionReason String?
+  joinedAt DateTime @default(now())
+  @@unique([communityId, userId])
+  @@index([userId, status])
+}
+model MembershipQuestion {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  prompt String
+  answers MembershipApplicationAnswer[]
+}
+model MembershipApplication {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  userId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  introduction String
+  proposedContribution BigInt
+  status ApplicationStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  decidedAt DateTime?
+  answers MembershipApplicationAnswer[]
+  proposal Proposal?
+  @@index([communityId, status])
+  @@index([userId])
+}
+model MembershipApplicationAnswer {
+  id String @id @default(uuid()) @db.Uuid
+  applicationId String @db.Uuid
+  questionId String @db.Uuid
+  application MembershipApplication @relation(fields:[applicationId], references:[id], onDelete:Restrict)
+  question MembershipQuestion @relation(fields:[questionId], references:[id], onDelete:Restrict)
+  answer String
+  @@unique([applicationId, questionId])
+}
+// Agenda and its single proposal are one aggregate: one lifecycle, ballot and result.
+model Proposal {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  proposerId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  proposer User @relation(fields:[proposerId], references:[id], onDelete:Restrict)
+  title String
+  description String
+  type ProposalType
+  status ProposalStatus @default(DRAFT)
+  amount BigInt @default(0)
+  recipient String?
+  supportingUrl String?
+  targetUserId String? @db.Uuid
+  applicationId String? @unique @db.Uuid
+  application MembershipApplication? @relation(fields:[applicationId], references:[id], onDelete:Restrict)
+  quorumBps Int
+  thresholdBps Int
+  opensAt DateTime
+  closesAt DateTime
+  finalizedAt DateTime?
+  cancellationReason String?
+  governanceChange Json?
+  createdAt DateTime @default(now())
+  eligibleVoters EligibleVoter[]
+  votes Vote[]
+  transactions LedgerTransaction[]
+  execution FundingExecution?
+  @@index([communityId, status, closesAt])
+}
+model EligibleVoter {
+  proposalId String @db.Uuid
+  userId String @db.Uuid
+  proposal Proposal @relation(fields:[proposalId], references:[id], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  vote Vote?
+  @@id([proposalId, userId])
+  @@index([userId])
+}
+model Vote {
+  id String @id @default(uuid()) @db.Uuid
+  proposalId String @db.Uuid
+  userId String @db.Uuid
+  proposal Proposal @relation(fields:[proposalId], references:[id], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  eligibleVoter EligibleVoter @relation(fields:[proposalId, userId], references:[proposalId, userId], onDelete:Restrict)
+  choice VoteChoice
+  createdAt DateTime @default(now())
+  @@unique([proposalId, userId])
+}
+model TreasuryAccount {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  kind String
+  balance BigInt @default(0)
+  entries LedgerEntry[]
+  outgoing LedgerTransaction[] @relation("SourceAccount")
+  incoming LedgerTransaction[] @relation("DestinationAccount")
+  @@unique([communityId, kind])
+}
+model LedgerTransaction {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  initiatedById String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  initiatedBy User @relation(fields:[initiatedById], references:[id], onDelete:Restrict)
+  proposalId String? @db.Uuid
+  proposal Proposal? @relation(fields:[proposalId], references:[id], onDelete:Restrict)
+  amount BigInt
+  currency String
+  type String
+  status TransactionStatus @default(CONFIRMED)
+  idempotencyKey String
+  simulated Boolean @default(true)
+  network String @default("local-simulation")
+  sourceAccount String @db.Uuid
+  destinationAccount String @db.Uuid
+  source TreasuryAccount @relation("SourceAccount", fields:[sourceAccount], references:[id], onDelete:Restrict)
+  destination TreasuryAccount @relation("DestinationAccount", fields:[destinationAccount], references:[id], onDelete:Restrict)
+  externalReference String?
+  confirmedAt DateTime?
+  createdAt DateTime @default(now())
+  entries LedgerEntry[]
+  execution FundingExecution?
+  @@unique([communityId, idempotencyKey])
+  @@index([communityId, createdAt])
+}
+model LedgerEntry {
+  id String @id @default(uuid()) @db.Uuid
+  transactionId String @db.Uuid
+  accountId String @db.Uuid
+  transaction LedgerTransaction @relation(fields:[transactionId], references:[id], onDelete:Restrict)
+  account TreasuryAccount @relation(fields:[accountId], references:[id], onDelete:Restrict)
+  amount BigInt
+  @@index([accountId])
+}
+model FundingExecution {
+  id String @id @default(uuid()) @db.Uuid
+  proposalId String @unique @db.Uuid
+  transactionId String @unique @db.Uuid
+  proposal Proposal @relation(fields:[proposalId], references:[id], onDelete:Restrict)
+  transaction LedgerTransaction @relation(fields:[transactionId], references:[id], onDelete:Restrict)
+  status TransactionStatus @default(CONFIRMED)
+  network String @default("local-simulation")
+  accountId String?
+  transactionHash String?
+  confirmedAt DateTime?
+}
+model AuditEvent {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  actorId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  actor User @relation(fields:[actorId], references:[id], onDelete:Restrict)
+  action String
+  entityId String
+  details Json
+  createdAt DateTime @default(now())
+  @@index([communityId, createdAt])
+}
+model Notification {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  communityId String @db.Uuid
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  message String
+  href String
+  readAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId, readAt])
+}
+model RateLimit {
+  key String @id
+  count Int @default(1)
+  expiresAt DateTime
+}

@@ -1,0 +1,58 @@
+{
+  "name": "fundicate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --webpack --hostname 127.0.0.1",
+    "build": "prisma generate && tsc --noEmit && node scripts/build.mjs",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write src tests scripts prisma/*.ts *.ts *.mjs *.json *.md docs/*.md",
+    "test:browser": "node scripts/browser-tests.mjs",
+    "test:accessibility": "node scripts/browser-tests.mjs accessibility",
+    "test": "node scripts/unit-tests.mjs",
+    "test:integration": "node scripts/test-db.mjs integration",
+    "test:e2e": "node scripts/test-db.mjs e2e",
+    "db:local": "node scripts/local-db.mjs start",
+    "db:stop": "node scripts/local-db.mjs stop",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "setup": "npm run db:local && prisma generate && npm run db:migrate && npm run db:seed"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.15.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.4.3",
+    "prettier": "^3.9.10",
+    "prisma": "7.10.1",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.0.0"
+  },
+  "overrides": {
+    "eslint-visitor-keys": "4.2.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "dotenv": "^18.0.9",
+    "lucide-react": "^1.66.0",
+    "next": "^16.4.3",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  }
+}
