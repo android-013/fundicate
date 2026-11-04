@@ -2,6 +2,8 @@
 
 **Fund together. Decide together.** A functional local social-money governance app for the NEAR ecosystem hackathon brief. All treasury activity is explicitly simulated; no real money or blockchain transactions occur.
 
+The redesigned workspace uses a blockchain-inspired dark indigo, violet and cyan theme around networking, voting and collective growth. The customizable dashboard keeps the overview simple, while six analytics areas support deeper investigation, saved views, source-record inspection and CSV exports. See [the analytics guide](docs/ANALYTICS.md) for filters and exact metric definitions.
+
 ## Run locally on this Windows computer
 
 Requirements: Node.js 22.12+ with npm, and PostgreSQL binaries. PostgreSQL 18 is already installed on this computer. No hosted service, wallet, OAuth provider, or blockchain credential is needed.
@@ -87,7 +89,7 @@ npm run test:browser
 npm run test:accessibility
 ```
 
-- Unit tests cover exact monetary parsing, quorum, majority, abstentions, two-thirds removal and invalid inputs.
+- Unit tests cover exact monetary parsing, quorum, majority, abstentions, two-thirds removal, analytics dates, filters, trend reconciliation and CSV safety.
 - Integration tests use real PostgreSQL and check auth/session behavior, scoped permissions, admission, snapshots, immutable votes/audits, administrator uniqueness, balanced/reconciled ledgers, idempotency, concurrent overspending, and retained membership history.
 - HTTP end-to-end tests cover registration → community creation → application → admission vote → member proposal review → funding vote → approval → simulated execution → treasury/audit → logout, and all 16 required pages.
 - Integration and HTTP tests create and migrate a uniquely named `fundicate_test_*` database and drop only that database afterward. The configured database user needs CREATEDB permission. They never reset the demonstration database. `test:e2e` requires a completed production build and temporarily binds port 3001.
@@ -105,20 +107,22 @@ See `docs/VERIFICATION.md` for actual results from the implementation session. `
 
 ## Architecture and important files
 
-| Path                               | Responsibility                                                                                                                                            |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `prisma/schema.prisma`             | Users, sessions, communities, membership, policy, proposal/agenda aggregate, ballots, ledger, executions, audit, notifications and persistent rate limits |
-| `prisma/migrations/`               | Deployable schema, foreign keys, checks, deferred integrity triggers and append-only history                                                              |
-| `prisma/seed.ts`                   | Explicit local demo fixtures                                                                                                                              |
-| `src/lib/auth.ts`                  | Salted scrypt passwords, hashed random session tokens, expiry/revocation, rate limits                                                                     |
-| `src/lib/validation.ts`            | Zod server schemas and exact minor-unit parsing                                                                                                           |
-| `src/lib/service.ts`               | Community RBAC, transactional governance and treasury operations                                                                                          |
-| `src/lib/governance.ts`            | Pure, testable integer-safe outcome calculation                                                                                                           |
-| `src/lib/treasury-adapter.ts`      | Explicit local simulation and future adapter contract                                                                                                     |
-| `src/app/api/[operation]/route.ts` | Same-origin JSON mutation endpoints, sessions, validation and safe public errors                                                                          |
-| `src/app/(platform)/`              | Dashboard, exploration, community sections and account settings                                                                                           |
-| `src/components/`                  | Reusable forms, confirmations, tables, cards, navigation and statuses                                                                                     |
-| `tests/`, `scripts/`               | Automated checks, isolated test database runner and local setup                                                                                           |
+| Path                                                             | Responsibility                                                                                                                                            |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prisma/schema.prisma`                                           | Users, sessions, communities, membership, policy, proposal/agenda aggregate, ballots, ledger, executions, audit, notifications and persistent rate limits |
+| `prisma/migrations/`                                             | Deployable schema, foreign keys, checks, deferred integrity triggers and append-only history                                                              |
+| `prisma/seed.ts`                                                 | Explicit local demo fixtures                                                                                                                              |
+| `src/lib/auth.ts`                                                | Salted scrypt passwords, hashed random session tokens, expiry/revocation, rate limits                                                                     |
+| `src/lib/validation.ts`                                          | Zod server schemas and exact minor-unit parsing                                                                                                           |
+| `src/lib/service.ts`                                             | Community RBAC, transactional governance and treasury operations                                                                                          |
+| `src/lib/analytics-core.ts`, `src/lib/analytics.ts`              | Validated analytical filters, exact summaries, scoped records, preferences and saved views                                                                |
+| `src/app/(platform)/analytics/`, `src/app/api/analytics/export/` | Six analytics areas, source inspection and authenticated CSV exports                                                                                      |
+| `src/lib/governance.ts`                                          | Pure, testable integer-safe outcome calculation                                                                                                           |
+| `src/lib/treasury-adapter.ts`                                    | Explicit local simulation and future adapter contract                                                                                                     |
+| `src/app/api/[operation]/route.ts`                               | Same-origin JSON mutation endpoints, sessions, validation and safe public errors                                                                          |
+| `src/app/(platform)/`                                            | Dashboard, exploration, community sections and account settings                                                                                           |
+| `src/components/`                                                | Reusable forms, confirmations, tables, cards, navigation and statuses                                                                                     |
+| `tests/`, `scripts/`                                             | Automated checks, isolated test database runner and local setup                                                                                           |
 
 Agendas and their single proposals form one aggregate rather than two separate tables. There is one lifecycle, one eligible-voter snapshot, and one immutable ballot per decision. Roles are community-scoped. The administrator is a required single Community.adminId reference, with a deferred database constraint requiring an active membership; ordinary membership roles are MEMBER or MODERATOR, so duplicate ADMIN role rows cannot exist.
 

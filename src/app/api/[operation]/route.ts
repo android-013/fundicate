@@ -14,6 +14,7 @@ import { AppError, ensure } from "@/lib/errors";
 import { db } from "@/lib/db";
 import * as service from "@/lib/service";
 import { profileSchema, uuid } from "@/lib/validation";
+import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
 
 export const runtime = "nodejs";
 export async function POST(
@@ -88,6 +89,23 @@ export async function POST(
     )
       await rateLimit(`${operation}:${user.id}`, 30, 60);
     switch (operation) {
+      case "dashboard-preferences":
+        await saveDashboardPreference(user.id, body);
+        result = { message: "Your dashboard layout is saved." };
+        break;
+      case "analytics-save-view":
+        await saveAnalyticsView(user.id, body);
+        result = { message: "Analysis saved to your workspace." };
+        break;
+      case "analytics-delete-view": {
+        const { id } = z.object({ id: uuid }).parse(body);
+        const deleted = await db.savedAnalyticsView.deleteMany({
+          where: { id, userId: user.id },
+        });
+        ensure(deleted.count, "Saved view not found.", 404);
+        result = { message: "Saved view removed." };
+        break;
+      }
       case "logout": {
         const token = req.cookies.get(sessionCookie)?.value;
         if (token)

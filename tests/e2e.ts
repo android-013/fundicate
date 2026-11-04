@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { db } from "../src/lib/db";
+import { parseFilters } from "../src/lib/analytics-core";
 const origin = process.env.APP_ORIGIN!;
 let checks = 0;
 async function post(
@@ -257,6 +258,12 @@ async function main() {
     `/communities/${c.slug}/activity`,
     "/settings/profile",
     "/settings/security",
+    "/analytics",
+    "/analytics/treasury",
+    "/analytics/governance",
+    "/analytics/network",
+    "/analytics/personal",
+    "/analytics/records",
   ];
   for (const path of paths) {
     const res = await page(path, admin);
@@ -269,6 +276,100 @@ async function main() {
       where: { communityId: c.id, action: "SIMULATED_PAYOUT" },
     })) === 1,
   );
+  await page("/analytics", "", 307);
+  checks++;
+  await post(
+    "dashboard-preferences",
+    { widgets: ["treasury", "votes"] },
+    admin,
+  );
+  assert.deepEqual(
+    (
+      await db.dashboardPreference.findUniqueOrThrow({
+        where: { userId: c.adminId },
+      })
+    ).widgets,
+    ["treasury", "votes"],
+  );
+  checks++;
+  await post(
+    "dashboard-preferences",
+    { widgets: ["treasury", "treasury"] },
+    admin,
+    400,
+  );
+  checks++;
+  const candidateUser = await db.user.findUniqueOrThrow({
+    where: { email: "taylor@test.invalid" },
+  });
+  await post(
+    "dashboard-preferences",
+    { userId: c.adminId, widgets: ["activity"] },
+    candidate,
+  );
+  assert.deepEqual(
+    (
+      await db.dashboardPreference.findUniqueOrThrow({
+        where: { userId: c.adminId },
+      })
+    ).widgets,
+    ["treasury", "votes"],
+  );
+  assert.deepEqual(
+    (
+      await db.dashboardPreference.findUniqueOrThrow({
+        where: { userId: candidateUser.id },
+      })
+    ).widgets,
+    ["activity"],
+  );
+  checks++;
+  await post(
+    "analytics-save-view",
+    {
+      name: "Funding source view",
+      section: "treasury",
+      filters: parseFilters({ community: c.slug, range: "all" }),
+    },
+    admin,
+  );
+  const saved = await db.savedAnalyticsView.findUniqueOrThrow({
+    where: { userId_name: { userId: c.adminId, name: "Funding source view" } },
+  });
+  await post("analytics-delete-view", { id: saved.id }, candidate, 404);
+  await post("analytics-delete-view", { id: saved.id }, admin);
+  checks += 3;
+  const csv = await fetch(
+    origin +
+      `/api/analytics/export?community=${c.slug}&range=all&dataset=transactions`,
+    { headers: { Cookie: admin } },
+  );
+  assert.equal(csv.status, 200);
+  assert.ok(csv.headers.get("content-type")?.startsWith("text/csv"));
+  assert.equal(csv.headers.get("x-record-count"), "2");
+  assert.ok((await csv.text()).includes(execution.transactionId));
+  checks++;
+  const unauthorized = await fetch(origin + "/api/analytics/export");
+  assert.equal(unauthorized.status, 401);
+  checks++;
+  const forbidden = await fetch(
+    origin + "/api/analytics/export?community=taylors-collective",
+    { headers: { Cookie: admin } },
+  );
+  assert.equal(forbidden.status, 403);
+  checks++;
+  const inspected = await page(
+    `/analytics/inspect/transactions/${execution.transactionId}`,
+    admin,
+  );
+  assert.ok((await inspected.text()).includes("Balanced ledger entries"));
+  checks++;
+  const invalid = await page(
+    "/analytics?range=custom&from=2026-02-30&to=2026-03-01",
+    admin,
+  );
+  assert.ok((await invalid.text()).includes("Adjust your report filters."));
+  checks++;
   await post("logout", {}, candidate);
   await page("/dashboard", candidate, 307);
   checks += 2;

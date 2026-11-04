@@ -22,7 +22,7 @@ if (
 rmSync(buildOutput, { recursive: true, force: true });
 function prepare(source) {
   const subpath = relative(resolve("src/app"), source);
-  for (const prefix of ["server/app", "static/chunks/app"])
+  for (const prefix of ["server/app", "static/chunks/app", "types/app"])
     mkdirSync(join(buildOutput, prefix, subpath), { recursive: true });
   for (const entry of readdirSync(source, { withFileTypes: true }))
     if (entry.isDirectory()) prepare(join(source, entry.name));

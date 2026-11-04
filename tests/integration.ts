@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import type { User } from "@prisma/client";
 import { db } from "../src/lib/db";
+import {
+  getAnalytics,
+  inspectAnalyticsRecord,
+  reportRecords,
+  saveAnalyticsView,
+  saveDashboardPreference,
+} from "../src/lib/analytics";
+import { parseFilters } from "../src/lib/analytics-core";
 import {
   register,
   login,
@@ -32,7 +41,7 @@ async function main() {
     new URL(process.env.DATABASE_URL!).pathname.startsWith("/fundicate_test_"),
     "Tests require the isolated runner",
   );
-  const people = [];
+  const people: User[] = [];
   for (let i = 0; i < 6; i++)
     people.push(
       await register({
@@ -775,6 +784,137 @@ async function main() {
           }),
         /Member submissions are disabled/,
       );
+    },
+  );
+  await check("analytics reconcile to the immutable ledger", async () => {
+    const r = await getAnalytics(
+      member.id,
+      parseFilters({ community: c.slug, range: "all" }),
+    );
+    assert.equal(r.money.length, 1);
+    assert.equal(r.money[0].incoming, 10000n);
+    assert.equal(r.money[0].outgoing, 8000n);
+    assert.equal(r.money[0].closing, 2000n);
+    assert.equal(r.money[0].current, 2000n);
+    assert.equal(r.money[0].trend.at(-1)?.balance, 2000n);
+  });
+  await check(
+    "analytics reject cross-community scopes and record inspection",
+    async () => {
+      await assert.rejects(
+        () => getAnalytics(people[5].id, parseFilters({ community: c.slug })),
+        /active communities/,
+      );
+      const r = await getAnalytics(
+        people[5].id,
+        parseFilters({ range: "all" }),
+      );
+      assert.equal(r.transactions.length, 0);
+      const tx = await db.ledgerTransaction.findFirstOrThrow({
+        where: { communityId: c.id },
+      });
+      await assert.rejects(
+        () => inspectAnalyticsRecord(people[5].id, "transactions", tx.id),
+        /not found/,
+      );
+    },
+  );
+  await check(
+    "dashboard preferences and saved analyses are owned by the authenticated user",
+    async () => {
+      await saveDashboardPreference(member.id, {
+        widgets: ["treasury", "votes"],
+      });
+      assert.deepEqual(
+        (
+          await db.dashboardPreference.findUniqueOrThrow({
+            where: { userId: member.id },
+          })
+        ).widgets,
+        ["treasury", "votes"],
+      );
+      await assert.rejects(() =>
+        saveDashboardPreference(member.id, {
+          widgets: ["treasury", "treasury"],
+        }),
+      );
+      const view = await saveAnalyticsView(member.id, {
+        name: "My funding view",
+        section: "treasury",
+        filters: parseFilters({ community: c.slug, range: "all" }),
+      });
+      const another = await getAnalytics(
+        mod.id,
+        parseFilters({ community: c.slug, range: "all" }),
+      );
+      assert.ok(!another.savedViews.some((v) => v.id === view.id));
+      await assert.rejects(
+        () =>
+          saveAnalyticsView(people[5].id, {
+            name: "Forbidden report",
+            filters: parseFilters({ community: c.slug }),
+          }),
+        /active communities/,
+      );
+    },
+  );
+  await check(
+    "analytics never combine currencies or miss events from another currency community",
+    async () => {
+      const eur = await createCommunity(admin.id, {
+        name: "Euro collective",
+        slug: "euro-collective",
+        description: "A separate euro treasury to verify currency isolation.",
+        purpose: "Verify exact currency grouping and vote event populations.",
+        currency: "EUR",
+        minimumContribution: "0",
+        questions: "",
+      });
+      await contribute(admin.id, {
+        communityId: eur.id,
+        amount: "12.34",
+        idempotencyKey: randomUUID(),
+      });
+      const p = await createProposal(admin.id, {
+        communityId: eur.id,
+        title: "An earlier euro decision with a new ballot",
+        description:
+          "An earlier decision can receive a vote in the current reporting window.",
+        type: "FUNDING",
+        amount: "1",
+        recipient: "A euro project",
+        quorumBps: 5000,
+        thresholdBps: 5001,
+        opensAt: new Date(Date.now() - 3600000).toISOString(),
+        closesAt: new Date(Date.now() + 86400000).toISOString(),
+        publish: true,
+      });
+      await db.proposal.update({
+        where: { id: p.id },
+        data: { createdAt: new Date(Date.now() - 60 * 86400000) },
+      });
+      const vote = await castVote(admin.id, {
+        communityId: eur.id,
+        proposalId: p.id,
+        choice: "YES",
+      });
+      const all = await getAnalytics(admin.id, parseFilters({ range: "all" }));
+      assert.equal(all.money.find((m) => m.currency === "USD")?.current, 2000n);
+      assert.equal(all.money.find((m) => m.currency === "EUR")?.current, 1234n);
+      const events = await getAnalytics(
+        admin.id,
+        parseFilters({ range: "30d", dataset: "votes" }),
+      );
+      assert.ok(reportRecords(events).some((v) => v.id === vote.id));
+      assert.equal(
+        events.activityTrend.reduce((sum, p) => sum + p.votes, 0),
+        events.votes.length,
+      );
+      const cohort = await getAnalytics(
+        admin.id,
+        parseFilters({ range: "30d", dataset: "votes", cohort: "decisions" }),
+      );
+      assert.ok(!reportRecords(cohort).some((v) => v.id === vote.id));
     },
   );
   console.log(`\n${passed} PostgreSQL integrity/security checks passed.`);

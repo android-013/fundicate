@@ -1,5 +1,29 @@
 # Verification results
 
+## UI and analytics expansion — 3 November 2026
+
+The blockchain-inspired redesign and analytics expansion were verified against the existing local application. The third migration, `20261103000000_analytics_preferences`, adds per-account dashboard preferences and saved analytics views; existing demo and financial records were preserved.
+
+| Check                        | Result                                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `npm test`                   | PASS — 25 unit tests                                                                     |
+| `npm run test:integration`   | PASS — 27 real PostgreSQL checks                                                         |
+| `npm run test:e2e`           | PASS — 61 HTTP workflow/access checks against an isolated temporary database             |
+| `npm run test:browser`       | PASS — 75 layout/interaction checks, no runtime errors or horizontal overflow            |
+| `npm run test:accessibility` | PASS — 30 desktop/mobile route scans, no axe WCAG A/AA violations                        |
+| `npm run lint`               | PASS — zero warnings/errors                                                              |
+| `npm run build`              | PASS — Prisma generation, TypeScript, Webpack compilation and complete static generation |
+
+New unit coverage verifies UTC boundaries and impossible dates, duplicate/invalid filters, preserved drill-down filters, bigint contribution summaries, empty comparison baselines, daily/monthly trend reconciliation, CSV precision/formula escaping and dashboard widget validation.
+
+New database coverage verifies ledger report reconciliation, forbidden community scopes and source inspection, private preference/saved-view ownership, separate USD/EUR calculations, and the difference between vote-event and proposal-created cohorts. New HTTP coverage checks all six analytics areas, unauthenticated redirects, mutation validation, forged ownership fields, private view deletion, CSV content/access, transaction inspection and invalid-date feedback.
+
+Browser QA exercises persisted dashboard customization, saving/reopening/removing a filtered report, CSV downloads and source inspection. Desktop and mobile routes use 1440×1000 and 390×844 viewports; additional 320×740 checks verify landing, dashboard, overview, explorer and the customization panel. Screenshots were visually reviewed. Chart hydration errors and graph-label accessibility issues found during development were fixed before the passing runs.
+
+Analytics are based on recorded application data, with explicit metric/cohort definitions and guardrails in [ANALYTICS.md](ANALYTICS.md). This remains a local treasury simulation; no chain integration or production deployment was performed. The dependency audit and baseline repository checks below are the earlier 2 November results, not a newly claimed audit.
+
+## Original local MVP — 2 November 2026
+
 Validated on **2 November 2026**, with Node.js 22.12.0, PostgreSQL 18.4, Next.js 16.4.3, Prisma 7.10.1 and the generated dependency lockfile.
 
 | Command                                   | Final result                                                                           |
@@ -34,7 +58,7 @@ Integration and HTTP test databases are uniquely named `fundicate_test_*` and re
 
 ## Environment-specific configuration
 
-Turbopack cannot create required junctions in this Windows sandbox. Webpack is used instead. Build scripts use project-local temporary directories, prepare generated output directories synchronously and run both Next.js compile and generate phases. They also preserve the compiled proxy artifact between those phases because Next 16.4 renames it in each phase. The build command never stops after compile-only output.
+Turbopack cannot create required junctions in this Windows sandbox. Webpack is used instead. Build scripts use project-local temporary directories, prepare generated output directories synchronously and run both Next.js compile and generate phases. The 3 November expansion also precreates the route-specific generated type directories after a repeat build exposed the same Windows directory-creation issue there. The scripts preserve the compiled proxy artifact between phases because Next 16.4 renames it in each phase. The build command never stops after compile-only output.
 
 Microsoft Edge's headless launcher fails under the sandbox's process/pipe restrictions. Playwright's project-local Chromium headless shell runs successfully and was used for the final browser and accessibility results. The in-app preview opening also timed out; screenshots came from the verified Chromium renderer.
 

@@ -37,6 +37,12 @@ try {
     "/communities/campus-collective/activity",
     "/settings/profile",
     "/settings/security",
+    "/analytics",
+    "/analytics/treasury",
+    "/analytics/governance",
+    "/analytics/network",
+    "/analytics/personal",
+    "/analytics/records",
   ]) {
     await page.goto(origin + path, { waitUntil: "networkidle" });
     const results = await new AxeBuilder({ page })
@@ -62,6 +68,10 @@ try {
     "/dashboard",
     "/explore",
     "/communities/campus-collective/treasury",
+    "/analytics",
+    "/analytics/treasury",
+    "/analytics/network",
+    "/analytics/records",
   ]) {
     await page.goto(origin + path, { waitUntil: "networkidle" });
     const results = await new AxeBuilder({ page })

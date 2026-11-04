@@ -67,6 +67,8 @@ model User {
   transactions LedgerTransaction[]
   auditEvents AuditEvent[]
   notifications Notification[]
+  dashboardPreference DashboardPreference?
+  savedAnalyticsViews SavedAnalyticsView[]
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -295,4 +297,21 @@ model RateLimit {
   key String @id
   count Int @default(1)
   expiresAt DateTime
+}
+
+model DashboardPreference {
+  userId String @id @db.Uuid
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  widgets Json
+  updatedAt DateTime @updatedAt
+}
+model SavedAnalyticsView {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  name String
+  filters Json
+  createdAt DateTime @default(now())
+  @@unique([userId,name])
+  @@index([userId,createdAt])
 }

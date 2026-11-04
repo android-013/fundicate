@@ -1,213 +1,273 @@
 import Link from "next/link";
 import {
-  ArrowRight,
   ArrowUpRight,
-  Check,
-  Users,
+  ArrowRight,
+  Network,
   Vote,
+  ChartNoAxesCombined,
+  Boxes,
   ShieldCheck,
-  Leaf,
-  MoveUpRight,
+  Workflow,
+  TrendingUp,
 } from "lucide-react";
 import { Logo } from "@/components/ui";
+import { NetworkArt } from "@/components/network-art";
 export default function Home() {
   return (
-    <div className="landing">
+    <div className="landing network-landing">
       <header className="landing-header">
         <Logo />
         <nav>
-          <Link href="/explore">Explore communities</Link>
-          <a href="#how-it-works">How it works</a>
+          <Link href="/explore">Discover communities</Link>
+          <a href="#how-it-works">How the network works</a>
+          <a href="#collective-intelligence">Collective intelligence</a>
         </nav>
         <div className="row">
           <Link href="/login" className="text-link">
             Sign in
           </Link>
           <Link href="/register" className="button primary">
-            Get started <ArrowUpRight size={16} />
+            Join the network <ArrowUpRight size={16} />
           </Link>
         </div>
       </header>
       <main>
-        <section className="hero">
-          <div className="hero-copy">
-            <div className="eyebrow">
+        <section className="network-hero">
+          <div className="network-hero-copy">
+            <div className="hero-pill">
               <span className="live-dot" />
-              SMALL CONTRIBUTIONS. SHARED POSSIBILITIES.
+              PEOPLE. CONSENSUS. POSSIBILITY.<span>NEAR ECOSYSTEM ↗</span>
             </div>
             <h1>
-              Good things
+              A network of people.
               <br />
-              happen <span>together.</span>
+              <span>A world of possibility.</span>
             </h1>
             <p>
-              Bring your people, pool your resources, and decide what comes
-              next. A clearer way to turn collective ambition into real
-              community impact.
+              Connect with a shared purpose. Fund the ideas you believe in. Give
+              every voice a part in what comes next.
             </p>
             <div className="hero-actions">
               <Link href="/register" className="button primary large">
-                Start something together <ArrowUpRight size={19} />
+                Build something together <ArrowUpRight size={19} />
               </Link>
-              <Link href="/explore" className="button ghost large">
-                Explore communities <ArrowRight size={17} />
+              <Link href="/explore" className="button secondary large">
+                Find your collective <ArrowRight size={17} />
               </Link>
             </div>
             <div className="hero-proof">
               <span>
-                <ShieldCheck size={16} />
-                Transparent by design
+                <Network size={16} />
+                Community at the core
               </span>
               <span>
                 <Vote size={16} />
-                Every member has a voice
+                Consensus by design
+              </span>
+              <span>
+                <ShieldCheck size={16} />
+                Transparency at every step
               </span>
             </div>
           </div>
-          <div
-            className="hero-visual"
-            aria-label="Illustration of collective funding and community voting"
-          >
-            <div className="visual-grid" />
-            <span className="floating-label">
-              <span className="live-dot" />A SHARED FUTURE, IN MOTION
-            </span>
-            <div className="orbit orbit-one" />
-            <div className="orbit orbit-two" />
-            <div className="center-symbol">
-              <Leaf size={68} />
-            </div>
-            <div className="visual-card pool-card">
-              <div className="row between">
-                <span>Campus Collective</span>
-                <span className="tiny-pill">DEMO</span>
-              </div>
-              <small>Our shared treasury</small>
-              <strong>
-                $12,450<span>.00</span>
-              </strong>
-              <div className="mini-chart">
-                {[22, 30, 25, 42, 37, 50, 46, 60, 66, 62, 82, 94].map(
-                  (n, i) => (
-                    <span style={{ height: `${n}%` }} key={i} />
-                  ),
-                )}
-              </div>
-              <div className="row between small-text">
-                <span>12 people. One shared goal.</span>
-                <ArrowUpRight size={16} />
-              </div>
-            </div>
-            <div className="visual-card ballot-card">
-              <span className="round-check">
-                <Check size={16} />
+          <div className="network-hero-visual">
+            <NetworkArt />
+            <div className="protocol-float-card">
+              <span className="float-icon">
+                <Vote size={19} />
               </span>
               <div>
-                <strong>A new idea, approved.</strong>
-                <small>Community garden · illustrative vote</small>
-                <div className="vote-avatars">
-                  <span>AM</span>
-                  <span>SK</span>
-                  <span>JL</span>
-                  <span>+9</span>
-                </div>
+                <small>THE POWER OF PARTICIPATION</small>
+                <strong>One person. One voice.</strong>
               </div>
+              <span className="float-signal" />
             </div>
-            <div className="orbit-label">
-              MORE THAN A FUND.
-              <br />A WAY FORWARD.
+            <div className="protocol-float-label">
+              <Boxes size={16} />
+              <span>
+                Collective resources.
+                <br />
+                Connected decisions.
+              </span>
             </div>
           </div>
         </section>
-        <div className="value-strip">
+        <div className="network-principles">
           <span>
-            Built around people.
+            A stronger future
             <br />
-            <strong>Accountable at every step.</strong>
+            <strong>is built together.</strong>
           </span>
           <div>
-            <Users size={22} />
-            <strong>Shared purpose</strong>
+            <Network size={22} />
+            <span>Connected communities</span>
           </div>
           <div>
             <Vote size={22} />
-            <strong>Fair decisions</strong>
+            <span>Recorded governance</span>
           </div>
           <div>
-            <ShieldCheck size={22} />
-            <strong>Clear money trails</strong>
+            <ChartNoAxesCombined size={22} />
+            <span>Transparent intelligence</span>
           </div>
-          <span className="near-lockup">
-            Built for the
+          <span className="simulation-disclosure">
+            Local MVP
             <br />
-            <strong>NEAR ecosystem ↗</strong>
+            <strong>Simulated treasury</strong>
           </span>
         </div>
-        <section className="how-section" id="how-it-works">
-          <div>
-            <div className="eyebrow">FROM “WHAT IF” TO “WE DID”</div>
+        <section className="network-how" id="how-it-works">
+          <div className="section-intro">
+            <div className="eyebrow">FROM CONNECTION TO COLLECTIVE IMPACT</div>
             <h2>
-              A little from everyone.
+              People create the network.
               <br />
-              Something bigger for all.
+              <span>Purpose gives it direction.</span>
             </h2>
             <p>
-              From campus clubs to neighborhood projects, give your community a
-              place to make progress together.
+              A home for communities that want to fund, decide, and grow
+              together. With clear rules, shared ownership of decisions, and a
+              trail you can follow.
             </p>
-            <Link href="/explore" className="text-link">
-              Find your community <ArrowRight size={17} />
-            </Link>
           </div>
-          <div className="how-steps">
+          <div className="network-feature-grid">
             {[
               {
                 n: "01",
-                title: "Find your people",
-                text: "Create a community or apply to join one that shares your purpose.",
+                icon: Network,
+                title: "Find your people.",
+                text: "Create a collective or join a community that shares your ambition. Every new connection opens up new possibilities.",
               },
               {
                 n: "02",
-                title: "Put ideas to a vote",
-                text: "Clear rules, one member per vote, and results everyone can understand.",
+                icon: Vote,
+                title: "Turn voices into direction.",
+                text: "Bring an idea forward. Vote with clear rules, frozen eligibility and outcomes calculated by the server.",
               },
               {
                 n: "03",
-                title: "Make every contribution count",
-                text: "Track pooled funds and approved allocations in a transparent ledger.",
+                icon: Workflow,
+                title: "Make every movement visible.",
+                text: "Follow pooled resources from contributions to approved allocations and separately recorded simulated payouts.",
               },
-            ].map((s) => (
-              <div key={s.n}>
-                <span>{s.n}</span>
-                <div>
-                  <h3>{s.title}</h3>
-                  <p>{s.text}</p>
-                </div>
-                <MoveUpRight size={18} />
-              </div>
+            ].map((item) => (
+              <article key={item.n}>
+                <span className="feature-number">{item.n}</span>
+                <span className="feature-icon">
+                  <item.icon size={26} />
+                </span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <Link href="/register">
+                  Be part of it <ArrowUpRight size={15} />
+                </Link>
+              </article>
             ))}
           </div>
         </section>
-        <section className="landing-cta">
-          <Leaf size={32} />
+        <section className="intelligence-section" id="collective-intelligence">
+          <div className="intelligence-preview">
+            <div className="preview-top">
+              <span>
+                <ChartNoAxesCombined size={16} />
+                COLLECTIVE INTELLIGENCE
+              </span>
+              <span className="badge green">Explore deeper</span>
+            </div>
+            <div className="preview-flow">
+              <div>
+                <span className="preview-node cyan">
+                  <Network size={23} />
+                </span>
+                <strong>Your network</strong>
+                <small>People & communities</small>
+              </div>
+              <span>→</span>
+              <div>
+                <span className="preview-node violet">
+                  <Vote size={23} />
+                </span>
+                <strong>Your decisions</strong>
+                <small>Participation & outcomes</small>
+              </div>
+              <span>→</span>
+              <div>
+                <span className="preview-node pink">
+                  <TrendingUp size={23} />
+                </span>
+                <strong>Your growth</strong>
+                <small>Funding & impact</small>
+              </div>
+            </div>
+            <div className="preview-layers">
+              <span>Overview</span>
+              <span>Analysis</span>
+              <span>Source records</span>
+              <span>Exact details ↗</span>
+            </div>
+            <small className="preview-caption">
+              A path through your data. No invented performance numbers.
+            </small>
+          </div>
+          <div>
+            <div className="eyebrow">
+              SIMPLE ON THE SURFACE. LIMITLESS CURIOSITY.
+            </div>
+            <h2>
+              See the big picture.
+              <br />
+              <span>Follow every detail.</span>
+            </h2>
+            <p>
+              Start with the signals that matter. Then follow treasury trends,
+              voting participation, community connections, and your own
+              contributions all the way to the original records.
+            </p>
+            <ul>
+              <li>
+                <ChartNoAxesCombined size={17} />
+                Filter by community, currency and time
+              </li>
+              <li>
+                <DatabaseIcon />
+                Inspect the source behind a metric
+              </li>
+              <li>
+                <ShieldCheck size={17} />
+                Save views and export your analysis
+              </li>
+            </ul>
+            <Link href="/register" className="button secondary">
+              Meet your new dashboard <ArrowUpRight size={16} />
+            </Link>
+          </div>
+        </section>
+        <section className="network-final-cta">
+          <span className="eyebrow">CONNECTION IS ONLY THE BEGINNING.</span>
           <h2>
-            Your next big thing
+            The future is collective.
             <br />
-            starts with “we.”
+            <span>Make it yours.</span>
           </h2>
-          <Link className="button light-button large" href="/register">
-            Build your community <ArrowUpRight size={18} />
+          <Link href="/register" className="button primary large">
+            Start your collective <ArrowUpRight size={19} />
           </Link>
-          <p>Hackathon MVP · local simulated treasury · no real funds</p>
+          <p>
+            Local hackathon MVP · all funds simulated · real NEAR integration is
+            future work
+          </p>
         </section>
       </main>
       <footer className="landing-footer">
         <Logo />
-        <p>Fund together. Decide together.</p>
+        <p>Fund together. Decide together. Grow together.</p>
         <Link href="/explore">
-          Explore <ArrowUpRight size={14} />
+          Explore the network <ArrowUpRight size={14} />
         </Link>
       </footer>
     </div>
   );
+}
+function DatabaseIcon() {
+  return <Boxes size={17} />;
 }

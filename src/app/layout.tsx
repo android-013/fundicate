@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./network.css";
 export const metadata: Metadata = {
   title: {
     default: "Fundicate — Fund together. Decide together.",

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Leaf, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Network, Vote, TrendingUp } from "lucide-react";
 import { Logo } from "@/components/ui";
+import { NetworkArt } from "@/components/network-art";
 export default function AuthLayout({
   children,
 }: {
@@ -11,25 +12,37 @@ export default function AuthLayout({
       <section className="auth-story">
         <Logo light />
         <div>
-          <div className="eyebrow">A LITTLE TOGETHER GOES A LONG WAY.</div>
-          <h1>
-            Big ideas.
-            <br />
-            Shared belief.
-            <br />
-            <em>Real possibility.</em>
-          </h1>
-          <div className="auth-art" aria-hidden="true">
-            <span />
-            <Leaf size={90} />
-            <span />
+          <div className="eyebrow">
+            A SHARED FUTURE STARTS WITH A CONNECTION.
           </div>
+          <h1>
+            Your people.
+            <br />
+            Your voice.
+            <br />
+            <em>Your next chapter.</em>
+          </h1>
+          <NetworkArt compact />
           <p>
-            A shared home for the people, ideas, and funds that move your
-            community forward.
+            Build a network around what matters. Turn shared purpose into
+            decisions, progress, and collective possibility.
           </p>
+          <div className="auth-values">
+            <span>
+              <Network size={15} />
+              Connect
+            </span>
+            <span>
+              <Vote size={15} />
+              Decide
+            </span>
+            <span>
+              <TrendingUp size={15} />
+              Grow
+            </span>
+          </div>
         </div>
-        <small>Local hackathon demo · simulated funds</small>
+        <small>NEAR ecosystem project · local simulated treasury</small>
       </section>
       <section className="auth-form-area">
         <Link href="/" className="back-link">
@@ -38,7 +51,7 @@ export default function AuthLayout({
         </Link>
         <div className="auth-form-content">{children}</div>
         <p className="muted small-text">
-          Transparent by design. Community at heart.
+          People at the core. Transparency at every step.
         </p>
       </section>
     </main>

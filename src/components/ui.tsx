@@ -5,21 +5,22 @@ import {
   ArrowUpRight,
   ArrowRight,
   Users,
-  Leaf,
   Globe2,
   Check,
   Wallet,
   Vote,
   CircleDot,
   ShieldCheck,
+  Network,
 } from "lucide-react";
+import { BrandMark } from "./network-art";
 import { initials, moneyFormat, dateFormat, titleCase } from "@/lib/format";
 import { AvatarImage } from "./avatar-image";
 export function Logo({ light = false }: { light?: boolean }) {
   return (
     <Link href="/" className={`logo ${light ? "light" : ""}`}>
       <span className="logo-mark">
-        <Leaf size={22} />
+        <BrandMark />
       </span>
       fundicate<span className="logo-dot">.</span>
     </Link>
@@ -158,7 +159,7 @@ export function CommunityCard({
       <div className={`community-art ${c.color}`}>
         <div className="art-orbit" />
         <div className="art-orbit two" />
-        {c.color === "blue" ? <Globe2 size={42} /> : <Leaf size={42} />}
+        {c.color === "blue" ? <Globe2 size={42} /> : <Network size={42} />}
         <span className="art-label">A little together goes a long way.</span>
       </div>
       <div className="community-card-body">

@@ -1,5 +1,5 @@
-Current phase: 8 complete — Local MVP implemented and verified
-Overall progress: 100% of the local MVP
+Current phase: 11 — Expanded local MVP verified
+Overall progress: 100% of the expanded local MVP
 
 Progress measures the local MVP checklist, not elapsed time or production readiness. Real NEAR integration and the production limits below remain explicitly outside the completed simulation.
 
@@ -54,12 +54,34 @@ Progress measures the local MVP checklist, not elapsed time or production readin
 - [x] Lint, TypeScript, full production build and production dependency audit pass.
 - [x] README, reproducible demo, verification report and NEAR integration guide.
 
+## Phase 9 — Blockchain-inspired workspace · 100%
+
+- [x] Indigo, violet and cyan design system, connected-node identity and responsive navigation.
+- [x] Redesigned landing, authentication, dashboard and shared community interface.
+- [x] Clear networking, voting and growth entry points; existing governance/treasury flows retained.
+
+## Phase 10 — Simple overview and deep analytics · 100%
+
+- [x] Six analytical areas: overview, treasury, governance, network/growth, personal impact and record explorer.
+- [x] Exact per-currency metrics, trends, source drill-downs and balanced-ledger inspection.
+- [x] Community, time, currency, dataset, person, type, status and vote-cohort filters.
+- [x] Persisted dashboard customization, private saved views, pagination and authenticated CSV export.
+- [x] Third migration applied without resetting demo data; scoped authorization and export limits enforced.
+
+## Phase 11 — Expansion verification · 100%
+
+- [x] 25 unit tests and 27 real PostgreSQL integrity/security checks pass.
+- [x] 61 HTTP checks and 75 browser layout/interaction checks pass without browser runtime errors.
+- [x] Desktop/mobile review includes 320-pixel layouts; 30 axe scans report no WCAG A/AA violations.
+- [x] TypeScript, lint and full production build pass.
+- [x] Metric definitions, operating limits, analytics guide and updated handoff documented.
+
 ## Future work — not claimed as complete
 
 - [ ] NEAR wallet linking, treasury contract, testnet submission and verified chain receipts.
 - [ ] Durable outbox/reservations, chain reconciliation and safe external retry processing.
 - [ ] Production account recovery, email verification, MFA and stronger transfer reauthentication.
-- [ ] Production deployment/security review, monitoring, backups, pagination and scheduled maintenance/finalization.
+- [ ] Production deployment/security review, monitoring, backups, pagination on remaining community lists and scheduled maintenance/finalization.
 - [ ] File uploads, competing multi-proposal agendas and a ledger reversal UI.
 
 These future items do not change the fact that the delivered treasury uses local simulated funds. See `docs/NEAR-INTEGRATION.md` and `docs/VERIFICATION.md` for boundaries and evidence.
