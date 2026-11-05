@@ -49,6 +49,21 @@ enum TransactionStatus {
   FAILED
 }
 
+enum FundingRoundStatus {
+  DRAFT
+  SUBMISSIONS
+  SCREENING
+  SELECTION
+  DECIDED
+  CANCELLED
+}
+
+enum SchemeStatus {
+  SUBMITTED
+  QUALIFIED
+  REJECTED
+}
+
 model User {
   id String @id @default(uuid()) @db.Uuid
   email String @unique
@@ -69,6 +84,11 @@ model User {
   notifications Notification[]
   dashboardPreference DashboardPreference?
   savedAnalyticsViews SavedAnalyticsView[]
+  fundingRounds FundingRound[]
+  fundingSchemes FundingScheme[]
+  roundEligibility RoundElectorate[]
+  screeningBallots SchemeScreeningVote[]
+  selectionBallots RoundSelectionVote[]
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -102,6 +122,7 @@ model Community {
   transactions LedgerTransaction[]
   auditEvents AuditEvent[]
   notifications Notification[]
+  fundingRounds FundingRound[]
   @@index([createdAt])
 }
 model GovernancePolicy {
@@ -159,7 +180,7 @@ model MembershipApplicationAnswer {
   answer String
   @@unique([applicationId, questionId])
 }
-// Agenda and its single proposal are one aggregate: one lifecycle, ballot and result.
+// Existing single-proposal decisions remain independent of multi-scheme FundingRounds.
 model Proposal {
   id String @id @default(uuid()) @db.Uuid
   communityId String @db.Uuid
@@ -314,4 +335,88 @@ model SavedAnalyticsView {
   createdAt DateTime @default(now())
   @@unique([userId,name])
   @@index([userId,createdAt])
+}
+
+model FundingRound {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  creatorId String @db.Uuid
+  community Community @relation(fields:[communityId], references:[id], onDelete:Restrict)
+  creator User @relation(fields:[creatorId], references:[id], onDelete:Restrict)
+  title String
+  description String
+  proposalPolicy String @default("MEMBERS")
+  quorumBps Int @default(5000)
+  status FundingRoundStatus @default(DRAFT)
+  submissionsCloseAt DateTime
+  screeningOpensAt DateTime?
+  screeningClosesAt DateTime?
+  selectionOpensAt DateTime?
+  selectionClosesAt DateTime?
+  decidedAt DateTime?
+  outcome String?
+  winnerSchemeId String? @db.Uuid
+  createdAt DateTime @default(now())
+  schemes FundingScheme[]
+  electorate RoundElectorate[]
+  screeningVotes SchemeScreeningVote[]
+  selectionVotes RoundSelectionVote[]
+  @@index([communityId,createdAt])
+}
+
+model FundingScheme {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  authorId String @db.Uuid
+  round FundingRound @relation(fields:[roundId], references:[id], onDelete:Restrict)
+  author User @relation(fields:[authorId], references:[id], onDelete:Restrict)
+  title String
+  description String
+  amount BigInt
+  recipient String
+  supportingUrl String?
+  status SchemeStatus @default(SUBMITTED)
+  createdAt DateTime @default(now())
+  screeningVotes SchemeScreeningVote[]
+  selectionVotes RoundSelectionVote[]
+  @@unique([roundId,id])
+  @@index([roundId,createdAt])
+}
+
+model RoundElectorate {
+  roundId String @db.Uuid
+  userId String @db.Uuid
+  round FundingRound @relation(fields:[roundId], references:[id], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  screeningVotes SchemeScreeningVote[]
+  selectionVote RoundSelectionVote?
+  @@id([roundId,userId])
+}
+
+model SchemeScreeningVote {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  schemeId String @db.Uuid
+  userId String @db.Uuid
+  round FundingRound @relation(fields:[roundId], references:[id], onDelete:Restrict)
+  scheme FundingScheme @relation(fields:[roundId,schemeId], references:[roundId,id], onDelete:Restrict)
+  voter RoundElectorate @relation(fields:[roundId,userId], references:[roundId,userId], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  choice VoteChoice
+  createdAt DateTime @default(now())
+  @@unique([schemeId,userId])
+  @@index([roundId])
+}
+
+model RoundSelectionVote {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  schemeId String @db.Uuid
+  userId String @db.Uuid
+  round FundingRound @relation(fields:[roundId], references:[id], onDelete:Restrict)
+  scheme FundingScheme @relation(fields:[roundId,schemeId], references:[roundId,id], onDelete:Restrict)
+  voter RoundElectorate @relation(fields:[roundId,userId], references:[roundId,userId], onDelete:Restrict)
+  user User @relation(fields:[userId], references:[id], onDelete:Restrict)
+  createdAt DateTime @default(now())
+  @@unique([roundId,userId])
 }

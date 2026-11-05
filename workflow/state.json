@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "revision": 2,
+  "totalParts": 5,
+  "completedParts": [
+    1
+  ],
+  "nextPart": 2,
+  "status": "in_progress",
+  "activeRun": {
+    "id": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+    "part": 2,
+    "startedAt": "2026-11-05T11:06:24.776Z",
+    "checks": {},
+    "acceptance": {},
+    "blockers": {},
+    "checkpoints": [],
+    "review": null,
+    "activeCheck": null
+  },
+  "parts": {
+    "1": {
+      "number": 1,
+      "title": "Existing application and first capability upgrades",
+      "status": "complete",
+      "historical": true,
+      "handoff": "docs/parts/part-01.md"
+    },
+    "2": {
+      "number": 2,
+      "title": "Funded rounds, accounting and governance foundation",
+      "status": "in_progress"
+    },
+    "3": {
+      "number": 3,
+      "title": "Weighted governance, allocation policies and rejection veto",
+      "status": "pending"
+    },
+    "4": {
+      "number": 4,
+      "title": "Complete election methods and participation-based reputation",
+      "status": "pending"
+    },
+    "5": {
+      "number": 5,
+      "title": "Verified NEAR testnet, integrated analytics and full-system audit",
+      "status": "pending"
+    }
+  },
+  "requirements": {
+    "R01": {
+      "status": "verified",
+      "historicalEvidence": "docs/VERIFICATION.md: 5 November 2026 historical run"
+    },
+    "R02": {
+      "status": "verified",
+      "historicalEvidence": "docs/VERIFICATION.md: 5 November 2026 historical run"
+    },
+    "R03": {
+      "status": "verified",
+      "historicalEvidence": "docs/VERIFICATION.md: existing UI/network review"
+    },
+    "R04": {
+      "status": "verified",
+      "historicalEvidence": "docs/VERIFICATION.md: 27 database and 61 HTTP checks"
+    },
+    "R05": {
+      "status": "verified",
+      "historicalEvidence": "docs/ANALYTICS.md and docs/VERIFICATION.md"
+    },
+    "R06": {
+      "status": "verified",
+      "historicalEvidence": "docs/VERIFICATION.md: 20 round scenarios and 14 accessibility scans"
+    },
+    "R07": {
+      "status": "pending"
+    },
+    "R08": {
+      "status": "pending"
+    },
+    "R09": {
+      "status": "pending"
+    },
+    "R10": {
+      "status": "pending"
+    },
+    "R11": {
+      "status": "pending"
+    },
+    "R12": {
+      "status": "pending"
+    },
+    "R13": {
+      "status": "pending"
+    },
+    "R14": {
+      "status": "pending"
+    },
+    "R15": {
+      "status": "pending"
+    },
+    "R16": {
+      "status": "pending"
+    },
+    "R17": {
+      "status": "pending"
+    },
+    "R18": {
+      "status": "pending"
+    },
+    "R19": {
+      "status": "pending"
+    },
+    "R20": {
+      "status": "pending"
+    },
+    "R21": {
+      "status": "pending"
+    },
+    "R22": {
+      "status": "pending"
+    },
+    "R23": {
+      "status": "pending"
+    },
+    "R24": {
+      "status": "pending"
+    },
+    "R25": {
+      "status": "pending"
+    },
+    "R26": {
+      "status": "pending"
+    },
+    "R27": {
+      "status": "pending"
+    },
+    "R28": {
+      "status": "pending"
+    },
+    "R29": {
+      "status": "pending"
+    },
+    "R30": {
+      "status": "pending"
+    },
+    "R31": {
+      "status": "pending"
+    },
+    "R32": {
+      "status": "pending"
+    },
+    "R33": {
+      "status": "pending"
+    },
+    "R34": {
+      "status": "pending"
+    },
+    "R35": {
+      "status": "pending"
+    },
+    "R36": {
+      "status": "pending"
+    }
+  },
+  "updatedAt": "2026-11-05T11:06:24.779Z"
+}

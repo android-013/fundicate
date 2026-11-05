@@ -1,0 +1,457 @@
+{
+  "schemaVersion": 1,
+  "requirements": [
+    {
+      "id": "R01",
+      "title": "Existing registration, sign-in, sessions and profiles",
+      "part": 1,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "verified",
+      "baselineEvidence": "docs/VERIFICATION.md: 5 November 2026 historical run",
+      "acceptance": [
+        "Preserve secure sessions, profile settings and account-scoped authorization."
+      ]
+    },
+    {
+      "id": "R02",
+      "title": "Existing communities, one administrator and multiple moderators",
+      "part": 1,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "verified",
+      "baselineEvidence": "docs/VERIFICATION.md: 5 November 2026 historical run",
+      "acceptance": [
+        "Preserve community discovery, role separation and exactly one active administrator."
+      ]
+    },
+    {
+      "id": "R03",
+      "title": "Blockchain-inspired responsive interface and networking",
+      "part": 1,
+      "source": "user-existing",
+      "mandatory": true,
+      "initialStatus": "verified",
+      "baselineEvidence": "docs/VERIFICATION.md: existing UI/network review",
+      "acceptance": [
+        "Keep branding, community connections, mobile navigation and accessible layouts."
+      ]
+    },
+    {
+      "id": "R04",
+      "title": "Existing proposals, simulated treasury and immutable audit history",
+      "part": 1,
+      "source": "existing",
+      "mandatory": true,
+      "initialStatus": "verified",
+      "baselineEvidence": "docs/VERIFICATION.md: 27 database and 61 HTTP checks",
+      "acceptance": [
+        "Preserve legacy proposals, balanced ledger history, replay and overspending protection."
+      ]
+    },
+    {
+      "id": "R05",
+      "title": "Simple dashboard and deep analytics extras",
+      "part": 1,
+      "source": "user-existing",
+      "mandatory": true,
+      "initialStatus": "verified",
+      "baselineEvidence": "docs/ANALYTICS.md and docs/VERIFICATION.md",
+      "acceptance": [
+        "Keep dashboard customization, saved views, filters, source inspection, exact currency groups and CSV exports."
+      ]
+    },
+    {
+      "id": "R06",
+      "title": "Existing multi-scheme rounds and two equal-weight sealed elections",
+      "part": 1,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "verified",
+      "baselineEvidence": "docs/VERIFICATION.md: 20 round scenarios and 14 accessibility scans",
+      "acceptance": [
+        "Preserve member/public submissions, frozen voters, 24-hour screening and separate FPTP selection, stage privacy and published results."
+      ]
+    },
+    {
+      "id": "R07",
+      "title": "Contribution declarations for every member including the creator",
+      "part": 2,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "New strict-profile membership records include a declared contribution, questions and introduction as applicable, including the founding administrator.",
+        "Legacy unknown pledges remain unknown; declarations never masquerade as received funds."
+      ]
+    },
+    {
+      "id": "R08",
+      "title": "PDF-conforming governance with governed administrator succession",
+      "part": 2,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "New strict-profile admissions require member majority with published quorum; removal requires exact two-thirds of valid YES/NO power.",
+        "An administrator can be removed through a member decision with an eligible, published successor and atomic authority transfer.",
+        "Preserve legacy REVIEW and transfer behavior as versioned extras; staff receive no voting privilege from role alone.",
+        "Strict-profile staff cannot use unilateral suspension or voter stripping to shape an open ballot; legacy emergency suspension remains an explicitly versioned extra with regression coverage."
+      ]
+    },
+    {
+      "id": "R09",
+      "title": "Staff-only, member and everyone submission policies",
+      "part": 2,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Add STAFF, retain MEMBERS and EVERYONE, and enforce each policy server-side.",
+        "Staff publish agendas; permitted members and outsiders submit schemes, with clear funding-request categories and recipient information."
+      ]
+    },
+    {
+      "id": "R10",
+      "title": "Immutable versioned governance and asset snapshots",
+      "part": 2,
+      "source": "original-and-user",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Preserve published V1 rounds as equal-weight, decision-only rounds without retroactive payment rights.",
+        "New funded rounds lock all supported rules, asset ID/decimals, deadlines, caps and settlement policy before contributions/votes.",
+        "Unsupported future veto/method settings are rejected rather than silently ignored."
+      ]
+    },
+    {
+      "id": "R11",
+      "title": "Prepaid round funds with contributor ownership and segregation",
+      "part": 2,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Record actual simulated received contributions separately from pledges and communal legacy funds.",
+        "Move committed amounts into scoped held/reserved accounts so legacy TREASURY spending cannot consume them.",
+        "Every deposit is balanced, replay-safe, attributable and reconciled per round and asset."
+      ]
+    },
+    {
+      "id": "R12",
+      "title": "Published contribution limits, targets and collection cutoff",
+      "part": 2,
+      "source": "structured-enhancement",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Publish minimum/maximum contributions, target, cutoff and failed-target/empty-round behavior.",
+        "Freeze the paid contribution basis at the declared cutoff; later deposits never alter an open electorate or its weights."
+      ]
+    },
+    {
+      "id": "R13",
+      "title": "Winner-all settlement and exact contributor refunds",
+      "part": 2,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Deliver a full local funded FPTP round with explicitly veto-disabled rules, safe winner-all settlement and receipts.",
+        "Ties, no quorum, no eligible schemes, failed targets, unused caps and refunds have published deterministic handling.",
+        "Refund the original contributor/payment source even after membership changes; preserve exact minor units and replay safety."
+      ]
+    },
+    {
+      "id": "R14",
+      "title": "Separate financial lifecycle and durable execution recovery",
+      "part": 2,
+      "source": "engineering-foundation",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Keep election state separate from collection/reservation/execution/refund state and immutable posted history.",
+        "Use unique operation identities and durable outbox/attempt records; external submission is never inside a retryable database transaction.",
+        "Concurrent settle/refund/retry and restart cases cannot double-spend or double-refund."
+      ]
+    },
+    {
+      "id": "R15",
+      "title": "Equal and paid-contribution-weighted votes by stage",
+      "part": 3,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Configure screening, selection and veto weights independently, using immutable eligible paid-contribution snapshots.",
+        "Publish quorum/approval/abstention denominators; reject all-zero weighted electorates and never sum different assets.",
+        "Deposits, departures and role changes after cutoff do not rewrite frozen power or valid earlier ballots."
+      ]
+    },
+    {
+      "id": "R16",
+      "title": "Winner-all, proportional and custom ranked allocation",
+      "part": 3,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Support all three policies with published request caps, tie handling, too-few-winner and residual rules.",
+        "Ranked shares validate to 100%; integer deterministic remainder allocation preserves every minor unit.",
+        "A versioned immutable allocation plan is the sole source of payout instructions."
+      ]
+    },
+    {
+      "id": "R17",
+      "title": "Optional 24-hour, 90-percent rejection veto",
+      "part": 3,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Publish enabled/disabled and equal/weighted veto configuration before funding and freeze its electorate/power.",
+        "When enabled, show the result/allocation then hold all payouts through the full 24-hour window.",
+        "At least 90% of all frozen eligible veto power rejects the whole round; successful rejection refunds contributors."
+      ]
+    },
+    {
+      "id": "R18",
+      "title": "Central settlement gates and exact conservation across allocation modes",
+      "part": 3,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Every controller, worker, legacy bridge and retry uses the same eligibility gate; configured vetoes cannot be bypassed.",
+        "Received = held + reserved + paid + refunded per round/asset, with fees zero unless explicitly versioned and published.",
+        "Unknown execution outcomes reconcile before new submission or release; no hidden redistribution of unused shares."
+      ]
+    },
+    {
+      "id": "R19",
+      "title": "Optional capped contribution-weighted mode",
+      "part": 3,
+      "source": "structured-optional",
+      "mandatory": false,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Only implement as a separately named published option with satisfiable caps and exact frozen weights; ordinary contribution weighting remains available."
+      ]
+    },
+    {
+      "id": "R20",
+      "title": "Ranked-choice/IRV selection",
+      "part": 4,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Validate ranked ballots and publish elimination, exhaustion and tie rules.",
+        "Provide deterministic replay and reference/edge-case tests with equal and defined weighted ballots."
+      ]
+    },
+    {
+      "id": "R21",
+      "title": "Multi-winner STV selection",
+      "part": 4,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Version the quota, seat count, surplus-transfer precision and tie rules; test quota and conservation vectors.",
+        "Keep elected winners distinct from the separate money-allocation policy."
+      ]
+    },
+    {
+      "id": "R22",
+      "title": "Elo-style pairwise polling",
+      "part": 4,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Publish initialization, K/update order or period semantics, draws, pair scheduling and tie rules before voting.",
+        "Validate pairwise ballots and deterministic result transcripts; distinguish Elo from Glicko-2."
+      ]
+    },
+    {
+      "id": "R23",
+      "title": "Glicko-2 replaces the document's GECCO label",
+      "part": 4,
+      "source": "user-confirmed",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Use GLICKO_2 with rating, deviation, volatility, rating-period and convergence parameters.",
+        "Pass Mark Glickman's official example vectors for the standard algorithm; separately specify/test any weighted extension.",
+        "Never relabel Elo or a generic pairwise score as Glicko-2."
+      ]
+    },
+    {
+      "id": "R24",
+      "title": "Forced-choice pairwise plus-one/minus-one polling",
+      "part": 4,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Support one-versus-one comparisons without a draw, with published +1/-1 scoring and declared weight treatment.",
+        "Reject duplicate, incomplete/ineligible and out-of-round pairs according to the published ballot contract."
+      ]
+    },
+    {
+      "id": "R25",
+      "title": "All-method privacy, result/weight/allocation compatibility and replay",
+      "part": 4,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "All six methods retain frozen eligibility, one immutable complete ballot per permitted unit and stage-specific secrecy across UI, analytics, audits and exports.",
+        "Publish each method's ranking, ties, support measure and allocation transformation; do not proportionally divide raw Elo/Glicko ratings into money.",
+        "Define and test the supported equal/weighted and allocation combinations before exposing them; never silently substitute a method or omit a required feature.",
+        "Close all 36 required cells in workflow/method-matrix.json (six methods, two weight modes, three allocation policies) with named semantics and evidence; an unresolved mandatory cell blocks Part 4 unless the user explicitly approves an exclusion."
+      ]
+    },
+    {
+      "id": "R26",
+      "title": "One-to-five-star member, scheme/proposal and agenda/round reviews",
+      "part": 4,
+      "source": "original",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Support every required target with a 1-5-star score and written review, aggregate counts and average.",
+        "Separate presentation/participation reviews from verified recipient performance; no invented project-outcome claims."
+      ]
+    },
+    {
+      "id": "R27",
+      "title": "Participation-qualified reputation and accountable moderation",
+      "part": 4,
+      "source": "structured-enhancement",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Require recorded shared participation, reject self/duplicate/ineligible reviews and keep edit/moderation history.",
+        "Provide abuse reports, moderation reasons and appeals without silently rewriting historical outcomes or raw ratings."
+      ]
+    },
+    {
+      "id": "R28",
+      "title": "Secure wallet ownership, explicit testnet assets and contract integration",
+      "part": 5,
+      "source": "user-confirmed",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Link wallets with expiring domain/network-bound single-use signed challenges and replay protection.",
+        "Deploy/test a treasury contract with scoped authorization, operation nonces and immutable allocation references.",
+        "Keep native NEAR precision and asset identity distinct from USD/BDT/EUR; protect keys and disclose the governance/custody trust model.",
+        "Contract-level tests reject wrong signer/round/asset/recipient, over-allocation, duplicate nonce, redirected refunds and payout-before-veto bypasses."
+      ]
+    },
+    {
+      "id": "R29",
+      "title": "Real NEAR testnet deposit, payout and refund finality proof",
+      "part": 5,
+      "source": "user-confirmed",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Obtain genuine wallet approvals/funding and execute a testnet deposit, payout and refund through the app/contract.",
+        "Independently query RPC at FINAL and verify successful receipt outcomes plus signer, receiver, actions, amount, asset, network and operation identity.",
+        "A compiled adapter, mock receipt, transaction hash alone or unperformed external action cannot satisfy completion."
+      ]
+    },
+    {
+      "id": "R30",
+      "title": "Live outbox reconciliation, failure handling and restart recovery",
+      "part": 5,
+      "source": "engineering-and-user",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Lost responses, RPC failures, worker restart, duplicate callbacks and pending operations reconcile without duplicate external transfers.",
+        "A final failure safely releases/resolves reservations; an unknown status does not trigger an unsafe refund or retry.",
+        "Dispatch live execution separately from the global legacy simulation adapter; account for gas/storage through a separate operating reserve and reconcile custody against principal liabilities."
+      ]
+    },
+    {
+      "id": "R31",
+      "title": "Integrated deep analytics for every new subsystem",
+      "part": 5,
+      "source": "user-existing-and-more",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Extend the existing simple overview/drill-down model to round funds, weighted elections, allocations, vetoes, refunds, ratings and chain observations.",
+        "Preserve saved views/customization and add scoped source links/CSV; hidden ballots never leak through reports, search, aggregates or exports.",
+        "Reconcile each monetary/currency/asset group without assumed FX or fabricated historic counts."
+      ]
+    },
+    {
+      "id": "R32",
+      "title": "Reusable templates and explicit lifecycle maintenance",
+      "part": 5,
+      "source": "structured-enhancement",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Allow reusable agenda templates while each published round keeps its immutable rule version.",
+        "Provide idempotent scheduled/manual finalization and recovery tools with logs; unauthorized staff cannot override locked outcomes."
+      ]
+    },
+    {
+      "id": "R33",
+      "title": "Operational handoff and sensitive-action hardening",
+      "part": 5,
+      "source": "committed-enhancement",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Provide environment validation, public health/diagnostic boundaries, backup/restore instructions and a verified recovery exercise in isolated data.",
+        "Require appropriate reauthentication for sensitive authority/wallet actions and preserve account/session abuse controls.",
+        "Document remaining production limitations honestly; do not enable mainnet or publish a hosted deployment implicitly."
+      ]
+    },
+    {
+      "id": "R34",
+      "title": "Reproducible large fictional demo and separate real-chain demonstration",
+      "part": 5,
+      "source": "structured-demo-and-user",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Provide an opt-in isolated 100-member, 100,000-BDT, three-scheme demonstration showing sealed voting, allocation and refund paths.",
+        "Demonstrate real testnet assets separately without pretending BDT values are NEAR or resetting the user's demo database."
+      ]
+    },
+    {
+      "id": "R35",
+      "title": "Final full-requirements audit and verified release handoff",
+      "part": 5,
+      "source": "user",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Every mandatory requirement has implementation and fresh check/review evidence, including actual NEAR finality artifacts.",
+        "Run migration, money/privacy/authorization, HTTP, browser, accessibility, production-build and independent-review gates against the final source snapshot.",
+        "Do not convert deferred, unverified or externally blocked mandatory work into complete status."
+      ]
+    },
+    {
+      "id": "R36",
+      "title": "Preserve all existing extra features and user data throughout",
+      "part": 5,
+      "source": "user-confirmed",
+      "mandatory": true,
+      "initialStatus": "pending",
+      "acceptance": [
+        "Every part retains existing navigation, dashboards, deep analytics, saved views, CSV, community networking, legacy proposals, treasury receipts and immutable history.",
+        "Use additive/versioned migrations; no fabricated pledges, ownership, hashes, confirmations, or destructive demo resets.",
+        "Legacy public ballots remain clearly identified as historical behavior, while new PDF-conforming flows use the documented secrecy rules."
+      ]
+    }
+  ]
+}

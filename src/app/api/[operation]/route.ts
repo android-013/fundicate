@@ -15,6 +15,13 @@ import { db } from "@/lib/db";
 import * as service from "@/lib/service";
 import { profileSchema, uuid } from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
+import {
+  createFundingRound,
+  submitFundingScheme,
+  fundingRoundAction,
+  castScreeningVote,
+  castSelectionVote,
+} from "@/lib/rounds";
 
 export const runtime = "nodejs";
 export async function POST(
@@ -83,12 +90,46 @@ export async function POST(
     ensure(user, "Please sign in to continue.", 401);
     await rateLimit(`mutation:${user.id}`, 180, 60);
     if (
-      ["vote", "contribute", "proposal-action", "application"].includes(
-        operation,
-      )
+      [
+        "vote",
+        "contribute",
+        "proposal-action",
+        "application",
+        "round-screen-vote",
+        "round-selection-vote",
+        "round-action",
+        "round-scheme",
+      ].includes(operation)
     )
       await rateLimit(`${operation}:${user.id}`, 30, 60);
     switch (operation) {
+      case "funding-round": {
+        const round = await createFundingRound(user.id, body);
+        const community = await db.community.findUniqueOrThrow({
+          where: { id: round.communityId },
+          select: { slug: true },
+        });
+        result = {
+          redirect: `/communities/${community.slug}/rounds/${round.id}`,
+        };
+        break;
+      }
+      case "round-scheme":
+        await submitFundingScheme(user.id, body);
+        result = { message: "Scheme submitted to the round." };
+        break;
+      case "round-action":
+        await fundingRoundAction(user.id, body);
+        result = { message: "Funding round updated." };
+        break;
+      case "round-screen-vote":
+        await castScreeningVote(user.id, body);
+        result = { message: "Your screening ballot is sealed and recorded." };
+        break;
+      case "round-selection-vote":
+        await castSelectionVote(user.id, body);
+        result = { message: "Your selection ballot is sealed and recorded." };
+        break;
       case "dashboard-preferences":
         await saveDashboardPreference(user.id, body);
         result = { message: "Your dashboard layout is saved." };

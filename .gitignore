@@ -9,3 +9,5 @@ coverage/
 next-env.d.ts
 work/
 test-results/
+workflow/.progress.lock
+workflow/*.tmp-*

@@ -3561,3 +3561,203 @@ td small {
 .active-filter a {
   color: var(--accent);
 }
+/* Multi-scheme funding rounds share the existing workspace design system. */
+.round-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+.round-card {
+  padding: 24px;
+  display: block;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+.round-card:hover {
+  border-color: #aaa1ff;
+  transform: translateY(-2px);
+}
+.round-card h3 {
+  margin: 18px 0 10px;
+  font-size: 20px;
+}
+.round-card p {
+  color: #b7c4dc;
+  line-height: 1.65;
+}
+.round-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 12px;
+  color: #b7c4dc;
+  margin-top: 24px;
+}
+.round-pagination {
+  margin: 24px 0;
+}
+.round-title {
+  font-size: clamp(25px, 3vw, 36px);
+  margin: 16px 0 10px;
+  overflow-wrap: anywhere;
+}
+.round-stage-track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none;
+  padding: 0;
+  margin: 28px 0;
+  gap: 12px;
+}
+.round-stage-track li {
+  border: 1px solid #35425c;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #c0cce3;
+  background: #151e30;
+  font-size: 13px;
+}
+.round-stage-track li > span {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #28334c;
+}
+.round-stage-track li.current {
+  color: #f5f5ff;
+  border-color: #aaa1ff;
+  background: #262640;
+}
+.round-stage-track li.complete > span {
+  color: #82e9e7;
+}
+.round-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 22px;
+  align-items: start;
+}
+.round-main,
+.round-sidebar,
+.round-schemes {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.round-main h3,
+.round-sidebar h3 {
+  margin-bottom: 16px;
+}
+.round-main p {
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.round-request {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 0;
+}
+.round-request strong {
+  font-size: 24px;
+  color: #8ce7e7;
+}
+.round-request span,
+.round-screen-result span {
+  color: #c0cce3;
+  font-size: 12px;
+}
+.round-screen-result {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid #35425c;
+  padding: 18px 0 0;
+  margin-top: 20px;
+}
+.round-screen-result strong {
+  font-size: 13px;
+  color: #dcdaff;
+}
+.round-result {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  border-color: #8b84cb;
+  background: linear-gradient(120deg, #272741, #19263c);
+}
+.round-result > svg {
+  flex-shrink: 0;
+  color: #bbb1ff;
+}
+.round-results {
+  display: grid;
+  gap: 16px;
+}
+.round-results > div {
+  padding: 14px 0;
+  border-bottom: 1px solid #35425c;
+  gap: 14px;
+}
+.round-form-panel {
+  max-width: 850px;
+}
+.round-sidebar .detail-list > div {
+  align-items: flex-start;
+}
+.round-sidebar .detail-list dd {
+  max-width: 160px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.round-main details > summary {
+  cursor: pointer;
+  color: #dedaff;
+  font-weight: 600;
+}
+.round-main .table-scroll {
+  margin-top: 16px;
+}
+.round-schemes > .panel {
+  min-width: 0;
+}
+@media (max-width: 1100px) {
+  .round-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .round-sidebar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 680px) {
+  .round-list,
+  .round-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .round-stage-track {
+    gap: 6px;
+  }
+  .round-stage-track li {
+    flex-direction: column;
+    padding: 12px 3px;
+    gap: 8px;
+    font-size: 10px;
+  }
+  .round-card {
+    padding: 20px;
+  }
+  .round-layout {
+    gap: 18px;
+  }
+  .round-result {
+    gap: 10px;
+  }
+}

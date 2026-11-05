@@ -30,5 +30,6 @@ export const config = {
     "/settings/:path*",
     "/communities/new",
     "/communities/:slug/proposals/new",
+    "/communities/:slug/rounds/new",
   ],
 };

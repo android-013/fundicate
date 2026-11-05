@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "ownerPart": 4,
+  "requiredCells": 36,
+  "completionRule": "All required cells need versioned semantics and evidence; unresolved cells block Part 4 unless the user explicitly approves a scope amendment.",
+  "cells": [
+    {
+      "id": "FPTP-EQUAL-WINNER_ALL",
+      "method": "FPTP",
+      "weight": "EQUAL",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "FPTP-EQUAL-PROPORTIONAL",
+      "method": "FPTP",
+      "weight": "EQUAL",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "FPTP-EQUAL-RANKED_CUTS",
+      "method": "FPTP",
+      "weight": "EQUAL",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "FPTP-CONTRIBUTION-WINNER_ALL",
+      "method": "FPTP",
+      "weight": "CONTRIBUTION",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "FPTP-CONTRIBUTION-PROPORTIONAL",
+      "method": "FPTP",
+      "weight": "CONTRIBUTION",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "FPTP-CONTRIBUTION-RANKED_CUTS",
+      "method": "FPTP",
+      "weight": "CONTRIBUTION",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "IRV-EQUAL-WINNER_ALL",
+      "method": "IRV",
+      "weight": "EQUAL",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "IRV-EQUAL-PROPORTIONAL",
+      "method": "IRV",
+      "weight": "EQUAL",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "IRV-EQUAL-RANKED_CUTS",
+      "method": "IRV",
+      "weight": "EQUAL",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "IRV-CONTRIBUTION-WINNER_ALL",
+      "method": "IRV",
+      "weight": "CONTRIBUTION",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "IRV-CONTRIBUTION-PROPORTIONAL",
+      "method": "IRV",
+      "weight": "CONTRIBUTION",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "IRV-CONTRIBUTION-RANKED_CUTS",
+      "method": "IRV",
+      "weight": "CONTRIBUTION",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "STV-EQUAL-WINNER_ALL",
+      "method": "STV",
+      "weight": "EQUAL",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "STV-EQUAL-PROPORTIONAL",
+      "method": "STV",
+      "weight": "EQUAL",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "STV-EQUAL-RANKED_CUTS",
+      "method": "STV",
+      "weight": "EQUAL",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "STV-CONTRIBUTION-WINNER_ALL",
+      "method": "STV",
+      "weight": "CONTRIBUTION",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "STV-CONTRIBUTION-PROPORTIONAL",
+      "method": "STV",
+      "weight": "CONTRIBUTION",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "STV-CONTRIBUTION-RANKED_CUTS",
+      "method": "STV",
+      "weight": "CONTRIBUTION",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "ELO-EQUAL-WINNER_ALL",
+      "method": "ELO",
+      "weight": "EQUAL",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "ELO-EQUAL-PROPORTIONAL",
+      "method": "ELO",
+      "weight": "EQUAL",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "ELO-EQUAL-RANKED_CUTS",
+      "method": "ELO",
+      "weight": "EQUAL",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "ELO-CONTRIBUTION-WINNER_ALL",
+      "method": "ELO",
+      "weight": "CONTRIBUTION",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "ELO-CONTRIBUTION-PROPORTIONAL",
+      "method": "ELO",
+      "weight": "CONTRIBUTION",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "ELO-CONTRIBUTION-RANKED_CUTS",
+      "method": "ELO",
+      "weight": "CONTRIBUTION",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "GLICKO_2-EQUAL-WINNER_ALL",
+      "method": "GLICKO_2",
+      "weight": "EQUAL",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "GLICKO_2-EQUAL-PROPORTIONAL",
+      "method": "GLICKO_2",
+      "weight": "EQUAL",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "GLICKO_2-EQUAL-RANKED_CUTS",
+      "method": "GLICKO_2",
+      "weight": "EQUAL",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "GLICKO_2-CONTRIBUTION-WINNER_ALL",
+      "method": "GLICKO_2",
+      "weight": "CONTRIBUTION",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "GLICKO_2-CONTRIBUTION-PROPORTIONAL",
+      "method": "GLICKO_2",
+      "weight": "CONTRIBUTION",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "GLICKO_2-CONTRIBUTION-RANKED_CUTS",
+      "method": "GLICKO_2",
+      "weight": "CONTRIBUTION",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "FORCED_PAIRWISE-EQUAL-WINNER_ALL",
+      "method": "FORCED_PAIRWISE",
+      "weight": "EQUAL",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "FORCED_PAIRWISE-EQUAL-PROPORTIONAL",
+      "method": "FORCED_PAIRWISE",
+      "weight": "EQUAL",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "FORCED_PAIRWISE-EQUAL-RANKED_CUTS",
+      "method": "FORCED_PAIRWISE",
+      "weight": "EQUAL",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    },
+    {
+      "id": "FORCED_PAIRWISE-CONTRIBUTION-WINNER_ALL",
+      "method": "FORCED_PAIRWISE",
+      "weight": "CONTRIBUTION",
+      "allocation": "WINNER_ALL",
+      "required": true
+    },
+    {
+      "id": "FORCED_PAIRWISE-CONTRIBUTION-PROPORTIONAL",
+      "method": "FORCED_PAIRWISE",
+      "weight": "CONTRIBUTION",
+      "allocation": "PROPORTIONAL",
+      "required": true
+    },
+    {
+      "id": "FORCED_PAIRWISE-CONTRIBUTION-RANKED_CUTS",
+      "method": "FORCED_PAIRWISE",
+      "weight": "CONTRIBUTION",
+      "allocation": "RANKED_CUTS",
+      "required": true
+    }
+  ]
+}

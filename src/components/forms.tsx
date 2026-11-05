@@ -48,6 +48,10 @@ export function ActionForm({
         if (body.type === "GOVERNANCE")
           body.allowMemberProposals = form.get("allowMemberProposals") === "on";
       }
+      if (operation === "funding-round")
+        body.submissionsCloseAt = new Date(
+          String(body.submissionsCloseAt),
+        ).toISOString();
       if (operation === "contribute") {
         const token = key || crypto.randomUUID();
         setKey(token);

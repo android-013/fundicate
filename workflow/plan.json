@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "totalParts": 5,
+  "project": "Fundicate",
+  "sourceDocument": "C:/Users/Refat/Downloads/Money_Heist_Formatted.md",
+  "masterPlan": "docs/MASTER-PLAN.md",
+  "confirmedDecisions": {
+    "geccoMeans": "GLICKO_2",
+    "finalBlockchainTarget": "verified-near-testnet",
+    "allExistingWorkIsPart": 1,
+    "trigger": "next",
+    "partsPerTrigger": 1,
+    "preserveExistingFeatures": true
+  },
+  "parts": [
+    {
+      "number": 1,
+      "title": "Existing application and first capability upgrades",
+      "requirements": ["R01", "R02", "R03", "R04", "R05", "R06"],
+      "checks": [],
+      "handoff": "docs/parts/part-01.md"
+    },
+    {
+      "number": 2,
+      "title": "Funded rounds, accounting and governance foundation",
+      "requirements": ["R07", "R08", "R09", "R10", "R11", "R12", "R13", "R14"],
+      "checks": [
+        "workflow-tests",
+        "unit",
+        "typecheck",
+        "lint",
+        "integration",
+        "build",
+        "http",
+        "browser",
+        "rounds",
+        "accessibility",
+        "funds"
+      ],
+      "handoff": "docs/parts/part-02.md"
+    },
+    {
+      "number": 3,
+      "title": "Weighted governance, allocation policies and rejection veto",
+      "requirements": ["R15", "R16", "R17", "R18"],
+      "checks": [
+        "workflow-tests",
+        "unit",
+        "typecheck",
+        "lint",
+        "integration",
+        "build",
+        "http",
+        "browser",
+        "rounds",
+        "accessibility",
+        "funds",
+        "elections"
+      ],
+      "handoff": "docs/parts/part-03.md"
+    },
+    {
+      "number": 4,
+      "title": "Complete election methods and participation-based reputation",
+      "requirements": ["R20", "R21", "R22", "R23", "R24", "R25", "R26", "R27"],
+      "checks": [
+        "workflow-tests",
+        "unit",
+        "typecheck",
+        "lint",
+        "integration",
+        "build",
+        "http",
+        "browser",
+        "rounds",
+        "accessibility",
+        "funds",
+        "elections",
+        "reputation"
+      ],
+      "handoff": "docs/parts/part-04.md"
+    },
+    {
+      "number": 5,
+      "title": "Verified NEAR testnet, integrated analytics and full-system audit",
+      "requirements": [
+        "R28",
+        "R29",
+        "R30",
+        "R31",
+        "R32",
+        "R33",
+        "R34",
+        "R35",
+        "R36"
+      ],
+      "checks": [
+        "workflow-tests",
+        "unit",
+        "typecheck",
+        "lint",
+        "integration",
+        "build",
+        "http",
+        "browser",
+        "rounds",
+        "accessibility",
+        "funds",
+        "elections",
+        "reputation",
+        "near-testnet"
+      ],
+      "handoff": "docs/parts/part-05.md"
+    }
+  ]
+}

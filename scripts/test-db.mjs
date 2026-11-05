@@ -2,7 +2,7 @@ import "dotenv/config";
 import pg from "pg";
 import { spawn, spawnSync } from "node:child_process";
 const mode = process.argv[2] || "integration";
-if (!["integration", "e2e"].includes(mode))
+if (!["integration", "e2e", "rounds"].includes(mode))
   throw new Error("Unknown test mode");
 const databaseName = `fundicate_test_${Date.now()}_${process.pid}`;
 if (!/^fundicate_test_\d+_\d+$/.test(databaseName))
@@ -30,7 +30,7 @@ try {
     { env, stdio: "inherit", windowsHide: true },
   );
   if (migrate.status !== 0) throw new Error("Test database migration failed");
-  if (mode === "e2e") {
+  if (mode !== "integration") {
     server = spawn(
       process.execPath,
       [

@@ -1,5 +1,28 @@
 # Verification results
 
+## Capability phases 1–2 — 5 November 2026
+
+An additive fourth migration, `20261105000000_funding_rounds`, introduces funding rounds, competing schemes, frozen electorates and separate screening/selection ballots. Existing proposals, financial records and saved dashboard/analytics settings are retained. No reset or reseed was performed.
+
+| Check                               | Result                                                                                   |
+| ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| `npm test`                          | PASS — 31 unit tests                                                                     |
+| `npm run test:integration`          | PASS — all 27 existing PostgreSQL checks with the new schema                             |
+| `npm run test:e2e`                  | PASS — all 61 existing HTTP checks                                                       |
+| `npm run test:browser`              | PASS — all 75 existing browser layout/interaction checks                                 |
+| `npm run test:rounds`               | PASS — 20 new round authorization, integrity, privacy, HTTP and browser scenarios        |
+| Round accessibility                 | PASS — 14 desktop/mobile axe WCAG A/AA scans, no violations                              |
+| `npm run typecheck`, `npm run lint` | PASS — no errors or warnings                                                             |
+| `npm run build`                     | PASS — Prisma generation, TypeScript, Webpack compilation and complete static generation |
+
+The new round scenarios verify staff-only creation, authentication/origin protection, ignored forged ownership/clock fields, private drafts, submission deadlines, public/member submission policy, immutable rules and scheme content, submission caps, scoped identifiers, frozen voters, exclusion of suspended/late/non-members, duplicate ballots, PostgreSQL immutability, separate elections, stage-specific hidden results, ties, no quorum, empty rounds and rejected schemes. A recorded winner cannot be rewritten or executed through the legacy payout endpoint; round completion creates no ledger transaction or legacy proposal.
+
+Browser checks create/open a round, submit a scheme, cast both screening and selection ballots, inspect published results, verify visitor privacy, and follow the existing proposal navigation. Layouts are checked at 1440, 390 and 320 pixels; accessibility scans cover the new creation, submission, screening, selection, list and result interfaces. No browser runtime errors or horizontal overflow were observed. Test databases are uniquely named and dropped by the isolated runner; the demo database is preserved.
+
+Draft exclusion checks validate the not-found content and absence of draft fields as well as service-level authorization. Next.js can return HTTP 200 when a not-found boundary occurs after streaming begins; the bundled Next.js documentation describes this behavior.
+
+This batch completes the first two phases of [UPGRADE-PHASES.md](UPGRADE-PHASES.md). Round-specific fund commitments, reservations, settlement/refunds, allocation options, vetoes, advanced voting and ratings remain future phases. New round ballot privacy is enforced for application users until stage finalization; existing proposal ballots retain their earlier public behavior. These local checks are not a production security or complete manual accessibility audit.
+
 ## UI and analytics expansion — 3 November 2026
 
 The blockchain-inspired redesign and analytics expansion were verified against the existing local application. The third migration, `20261103000000_analytics_preferences`, adds per-account dashboard preferences and saved analytics views; existing demo and financial records were preserved.

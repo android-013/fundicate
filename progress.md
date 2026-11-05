@@ -1,7 +1,22 @@
-Current phase: 11 — Expanded local MVP verified
-Overall progress: 100% of the expanded local MVP
+<!-- delivery-status:start -->
+Current delivery: 1/5 parts complete. This is milestone count, not PDF feature coverage.
 
-Progress measures the local MVP checklist, not elapsed time or production readiness. Real NEAR integration and the production limits below remain explicitly outside the completed simulation.
+State: in_progress. Next eligible part: 2. Revision: 2.
+
+| Part | Scope | Status |
+| --- | --- | --- |
+| 1/5 | Existing application and first capability upgrades | complete |
+| 2/5 | Funded rounds, accounting and governance foundation | in_progress |
+| 3/5 | Weighted governance, allocation policies and rejection veto | pending |
+| 4/5 | Complete election methods and participation-based reputation | pending |
+| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | pending |
+
+Active run: c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01; part 2. Resume it before advancing.
+<!-- delivery-status:end -->
+
+The canonical plan is `docs/MASTER-PLAN.md`; machine state is `workflow/state.json`. All work recorded below is historical **Part 1/5**, including the earlier capability phases 1–2. The historical 100% labels describe that earlier scope, not the full PDF or this new five-part program. Milestone count and feature coverage are different measurements.
+
+## Historical Part 1 implementation log
 
 ## Phase 1 — Architecture · 100%
 
@@ -76,12 +91,33 @@ Progress measures the local MVP checklist, not elapsed time or production readin
 - [x] TypeScript, lint and full production build pass.
 - [x] Metric definitions, operating limits, analytics guide and updated handoff documented.
 
+## Capability phase 1 — Multi-scheme funding rounds · Complete
+
+- [x] Add separate rounds and competing schemes without converting or deleting legacy proposals.
+- [x] Staff-owned drafts, published locked rules, member/public submissions, scoped authorization and bounded submission limits.
+- [x] Immutable scheme content and an active-member snapshot shared by both voting stages.
+
+## Capability phase 2 — Separate screening and selection · Complete
+
+- [x] 24-hour majority screening, independent first-past-the-post selection and explicit quorum/tie/deadline rules.
+- [x] New round ballots stay hidden until their stage is finalized; voters see their own choice.
+- [x] Published results/ballots, immutable votes, no staff cancellation after publication and safe empty/no-quorum outcomes.
+- [x] 31 unit tests, 27 PostgreSQL checks, 61 HTTP checks and 75 existing browser checks pass.
+- [x] 20 new round scenarios and 14 round accessibility scans pass; desktop/mobile/320-pixel layouts checked.
+- [x] TypeScript, lint, full production build and additive fourth migration pass; demo financial records preserved.
+
+## Superseded capability-phase numbering
+
+The user regrouped all completed work into Part 1. The former pending capability phases are now expanded into delivery Parts 2–5 in `docs/MASTER-PLAN.md`: funded rounds/accounting; weighted allocation/veto; advanced methods/reputation; verified NEAR testnet and full integration.
+
+Round selections currently record a preference without moving or reserving funds. Existing dashboard, analytics, proposals and treasury features remain available. See `docs/UPGRADE-PHASES.md` for rules and boundaries.
+
 ## Future work — not claimed as complete
 
 - [ ] NEAR wallet linking, treasury contract, testnet submission and verified chain receipts.
 - [ ] Durable outbox/reservations, chain reconciliation and safe external retry processing.
 - [ ] Production account recovery, email verification, MFA and stronger transfer reauthentication.
 - [ ] Production deployment/security review, monitoring, backups, pagination on remaining community lists and scheduled maintenance/finalization.
-- [ ] File uploads, competing multi-proposal agendas and a ledger reversal UI.
+- [ ] File uploads, advanced round allocation/settlement and a ledger reversal UI.
 
 These future items do not change the fact that the delivered treasury uses local simulated funds. See `docs/NEAR-INTEGRATION.md` and `docs/VERIFICATION.md` for boundaries and evidence.

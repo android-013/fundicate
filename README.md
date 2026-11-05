@@ -2,7 +2,11 @@
 
 **Fund together. Decide together.** A functional local social-money governance app for the NEAR ecosystem hackathon brief. All treasury activity is explicitly simulated; no real money or blockchain transactions occur.
 
+The user-directed [five-part delivery plan](docs/MASTER-PLAN.md) treats **all current product work as Part 1/5**. Each fresh **next** request runs one of Parts 2–5 through the saved agent/verification loop. Use `npm run progress -- status` for current state; see [the workflow contract](workflow/FORMAT.md). Planning does not start Part 2. Final Part 5 completion requires the user's confirmed real NEAR testnet verification.
+
 The redesigned workspace uses a blockchain-inspired dark indigo, violet and cyan theme around networking, voting and collective growth. The customizable dashboard keeps the overview simple, while six analytics areas support deeper investigation, saved views, source-record inspection and CSV exports. See [the analytics guide](docs/ANALYTICS.md) for filters and exact metric definitions.
+
+Community **Funding rounds** add a separate multi-scheme workflow: staff publish a round, eligible accounts submit competing schemes, frozen members screen them in a 24-hour majority ballot, then select a qualified scheme in a separate 24-hour first-past-the-post election. Ballots stay hidden from other application users until their stage is finalized. Existing proposals and treasury workflows remain available. The first two capability phases record a decision without moving or reserving funds; see [the phased upgrade guide](docs/UPGRADE-PHASES.md) for current rules and the remaining allocation, refund, veto and reputation work.
 
 ## Run locally on this Windows computer
 
@@ -83,6 +87,7 @@ npm test
 npm run test:integration
 npm run build
 npm run test:e2e
+npm run test:rounds
 npm start
 # With the seeded app running at APP_ORIGIN:
 npm run test:browser
@@ -93,6 +98,7 @@ npm run test:accessibility
 - Integration tests use real PostgreSQL and check auth/session behavior, scoped permissions, admission, snapshots, immutable votes/audits, administrator uniqueness, balanced/reconciled ledgers, idempotency, concurrent overspending, and retained membership history.
 - HTTP end-to-end tests cover registration → community creation → application → admission vote → member proposal review → funding vote → approval → simulated execution → treasury/audit → logout, and all 16 required pages.
 - Integration and HTTP tests create and migrate a uniquely named `fundicate_test_*` database and drop only that database afterward. The configured database user needs CREATEDB permission. They never reset the demonstration database. `test:e2e` requires a completed production build and temporarily binds port 3001.
+- `test:rounds` uses its own temporary database and port 3001 after a production build. It verifies round authorization, immutable published rules, frozen voters, separate screening/selection, privacy, deadline/quorum/tie outcomes and browser/accessibility behavior. It requires the project-local Chromium described below. Run it separately from `test:e2e`, which uses the same test-server port.
 - Browser QA checks sign-in, proposal form switching, required pages, desktop/mobile overflow and browser runtime errors, and saves screenshots under ignored `test-results/`. Accessibility checks scan all required routes plus mobile variants with axe WCAG A/AA rules. These use a fresh browser context and a normal seeded demo login session. The runner uses project-local Chromium when installed, otherwise Microsoft Edge. Edge cannot launch in this Codex sandbox, so the recorded checks use Chromium. Automated scans do not replace a full manual accessibility audit.
 - `npm run format` formats source, tests, scripts and docs. Webpack is selected for Windows compatibility. The build wrapper runs both supported Next.js compile and generate phases on Windows and precreates nested static output directories to avoid a sandbox directory-creation race; static generation is not skipped. Build/test temp files stay under ignored `.local/`.
 
@@ -124,7 +130,7 @@ See `docs/VERIFICATION.md` for actual results from the implementation session. `
 | `src/components/`                                                | Reusable forms, confirmations, tables, cards, navigation and statuses                                                                                     |
 | `tests/`, `scripts/`                                             | Automated checks, isolated test database runner and local setup                                                                                           |
 
-Agendas and their single proposals form one aggregate rather than two separate tables. There is one lifecycle, one eligible-voter snapshot, and one immutable ballot per decision. Roles are community-scoped. The administrator is a required single Community.adminId reference, with a deferred database constraint requiring an active membership; ordinary membership roles are MEMBER or MODERATOR, so duplicate ADMIN role rows cannot exist.
+Existing single-proposal decisions use one lifecycle, one eligible-voter snapshot, and one immutable ballot per decision. New FundingRound and FundingScheme records support multi-scheme rounds with separate immutable screening and selection ballots; their voter snapshot is shared across both stages. Roles are community-scoped. The administrator is a required single Community.adminId reference, with a deferred database constraint requiring an active membership; ordinary membership roles are MEMBER or MODERATOR, so duplicate ADMIN role rows cannot exist.
 
 ## Governance rules
 
@@ -148,7 +154,7 @@ Agendas and their single proposals form one aggregate rather than two separate t
 
 This is a local hackathon MVP, not an audited production financial service. **No NEAR wallet connection, contract, testnet submission, real payment processing, or blockchain reconciliation is implemented.** `docs/NEAR-INTEGRATION.md` describes the exact integration boundary and required wallet, custody, outbox/reservation, nonce, reconciliation and finality work.
 
-Other deliberate limits: no email verification, password reset/change, MFA or admin-transfer password reauthentication; no attachment upload (supporting HTTP/HTTPS links work); no automated deadline worker (staff finalize); no independent secret-ballot protocol; all public community activity and vote choices are transparent; no ledger reversal UI; no per-user payment gateway or real-world custody. Optional HTTPS avatar images load directly in the browser and fall back to initials on failure.
+Other deliberate limits: no email verification, password reset/change, MFA or admin-transfer password reauthentication; no attachment upload (supporting HTTP/HTTPS links work); no automated deadline worker (staff finalize); no cryptographic secret-ballot protocol; legacy proposal votes remain public, while new funding-round choices stay hidden until their stage is finalized; no ledger reversal UI; no per-user payment gateway or real-world custody. Optional HTTPS avatar images load directly in the browser and fall back to initials on failure.
 
 Authentication abuse controls use persistent per-email and global limits; protected actions also have per-user limits. Add a trusted proxy/client-IP strategy for production rather than trusting arbitrary forwarding headers. Expired sessions and rate-limit rows have no scheduled cleanup job. Community discovery lists up to 60 results, proposals/transactions 100, activity 150, and application review 50; full records stay in PostgreSQL and production pagination is future work. Aggregate fundraising goals currently measure lifetime community contributions and may overlap.
 
