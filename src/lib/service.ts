@@ -7,6 +7,7 @@ import {
   applicationSchema,
   communitySchema,
   contributionSchema,
+  declarationSchema,
   memberSchema,
   proposalActionSchema,
   proposalSchema,
@@ -38,6 +39,58 @@ export async function atomic<T>(work: (tx: Tx) => Promise<T>): Promise<T> {
 }
 async function lockCommunity(tx: Tx, id: string) {
   await tx.$queryRaw`SELECT id FROM "Community" WHERE id = ${id}::uuid FOR UPDATE`;
+}
+async function openSuccession(
+  tx: Tx,
+  communityId: string,
+  adminId: string,
+  exceptId?: string,
+) {
+  return tx.proposal.findFirst({
+    where: {
+      communityId,
+      governanceProfile: "STRICT",
+      type: "REMOVAL",
+      status: "OPEN",
+      targetUserId: adminId,
+      ...(exceptId ? { id: { not: exceptId } } : {}),
+    },
+  });
+}
+async function validateSuccessor(
+  tx: Tx,
+  communityId: string,
+  adminId: string,
+  successorId: string | null | undefined,
+  exceptId?: string,
+) {
+  ensure(
+    successorId && successorId !== adminId,
+    "Choose a different active member as the published successor.",
+  );
+  const successor = await tx.communityMembership.findUnique({
+    where: { communityId_userId: { communityId, userId: successorId } },
+  });
+  ensure(
+    successor?.status === "ACTIVE",
+    "The published successor must be an active member of this community.",
+  );
+  ensure(
+    !(await tx.proposal.findFirst({
+      where: {
+        communityId,
+        type: "REMOVAL",
+        status: "OPEN",
+        targetUserId: successorId,
+        ...(exceptId ? { id: { not: exceptId } } : {}),
+      },
+    })),
+    "A member facing an open removal ballot cannot be nominated as successor.",
+  );
+  ensure(
+    !(await openSuccession(tx, communityId, adminId, exceptId)),
+    "An administrator-removal ballot is already open in this community.",
+  );
 }
 export async function access(
   tx: Tx,
@@ -100,10 +153,49 @@ async function notify(
     data: { userId, communityId, message, href },
   });
 }
+async function activateApplicant(
+  tx: Tx,
+  communityId: string,
+  userId: string,
+  amount: bigint,
+) {
+  const existing = await tx.communityMembership.findUnique({
+    where: { communityId_userId: { communityId, userId } },
+  });
+  // A returning member's original declaration is immutable; unknown historical records gain the actual application pledge.
+  const declaration =
+    existing?.declaredContribution !== null &&
+    existing?.declaredContribution !== undefined
+      ? {}
+      : { declaredContribution: amount, declaredAt: new Date() };
+  return tx.communityMembership.upsert({
+    where: { communityId_userId: { communityId, userId } },
+    create: {
+      communityId,
+      userId,
+      declaredContribution: amount,
+      declaredAt: new Date(),
+    },
+    update: {
+      status: "ACTIVE",
+      role: "MEMBER",
+      suspensionReason: null,
+      ...declaration,
+    },
+  });
+}
 
 export async function createCommunity(userId: string, input: unknown) {
   const data = communitySchema.parse(input);
   return atomic(async (tx) => {
+    const strict = data.governanceProfile === "STRICT";
+    const declaredAt =
+      data.founderContribution !== undefined ? new Date() : null;
+    const prompts = data.questions
+      .split(/\r?\n/)
+      .map((v) => v.trim())
+      .filter(Boolean)
+      .slice(0, 5);
     const community = await tx.community.create({
       data: {
         name: data.name,
@@ -112,17 +204,19 @@ export async function createCommunity(userId: string, input: unknown) {
         purpose: data.purpose,
         currency: data.currency,
         minimumContribution: data.minimumContribution,
+        governanceProfile: data.governanceProfile,
         adminId: userId,
         policy: { create: {} },
         questions: {
-          create: data.questions
-            .split("\n")
-            .map((v) => v.trim())
-            .filter(Boolean)
-            .slice(0, 5)
-            .map((prompt) => ({ prompt })),
+          create: strict ? [] : prompts.map((prompt) => ({ prompt })),
         },
-        memberships: { create: { userId } },
+        memberships: {
+          create: {
+            userId,
+            declaredContribution: data.founderContribution,
+            declaredAt,
+          },
+        },
         accounts: {
           create: [
             { kind: "TREASURY" },
@@ -134,8 +228,90 @@ export async function createCommunity(userId: string, input: unknown) {
     });
     await audit(tx, community.id, userId, "COMMUNITY_CREATED", community.id, {
       name: community.name,
+      governanceProfile: community.governanceProfile,
     });
+    if (strict) {
+      // Preserve the founder's actual answers in prompt order without inventing a member ballot.
+      const answers = data.founderAnswers
+        ? data.founderAnswers.split(/\r?\n/).map((v) => v.trim())
+        : [];
+      const questions = [];
+      for (const prompt of prompts)
+        questions.push(
+          await tx.membershipQuestion.create({
+            data: { communityId: community.id, prompt },
+          }),
+        );
+      const application = await tx.membershipApplication.create({
+        data: {
+          communityId: community.id,
+          userId,
+          introduction: data.founderIntroduction,
+          proposedContribution: data.founderContribution!,
+          status: "APPROVED",
+          decidedAt: declaredAt,
+          answers: {
+            create: questions.map((question, index) => ({
+              questionId: question.id,
+              answer: answers[index],
+            })),
+          },
+        },
+      });
+      await audit(
+        tx,
+        community.id,
+        userId,
+        "FOUNDER_DECLARATION_RECORDED",
+        application.id,
+        {
+          amountMinor: data.founderContribution!.toString(),
+          bootstrap: true,
+          receivedFunds: false,
+        },
+      );
+    }
     return community;
+  });
+}
+export async function declareContribution(
+  userId: string,
+  input: unknown,
+  now = new Date(),
+) {
+  const data = declarationSchema.parse(input);
+  return atomic(async (tx) => {
+    await lockCommunity(tx, data.communityId);
+    const { community, membership } = await access(
+      tx,
+      data.communityId,
+      userId,
+    );
+    if (membership.declaredContribution !== null) {
+      ensure(
+        membership.declaredContribution === data.amount,
+        "Your contribution declaration has already been recorded and cannot be changed.",
+        409,
+      );
+      return membership;
+    }
+    ensure(
+      data.amount >= community.minimumContribution,
+      "Your declaration is below the community minimum.",
+    );
+    const declared = await tx.communityMembership.update({
+      where: { id: membership.id },
+      data: { declaredContribution: data.amount, declaredAt: now },
+    });
+    await audit(
+      tx,
+      community.id,
+      userId,
+      "CONTRIBUTION_DECLARED",
+      membership.id,
+      { amountMinor: data.amount.toString(), receivedFunds: false },
+    );
+    return declared;
   });
 }
 export async function applyForMembership(userId: string, input: unknown) {
@@ -205,6 +381,35 @@ async function openBallot(tx: Tx, proposalId: string, actorId: string) {
   });
   ensure(proposal.status === "DRAFT", "Only a draft can be opened.");
   ensure(proposal.closesAt > new Date(), "The voting deadline has passed.");
+  if (proposal.governanceProfile === "STRICT" && proposal.type === "REMOVAL") {
+    const community = await tx.community.findUniqueOrThrow({
+      where: { id: proposal.communityId },
+    });
+    if (proposal.targetUserId === community.adminId)
+      await validateSuccessor(
+        tx,
+        community.id,
+        community.adminId,
+        proposal.successorId,
+        proposal.id,
+      );
+    else {
+      ensure(
+        !proposal.successorId,
+        "Only an administrator-removal ballot may name a successor.",
+      );
+      const succession = await openSuccession(
+        tx,
+        community.id,
+        community.adminId,
+        proposal.id,
+      );
+      ensure(
+        succession?.successorId !== proposal.targetUserId,
+        "The published successor is protected until the administrator-removal ballot is decided.",
+      );
+    }
+  }
   const members = await tx.communityMembership.findMany({
     where: { communityId: proposal.communityId, status: "ACTIVE" },
   });
@@ -243,7 +448,10 @@ export async function reviewApplication(userId: string, input: unknown) {
       "You cannot review your own application.",
       403,
     );
-    if (community.policy?.admissionPolicy === "VOTE") {
+    if (
+      community.governanceProfile === "STRICT" ||
+      community.policy?.admissionPolicy === "VOTE"
+    ) {
       ensure(
         data.decision === "ballot",
         "This community requires a membership vote. Staff cannot override it.",
@@ -252,17 +460,18 @@ export async function reviewApplication(userId: string, input: unknown) {
       const proposal = await tx.proposal.create({
         data: {
           communityId: data.communityId,
+          governanceProfile: community.governanceProfile,
           proposerId: userId,
           title: `Welcome ${app.user.displayName}`,
           description: `Membership application\n\n${app.introduction}\n\nReview note: ${data.reason}`,
           type: "ADMISSION",
           applicationId: app.id,
           targetUserId: app.userId,
-          quorumBps: community.policy.quorumBps,
+          quorumBps: community.policy!.quorumBps,
           thresholdBps: 5001,
           opensAt: new Date(),
           closesAt: new Date(
-            Date.now() + community.policy.votingDays * 86400000,
+            Date.now() + community.policy!.votingDays * 86400000,
           ),
         },
       });
@@ -279,13 +488,12 @@ export async function reviewApplication(userId: string, input: unknown) {
       },
     });
     if (approved)
-      await tx.communityMembership.upsert({
-        where: {
-          communityId_userId: { communityId: community.id, userId: app.userId },
-        },
-        create: { communityId: community.id, userId: app.userId },
-        update: { status: "ACTIVE", role: "MEMBER", suspensionReason: null },
-      });
+      await activateApplicant(
+        tx,
+        community.id,
+        app.userId,
+        app.proposedContribution,
+      );
     await audit(
       tx,
       community.id,
@@ -339,17 +547,52 @@ export async function createProposal(userId: string, input: unknown) {
   return atomic(async (tx) => {
     await lockCommunity(tx, data.communityId);
     const { community, isStaff } = await access(tx, data.communityId, userId);
+    const strictRemoval =
+      community.governanceProfile === "STRICT" && data.type === "REMOVAL";
     ensure(
-      isStaff || community.policy?.allowMemberProposals,
+      strictRemoval || isStaff || community.policy?.allowMemberProposals,
       "Member submissions are disabled in this community.",
       403,
     );
-    // Staff create formal agendas; member submissions enter the review queue as drafts.
-    if (data.type === "REMOVAL") {
+    ensure(
+      !data.successorId || strictRemoval,
+      "Successors belong only to strict administrator-removal ballots.",
+    );
+    if (community.governanceProfile === "STRICT" && data.type === "GOVERNANCE")
       ensure(
-        data.targetUserId !== community.adminId,
-        "Transfer administration before proposing removal of the administrator.",
+        data.admissionPolicy === "VOTE",
+        "Strict governance requires membership admission by majority vote.",
       );
+    // Strict removal is a member-governed agenda, including when ordinary submissions are disabled.
+    if (data.type === "REMOVAL") {
+      if (strictRemoval && data.targetUserId === community.adminId)
+        await validateSuccessor(
+          tx,
+          community.id,
+          community.adminId,
+          data.successorId,
+        );
+      else {
+        ensure(
+          data.targetUserId !== community.adminId,
+          "Transfer administration before proposing removal of the administrator.",
+        );
+        ensure(
+          !data.successorId,
+          "Only an administrator-removal ballot may name a successor.",
+        );
+        if (strictRemoval) {
+          const succession = await openSuccession(
+            tx,
+            community.id,
+            community.adminId,
+          );
+          ensure(
+            succession?.successorId !== data.targetUserId,
+            "The published successor is protected until the administrator-removal ballot is decided.",
+          );
+        }
+      }
       const target = await tx.communityMembership.findUnique({
         where: {
           communityId_userId: {
@@ -370,6 +613,7 @@ export async function createProposal(userId: string, input: unknown) {
     const proposal = await tx.proposal.create({
       data: {
         communityId: community.id,
+        governanceProfile: community.governanceProfile,
         proposerId: userId,
         title: data.title,
         description: data.description,
@@ -378,6 +622,10 @@ export async function createProposal(userId: string, input: unknown) {
         recipient: data.recipient || null,
         supportingUrl: data.supportingUrl || null,
         targetUserId: data.type === "REMOVAL" ? data.targetUserId : null,
+        successorId:
+          strictRemoval && data.targetUserId === community.adminId
+            ? data.successorId
+            : null,
         quorumBps: data.quorumBps,
         thresholdBps: data.type === "REMOVAL" ? 6667 : data.thresholdBps,
         opensAt: new Date(data.opensAt),
@@ -397,7 +645,8 @@ export async function createProposal(userId: string, input: unknown) {
     await audit(tx, community.id, userId, "PROPOSAL_CREATED", proposal.id, {
       type: data.type,
     });
-    if (data.publish && isStaff) await openBallot(tx, proposal.id, userId);
+    if (strictRemoval || (data.publish && isStaff))
+      await openBallot(tx, proposal.id, userId);
     return proposal;
   });
 }
@@ -474,7 +723,7 @@ async function finalize(tx: Tx, proposalId: string, userId: string) {
     },
   });
   if (p.type === "ADMISSION" && p.applicationId && p.targetUserId) {
-    await tx.membershipApplication.update({
+    const application = await tx.membershipApplication.update({
       where: { id: p.applicationId },
       data: {
         status: result.approved ? "APPROVED" : "REJECTED",
@@ -482,16 +731,12 @@ async function finalize(tx: Tx, proposalId: string, userId: string) {
       },
     });
     if (result.approved)
-      await tx.communityMembership.upsert({
-        where: {
-          communityId_userId: {
-            communityId: p.communityId,
-            userId: p.targetUserId,
-          },
-        },
-        create: { communityId: p.communityId, userId: p.targetUserId },
-        update: { status: "ACTIVE", role: "MEMBER", suspensionReason: null },
-      });
+      await activateApplicant(
+        tx,
+        p.communityId,
+        p.targetUserId,
+        application.proposedContribution,
+      );
     await audit(
       tx,
       p.communityId,
@@ -509,10 +754,58 @@ async function finalize(tx: Tx, proposalId: string, userId: string) {
     );
   }
   if (p.type === "REMOVAL" && result.approved && p.targetUserId) {
-    ensure(
-      p.targetUserId !== p.community.adminId,
-      "The current administrator cannot be removed. Transfer authority first.",
-    );
+    if (
+      p.governanceProfile === "STRICT" &&
+      p.targetUserId === p.community.adminId
+    ) {
+      await validateSuccessor(
+        tx,
+        p.communityId,
+        p.community.adminId,
+        p.successorId,
+        p.id,
+      );
+      await tx.community.update({
+        where: { id: p.communityId },
+        data: { adminId: p.successorId! },
+      });
+      await audit(
+        tx,
+        p.communityId,
+        userId,
+        "GOVERNED_ADMIN_SUCCESSION",
+        p.id,
+        { previousAdminId: p.targetUserId, successorId: p.successorId },
+      );
+      await notify(
+        tx,
+        p.successorId!,
+        p.communityId,
+        "The community elected you as administrator.",
+        `/communities/${p.community.slug}/governance`,
+      );
+    } else {
+      ensure(
+        !p.successorId,
+        "The published administrator-removal subject is no longer the administrator.",
+      );
+      ensure(
+        p.targetUserId !== p.community.adminId,
+        "The current administrator cannot be removed. Transfer authority first.",
+      );
+      if (p.governanceProfile === "STRICT") {
+        const succession = await openSuccession(
+          tx,
+          p.communityId,
+          p.community.adminId,
+          p.id,
+        );
+        ensure(
+          succession?.successorId !== p.targetUserId,
+          "The published successor is protected until the administrator-removal ballot is decided.",
+        );
+      }
+    }
     await tx.communityMembership.update({
       where: {
         communityId_userId: {
@@ -558,6 +851,10 @@ async function finalize(tx: Tx, proposalId: string, userId: string) {
         typeof rules.allowMemberProposals === "boolean" &&
         ["VOTE", "REVIEW"].includes(rules.admissionPolicy),
       "Invalid governance change.",
+    );
+    ensure(
+      p.governanceProfile !== "STRICT" || rules.admissionPolicy === "VOTE",
+      "Strict governance requires membership admission by majority vote.",
     );
     await tx.governancePolicy.update({
       where: { communityId: p.communityId },
@@ -721,18 +1018,32 @@ export async function proposalAction(userId: string, input: unknown) {
   const data = proposalActionSchema.parse(input);
   return atomic(async (tx) => {
     await lockCommunity(tx, data.communityId);
-    const { community } = await access(tx, data.communityId, userId, true);
+    const { community, isStaff } = await access(tx, data.communityId, userId);
     const p = await tx.proposal.findFirst({
       where: { id: data.proposalId, communityId: data.communityId },
       include: { execution: true },
     });
     ensure(p, "Proposal not found.", 404);
+    const memberGovernedAction =
+      p.governanceProfile === "STRICT" &&
+      p.type === "REMOVAL" &&
+      ["open", "finalize"].includes(data.action);
+    ensure(
+      isStaff || memberGovernedAction,
+      "A moderator or administrator is required.",
+      403,
+    );
     if (data.action === "open") {
       await openBallot(tx, p.id, userId);
       return p;
     }
     if (data.action === "finalize") return finalize(tx, p.id, userId);
     if (data.action === "cancel") {
+      ensure(
+        p.governanceProfile !== "STRICT" || p.status !== "OPEN",
+        "Published strict ballots must be decided by the community.",
+        403,
+      );
       ensure(
         ["DRAFT", "OPEN"].includes(p.status),
         "Only a draft or open proposal can be cancelled.",
@@ -813,11 +1124,39 @@ export async function manageMember(userId: string, input: unknown) {
         userId !== community.adminId,
         "Transfer administration before leaving.",
       );
+      if (community.governanceProfile === "STRICT") {
+        const succession = await openSuccession(
+          tx,
+          community.id,
+          community.adminId,
+        );
+        ensure(
+          succession?.successorId !== userId,
+          "The published successor cannot leave until the administrator-removal ballot is decided.",
+        );
+      }
       await tx.communityMembership.update({
         where: { id: target.id },
         data: { status: "LEFT" },
       });
     } else if (data.action === "transfer") {
+      if (community.governanceProfile === "STRICT") {
+        ensure(
+          !(await openSuccession(tx, community.id, community.adminId)),
+          "Administration is locked until the published administrator-removal ballot is decided.",
+        );
+        ensure(
+          !(await tx.proposal.findFirst({
+            where: {
+              communityId: community.id,
+              type: "REMOVAL",
+              status: "OPEN",
+              targetUserId: data.userId,
+            },
+          })),
+          "A member facing an open removal ballot cannot receive administration.",
+        );
+      }
       ensure(
         data.confirmName === community.name,
         "Type the exact community name to confirm this transfer.",
@@ -839,6 +1178,11 @@ export async function manageMember(userId: string, input: unknown) {
       );
     } else if (data.action === "suspend") {
       ensure(
+        community.governanceProfile !== "STRICT",
+        "Strict governance uses member removal ballots; staff cannot unilaterally suspend active voters.",
+        403,
+      );
+      ensure(
         data.userId !== community.adminId && data.userId !== userId,
         "The administrator and your own account cannot be suspended here.",
       );
@@ -854,6 +1198,7 @@ export async function manageMember(userId: string, input: unknown) {
       const proposal = await tx.proposal.create({
         data: {
           communityId: community.id,
+          governanceProfile: community.governanceProfile,
           proposerId: userId,
           title: "Review emergency suspension",
           description: `Vote YES to restore membership access. Vote NO to retain the suspension. Reason: ${data.reason}`,

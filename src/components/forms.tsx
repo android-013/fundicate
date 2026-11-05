@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, ReactNode, useState } from "react";
+import { FormEvent, ReactNode, useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
 
@@ -23,7 +23,9 @@ export function ActionForm({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [key, setKey] = useState("");
+  const [key, setKey] = useState<{ token: string; payload: string } | null>(
+    null,
+  );
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending) return;
@@ -48,13 +50,23 @@ export function ActionForm({
         if (body.type === "GOVERNANCE")
           body.allowMemberProposals = form.get("allowMemberProposals") === "on";
       }
-      if (operation === "funding-round")
+      if (operation === "funding-round") {
         body.submissionsCloseAt = new Date(
           String(body.submissionsCloseAt),
         ).toISOString();
-      if (operation === "contribute") {
-        const token = key || crypto.randomUUID();
-        setKey(token);
+        body.funded = form.get("funded") === "on";
+        if (body.funded) {
+          body.collectionClosesAt = new Date(
+            String(body.collectionClosesAt),
+          ).toISOString();
+          body.expiresAt = new Date(String(body.expiresAt)).toISOString();
+        }
+      }
+      if (["contribute", "round-contribute"].includes(operation)) {
+        const payload = JSON.stringify(body);
+        const token =
+          key?.payload === payload ? key.token : crypto.randomUUID();
+        setKey({ token, payload });
         body.idempotencyKey = token;
       }
       const res = await fetch(`/api/${operation}`, {
@@ -65,7 +77,7 @@ export function ActionForm({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Please try again.");
       setMessage(data.message || "Saved.");
-      if (operation === "contribute") setKey("");
+      if (["contribute", "round-contribute"].includes(operation)) setKey(null);
       if (data.redirect) router.push(data.redirect);
       router.refresh();
     } catch (err) {
@@ -184,9 +196,10 @@ export function Field({
   max?: string | number;
   help?: string;
 }) {
+  const fieldId = useId();
   return (
     <label className="field">
-      <span>{label}</span>
+      <span id={`${fieldId}-label`}>{label}</span>
       <input
         name={name}
         type={type}
@@ -196,8 +209,10 @@ export function Field({
         min={min}
         max={max}
         step={type === "number" ? "0.01" : undefined}
+        aria-labelledby={`${fieldId}-label`}
+        aria-describedby={help ? `${fieldId}-help` : undefined}
       />
-      {help && <small>{help}</small>}
+      {help && <small id={`${fieldId}-help`}>{help}</small>}
     </label>
   );
 }
@@ -238,10 +253,15 @@ export function Select({
   options: { value: string; label: string }[];
   defaultValue?: string;
 }) {
+  const fieldId = useId();
   return (
     <label className="field">
-      <span>{label}</span>
-      <select name={name} defaultValue={defaultValue}>
+      <span id={`${fieldId}-label`}>{label}</span>
+      <select
+        name={name}
+        defaultValue={defaultValue}
+        aria-labelledby={`${fieldId}-label`}
+      >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
@@ -251,20 +271,105 @@ export function Select({
     </label>
   );
 }
+export function CommunityGovernanceFields() {
+  const governanceLabelId = useId();
+  const [strict, setStrict] = useState(false);
+  const [questions, setQuestions] = useState("");
+  const questionCount = questions.split(/\r?\n/).filter((q) => q.trim()).length;
+  return (
+    <>
+      <label className="field">
+        <span id={governanceLabelId}>Governance profile</span>
+        <select
+          name="governanceProfile"
+          aria-labelledby={governanceLabelId}
+          value={strict ? "STRICT" : "LEGACY"}
+          onChange={(e) => setStrict(e.target.value === "STRICT")}
+        >
+          <option value="LEGACY">Legacy · flexible community governance</option>
+          <option value="STRICT">
+            Strict · member governed admission and removal
+          </option>
+        </select>
+      </label>
+      <p className="notice">
+        {strict
+          ? "Strict governance requires a majority admission ballot and an exact two-thirds removal ballot, including for the administrator. Staff cannot suspend voting access unilaterally. This profile is fixed at creation."
+          : "Legacy governance preserves staff review, emergency suspension review, and voluntary authority transfers. Its existing decisions and safeguards remain available."}
+      </p>
+      <label className="field">
+        <span>Membership questions (one per line, up to five)</span>
+        <textarea
+          name="questions"
+          value={questions}
+          onChange={(e) => setQuestions(e.target.value)}
+          rows={4}
+          placeholder="What would you like to contribute to our community?"
+        />
+      </label>
+      {strict && (
+        <section className="inset governance-founder">
+          <h3>Your founding membership</h3>
+          <p className="muted small-text">
+            The founder makes the same contribution declaration as future
+            members. A pledge records intent; it does not deposit money or
+            increase any pool.
+          </p>
+          <Field
+            name="founderContribution"
+            label="Your declared contribution"
+            type="number"
+            min="0"
+            max="9999999.99"
+            help="Use the treasury currency and meet the minimum membership pledge above."
+          />
+          <TextArea
+            name="founderIntroduction"
+            label="Your founding introduction"
+            placeholder="Explain what you hope to contribute (at least 20 characters)."
+          />
+          {questionCount > 0 && (
+            <TextArea
+              name="founderAnswers"
+              label="Your answers to the membership questions"
+              placeholder={`Write ${questionCount} ${questionCount === 1 ? "answer" : "answers"}, one per line, in the question order above.`}
+            />
+          )}
+        </section>
+      )}
+    </>
+  );
+}
 export function ProposalForm({
   communityId,
   quorumBps,
   thresholdBps,
   members,
   isStaff,
+  governanceProfile = "LEGACY",
+  adminId,
+  successors = [],
+  removalOnly = false,
+  initialType = "FUNDING",
 }: {
   communityId: string;
   quorumBps: number;
   thresholdBps: number;
   members: { id: string; name: string }[];
   isStaff: boolean;
+  governanceProfile?: "LEGACY" | "STRICT";
+  adminId?: string;
+  successors?: { id: string; name: string }[];
+  removalOnly?: boolean;
+  initialType?: string;
 }) {
-  const [type, setType] = useState("FUNDING");
+  const [type, setType] = useState(removalOnly ? "REMOVAL" : initialType);
+  const [targetId, setTargetId] = useState(members[0]?.id ?? "");
+  const strictRemoval = governanceProfile === "STRICT" && type === "REMOVAL";
+  const strictAdminRemoval =
+    governanceProfile === "STRICT" &&
+    type === "REMOVAL" &&
+    targetId === adminId;
   const local = (d: Date) =>
     new Date(d.getTime() - d.getTimezoneOffset() * 60000)
       .toISOString()
@@ -280,7 +385,15 @@ export function ProposalForm({
     <ActionForm
       operation="proposal"
       defaults={{ communityId }}
-      submit={isStaff ? "Save proposal" : "Submit for staff review"}
+      submit={
+        strictRemoval
+          ? strictAdminRemoval
+            ? "Open administrator removal ballot"
+            : "Open member removal ballot"
+          : isStaff
+            ? "Save proposal"
+            : "Submit for staff review"
+      }
     >
       <label className="field">
         <span>Decision type</span>
@@ -289,10 +402,14 @@ export function ProposalForm({
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
-          <option value="FUNDING">Funding proposal</option>
-          <option value="FUNDRAISING">Fundraising goal</option>
+          {!removalOnly && <option value="FUNDING">Funding proposal</option>}
+          {!removalOnly && (
+            <option value="FUNDRAISING">Fundraising goal</option>
+          )}
           <option value="REMOVAL">Member removal</option>
-          <option value="GOVERNANCE">Governance change</option>
+          {!removalOnly && (
+            <option value="GOVERNANCE">Governance change</option>
+          )}
         </select>
       </label>
       <Field
@@ -323,11 +440,41 @@ export function ProposalForm({
         />
       )}
       {type === "REMOVAL" && (
-        <Select
-          label="Member under consideration"
-          name="targetUserId"
-          options={members.map((m) => ({ value: m.id, label: m.name }))}
-        />
+        <>
+          <label className="field">
+            <span>Member under consideration</span>
+            <select
+              name="targetUserId"
+              value={targetId}
+              onChange={(e) => setTargetId(e.target.value)}
+              required
+            >
+              {!members.length && <option value="">No eligible members</option>}
+              {members.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          {strictAdminRemoval && (
+            <div className="inset">
+              <Select
+                name="successorId"
+                label="Published administrator successor"
+                options={successors
+                  .filter((m) => m.id !== adminId)
+                  .map((m) => ({ value: m.id, label: m.name }))}
+              />
+              <p className="muted small-text">
+                Approval removes the incumbent and appoints this active member
+                in one action. The nominee is public before voting. While the
+                ballot is open, authority transfer and the nominee’s departure
+                or removal are locked so the decision can be carried out.
+              </p>
+            </div>
+          )}
+        </>
       )}
       {type === "GOVERNANCE" && (
         <div className="inset">
@@ -336,7 +483,14 @@ export function ProposalForm({
             label="Proposed admission policy"
             options={[
               { value: "VOTE", label: "Member vote (simple majority)" },
-              { value: "REVIEW", label: "Moderator / administrator review" },
+              ...(governanceProfile === "LEGACY"
+                ? [
+                    {
+                      value: "REVIEW",
+                      label: "Moderator / administrator review",
+                    },
+                  ]
+                : []),
             ]}
           />
           <label className="checkbox">
@@ -400,7 +554,19 @@ export function ProposalForm({
         type="url"
         required={false}
       />
-      {isStaff ? (
+      {strictRemoval ? (
+        <>
+          <input type="hidden" name="publish" value="on" />
+          <p className="notice">
+            Any active member can open and finalize this removal ballot. It
+            opens directly with a frozen voter list
+            {strictAdminRemoval
+              ? " and the published successor; incumbent approval is not required"
+              : ""}
+            . Staff cannot cancel an open strict ballot.
+          </p>
+        </>
+      ) : isStaff ? (
         <label className="checkbox">
           <input type="checkbox" name="publish" defaultChecked />
           Open voting and freeze the eligible voter list

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "funds",
+  "token": "3ce00d50-6d28-48c9-977c-311fd91333e7",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/test-db.mjs",
+      "funds"
+    ]
+  ],
+  "startedAt": "2026-11-05T16:13:11.558Z",
+  "finishedAt": "2026-11-05T16:14:38.141Z",
+  "exitCode": 1,
+  "sourceFingerprint": "f02c399774357e26cc80c631bf356e6d21199ce403f1bd1d0b23b2c7bee6fd11",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/funds-3ce00d50-6d28-48c9-977c-311fd91333e7.log",
+  "logHash": "bfbbe6dab827bc8f95c6583918e7250520fcff4ab5118f9a48c8072496184b01"
+}

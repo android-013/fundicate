@@ -23,7 +23,8 @@ export default async function Members({
     isAdmin,
     isMember,
   } = await communityContext(slug);
-  const [members, applications] = await Promise.all([
+  const strict = c.governanceProfile === "STRICT";
+  const [members, applications, succession] = await Promise.all([
     db.communityMembership.findMany({
       where: { communityId: c.id },
       include: {
@@ -50,10 +51,28 @@ export default async function Members({
           take: 50,
         })
       : Promise.resolve([]),
+    strict
+      ? db.proposal.findFirst({
+          where: {
+            communityId: c.id,
+            governanceProfile: "STRICT",
+            type: "REMOVAL",
+            status: "OPEN",
+            targetUserId: c.adminId,
+          },
+          select: { id: true, successorId: true },
+        })
+      : Promise.resolve(null),
   ]);
+  const ownMembership = members.find((m) => m.userId === user?.id);
   return (
     <>
       <SectionTitle title="The people behind the possibility" />
+      <p className="muted small-text">
+        {strict ? "Strict member governance" : "Legacy governance"} ·
+        contribution declarations are pledges, not deposit receipts. Unknown
+        historical declarations have not been invented.
+      </p>
       <section className="panel">
         <div
           className="table-scroll"
@@ -67,6 +86,7 @@ export default async function Members({
                 <th>Member</th>
                 <th>Role</th>
                 <th>Membership</th>
+                <th>Declared contribution</th>
                 <th>Joined</th>
                 <th />
               </tr>
@@ -99,6 +119,20 @@ export default async function Members({
                   <td>
                     <Status value={m.status} />
                   </td>
+                  <td>
+                    {m.declaredContribution !== null ? (
+                      <>
+                        <strong>
+                          {moneyFormat(m.declaredContribution, c.currency)}
+                        </strong>
+                        <small className="muted">
+                          Pledge · not received money
+                        </small>
+                      </>
+                    ) : (
+                      <span className="muted">Unknown · not recorded</span>
+                    )}
+                  </td>
                   <td>{dateFormat(m.joinedAt)}</td>
                   <td>
                     {isAdmin &&
@@ -127,6 +161,57 @@ export default async function Members({
           </table>
         </div>
       </section>
+      {isMember && ownMembership?.declaredContribution === null && (
+        <section className="panel padded">
+          <h2>Record your contribution declaration</h2>
+          <p className="muted">
+            Your historical declaration is unknown. Record a prospective pledge
+            once; it will not create a deposit, payment receipt, or pool
+            balance.
+          </p>
+          <ActionForm
+            operation="declare-contribution"
+            defaults={{ communityId: c.id }}
+            submit="Record my pledge"
+          >
+            <Field
+              name="amount"
+              label={`Declared contribution (${c.currency})`}
+              type="number"
+              min={`${c.minimumContribution / 100n}.${(c.minimumContribution % 100n).toString().padStart(2, "0")}`}
+              max="9999999.99"
+              help={`At least ${moneyFormat(c.minimumContribution, c.currency)}. This declaration cannot be changed after recording.`}
+            />
+          </ActionForm>
+        </section>
+      )}
+      {strict && isMember && (
+        <section className="panel padded">
+          <h2>Leadership remains accountable to members</h2>
+          <p className="muted">
+            An active member can propose administrator removal with a public
+            successor. An exact two-thirds ballot decides; approval transfers
+            authority and removes the incumbent in one action. Staff cannot
+            suspend voting access unilaterally.
+          </p>
+          <Link
+            href={`/communities/${slug}/proposals/new?type=REMOVAL`}
+            className="button secondary"
+          >
+            Propose a removal ballot ↗
+          </Link>
+          {succession && (
+            <p className="notice">
+              An administrator-removal ballot is open. Authority transfer and
+              the nominated successor’s departure or removal are temporarily
+              locked.{" "}
+              <Link href={`/communities/${slug}/proposals/${succession.id}`}>
+                View the ballot →
+              </Link>
+            </p>
+          )}
+        </section>
+      )}
       {isStaff && (
         <>
           <SectionTitle title="Membership applications" />
@@ -200,9 +285,10 @@ export default async function Members({
           )}
         </>
       )}
-      {isStaff && (
+      {isStaff && !strict && (
         <section className="panel padded">
           <h2>Emergency safety review</h2>
+          <Badge>Legacy governance control</Badge>
           <p className="muted">
             Suspend access only for immediate safety or fraud concerns. This
             records the reason and automatically opens a three-day community
@@ -231,7 +317,7 @@ export default async function Members({
           </ActionForm>
         </section>
       )}
-      {isAdmin && (
+      {isAdmin && !succession && (
         <section className="panel padded">
           <h2>Transfer administrative authority</h2>
           <p className="muted">
@@ -256,7 +342,7 @@ export default async function Members({
           </ActionForm>
         </section>
       )}
-      {isMember && !isAdmin && (
+      {isMember && !isAdmin && succession?.successorId !== user?.id && (
         <section className="panel padded">
           <h3>Leave this community</h3>
           <p className="muted">

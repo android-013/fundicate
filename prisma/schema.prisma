@@ -89,6 +89,10 @@ model User {
   roundEligibility RoundElectorate[]
   screeningBallots SchemeScreeningVote[]
   selectionBallots RoundSelectionVote[]
+  roundAccounts RoundAccount[] @relation("RoundAccountOwner")
+  roundContributions RoundContribution[]
+  roundLedgerTransactions RoundLedgerTransaction[]
+  roundOperations RoundOperation[] @relation("RoundBeneficiary")
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -112,6 +116,7 @@ model Community {
   adminId String @db.Uuid
   admin User @relation(fields:[adminId], references:[id], onDelete:Restrict)
   minimumContribution BigInt @default(0)
+  governanceProfile String @default("LEGACY")
   createdAt DateTime @default(now())
   policy GovernancePolicy?
   memberships CommunityMembership[]
@@ -145,6 +150,8 @@ model CommunityMembership {
   status MembershipStatus @default(ACTIVE)
   suspensionReason String?
   joinedAt DateTime @default(now())
+  declaredContribution BigInt?
+  declaredAt DateTime?
   @@unique([communityId, userId])
   @@index([userId, status])
 }
@@ -204,6 +211,8 @@ model Proposal {
   finalizedAt DateTime?
   cancellationReason String?
   governanceChange Json?
+  governanceProfile String @default("LEGACY")
+  successorId String? @db.Uuid
   createdAt DateTime @default(now())
   eligibleVoters EligibleVoter[]
   votes Vote[]
@@ -357,6 +366,8 @@ model FundingRound {
   outcome String?
   winnerSchemeId String? @db.Uuid
   createdAt DateTime @default(now())
+  rulesVersion Int @default(1)
+  settlement RoundSettlement?
   schemes FundingScheme[]
   electorate RoundElectorate[]
   screeningVotes SchemeScreeningVote[]
@@ -376,9 +387,11 @@ model FundingScheme {
   recipient String
   supportingUrl String?
   status SchemeStatus @default(SUBMITTED)
+  category String @default("UNSPECIFIED")
   createdAt DateTime @default(now())
   screeningVotes SchemeScreeningVote[]
   selectionVotes RoundSelectionVote[]
+  operations RoundOperation[]
   @@unique([roundId,id])
   @@index([roundId,createdAt])
 }
@@ -419,4 +432,140 @@ model RoundSelectionVote {
   user User @relation(fields:[userId], references:[id], onDelete:Restrict)
   createdAt DateTime @default(now())
   @@unique([roundId,userId])
+}
+
+model RoundSettlement {
+  roundId String @id @db.Uuid
+  round FundingRound @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  rulesVersion Int @default(2)
+  assetId String
+  currency String
+  decimals Int @default(2)
+  network String @default("local-simulation")
+  status String @default("DRAFT")
+  fundingTarget BigInt
+  minimumContribution BigInt
+  maximumContribution BigInt
+  collectionClosesAt DateTime
+  expiresAt DateTime
+  rulesSnapshot Json
+  contributionSnapshot Json?
+  frozenAt DateTime?
+  received BigInt @default(0)
+  paid BigInt @default(0)
+  refunded BigInt @default(0)
+  allocationSnapshot Json?
+  preparedAt DateTime?
+  settledAt DateTime?
+  reason String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  accounts RoundAccount[]
+  transactions RoundLedgerTransaction[]
+  contributions RoundContribution[]
+  operations RoundOperation[]
+}
+
+model RoundAccount {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  settlement RoundSettlement @relation(fields:[roundId],references:[roundId],onDelete:Restrict)
+  key String
+  ownerId String? @db.Uuid
+  owner User? @relation("RoundAccountOwner",fields:[ownerId],references:[id],onDelete:Restrict)
+  balance BigInt @default(0)
+  entries RoundLedgerEntry[]
+  outgoing RoundLedgerTransaction[] @relation("RoundLedgerSource")
+  incoming RoundLedgerTransaction[] @relation("RoundLedgerDestination")
+  contributions RoundContribution[]
+  sourceOperations RoundOperation[] @relation("RoundOperationSource")
+  destinationOperations RoundOperation[] @relation("RoundOperationDestination")
+  @@unique([roundId,key])
+  @@unique([roundId,id])
+}
+
+model RoundLedgerTransaction {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  settlement RoundSettlement @relation(fields:[roundId],references:[roundId],onDelete:Restrict)
+  operationKey String
+  kind String
+  amount BigInt
+  assetId String
+  initiatedById String @db.Uuid
+  initiatedBy User @relation(fields:[initiatedById],references:[id],onDelete:Restrict)
+  sourceAccountId String @db.Uuid
+  destinationAccountId String @db.Uuid
+  source RoundAccount @relation("RoundLedgerSource",fields:[sourceAccountId],references:[id],onDelete:Restrict)
+  destination RoundAccount @relation("RoundLedgerDestination",fields:[destinationAccountId],references:[id],onDelete:Restrict)
+  createdAt DateTime @default(now())
+  entries RoundLedgerEntry[]
+  contribution RoundContribution?
+  operation RoundOperation?
+  @@unique([roundId,operationKey])
+}
+
+model RoundLedgerEntry {
+  id String @id @default(uuid()) @db.Uuid
+  transactionId String @db.Uuid
+  accountId String @db.Uuid
+  transaction RoundLedgerTransaction @relation(fields:[transactionId],references:[id],onDelete:Restrict)
+  account RoundAccount @relation(fields:[accountId],references:[id],onDelete:Restrict)
+  amount BigInt
+  @@index([accountId])
+}
+
+model RoundContribution {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  userId String @db.Uuid
+  sourceAccountId String @db.Uuid
+  transactionId String @unique @db.Uuid
+  settlement RoundSettlement @relation(fields:[roundId],references:[roundId],onDelete:Restrict)
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  sourceAccount RoundAccount @relation(fields:[sourceAccountId],references:[id],onDelete:Restrict)
+  transaction RoundLedgerTransaction @relation(fields:[transactionId],references:[id],onDelete:Restrict)
+  amount BigInt
+  createdAt DateTime @default(now())
+  @@index([roundId,userId])
+}
+
+model RoundOperation {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  operationKey String
+  kind String
+  amount BigInt
+  beneficiaryId String? @db.Uuid
+  sourceAccountId String @db.Uuid
+  destinationAccountId String @db.Uuid
+  recipient String
+  schemeId String? @db.Uuid
+  status String @default("PENDING")
+  attempts Int @default(0)
+  lastError String?
+  transactionId String? @unique @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  completedAt DateTime?
+  settlement RoundSettlement @relation(fields:[roundId],references:[roundId],onDelete:Restrict)
+  beneficiary User? @relation("RoundBeneficiary",fields:[beneficiaryId],references:[id],onDelete:Restrict)
+  source RoundAccount @relation("RoundOperationSource",fields:[sourceAccountId],references:[id],onDelete:Restrict)
+  destination RoundAccount @relation("RoundOperationDestination",fields:[destinationAccountId],references:[id],onDelete:Restrict)
+  scheme FundingScheme? @relation(fields:[schemeId],references:[id],onDelete:Restrict)
+  transaction RoundLedgerTransaction? @relation(fields:[transactionId],references:[id],onDelete:Restrict)
+  executionAttempts RoundExecutionAttempt[]
+  @@unique([roundId,operationKey])
+  @@index([roundId,status])
+}
+
+model RoundExecutionAttempt {
+  id String @id @default(uuid()) @db.Uuid
+  operationId String @db.Uuid
+  operation RoundOperation @relation(fields:[operationId],references:[id],onDelete:Restrict)
+  attempt Int
+  status String
+  error String?
+  createdAt DateTime @default(now())
+  @@unique([operationId,attempt])
 }

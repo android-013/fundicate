@@ -216,7 +216,11 @@ async function main() {
       );
     },
   );
-  const make = async (amount = "80", title = "Fund a shared project") =>
+  const make = async (
+    amount = "80",
+    title = "Fund a shared project",
+    publish = true,
+  ) =>
     createProposal(admin.id, {
       communityId: c.id,
       title,
@@ -229,7 +233,7 @@ async function main() {
       thresholdBps: 5001,
       opensAt: new Date(Date.now() - 3600000).toISOString(),
       closesAt: new Date(Date.now() + 86400000).toISOString(),
-      publish: true,
+      publish,
     });
   const p = await make();
   await check(
@@ -323,10 +327,16 @@ async function main() {
     );
   });
   await check("votes are rejected after the closing time", async () => {
-    const closed = await make("1", "An expired voting window");
+    const closed = await make("1", "An expired voting window", false);
     await db.proposal.update({
       where: { id: closed.id },
-      data: { closesAt: new Date(Date.now() - 1000) },
+      data: {
+        status: "OPEN",
+        closesAt: new Date(Date.now() - 1000),
+        eligibleVoters: {
+          create: (await active()).map((m) => ({ userId: m.userId })),
+        },
+      },
     });
     await assert.rejects(
       () =>
@@ -887,11 +897,16 @@ async function main() {
         thresholdBps: 5001,
         opensAt: new Date(Date.now() - 3600000).toISOString(),
         closesAt: new Date(Date.now() + 86400000).toISOString(),
-        publish: true,
+        publish: false,
       });
       await db.proposal.update({
         where: { id: p.id },
         data: { createdAt: new Date(Date.now() - 60 * 86400000) },
+      });
+      await proposalAction(admin.id, {
+        communityId: eur.id,
+        proposalId: p.id,
+        action: "open",
       });
       const vote = await castVote(admin.id, {
         communityId: eur.id,

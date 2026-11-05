@@ -12,6 +12,11 @@ import {
 } from "@/lib/auth";
 import { AppError, ensure } from "@/lib/errors";
 import { db } from "@/lib/db";
+import {
+  contributeToRound,
+  prepareRoundSettlement,
+  processRoundSettlement,
+} from "@/lib/funded-rounds";
 import * as service from "@/lib/service";
 import { profileSchema, uuid } from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
@@ -99,10 +104,37 @@ export async function POST(
         "round-selection-vote",
         "round-action",
         "round-scheme",
+        "round-contribute",
+        "round-settle",
+        "round-process",
       ].includes(operation)
     )
       await rateLimit(`${operation}:${user.id}`, 30, 60);
     switch (operation) {
+      case "declare-contribution":
+        await service.declareContribution(user.id, body);
+        result = {
+          message:
+            "Your prospective contribution declaration is recorded. No money moved.",
+        };
+        break;
+      case "round-contribute":
+        await contributeToRound(user.id, body);
+        result = {
+          message:
+            "Local simulated round deposit recorded. No real money moved.",
+        };
+        break;
+      case "round-settle":
+        await prepareRoundSettlement(user.id, body);
+        result = { message: "The round settlement plan is locked." };
+        break;
+      case "round-process":
+        await processRoundSettlement(user.id, body);
+        result = {
+          message: "Local simulated settlement operations processed.",
+        };
+        break;
       case "funding-round": {
         const round = await createFundingRound(user.id, body);
         const community = await db.community.findUniqueOrThrow({

@@ -3,12 +3,14 @@ import { notFound } from "next/navigation";
 import { LockKeyhole, ShieldCheck, Trophy, ArrowUpRight } from "lucide-react";
 import { communityContext } from "@/lib/community";
 import { getFundingRoundView } from "@/lib/rounds";
+import { getRoundFinanceView } from "@/lib/funded-rounds";
 import { AppError } from "@/lib/errors";
 import { uuid } from "@/lib/validation";
-import { dateTime, moneyFormat } from "@/lib/format";
+import { dateTime, moneyFormat, titleCase } from "@/lib/format";
 import { ActionButton, ActionForm, Select } from "@/components/forms";
 import { FundingSchemeForm } from "@/components/round-forms";
-import { Status, Empty } from "@/components/ui";
+import { RoundFunds } from "@/components/round-funds";
+import { Status, Empty, Badge } from "@/components/ui";
 import { LiveRefresh } from "@/components/live-refresh";
 export default async function FundingRoundDetail({
   params,
@@ -23,6 +25,7 @@ export default async function FundingRoundDetail({
     throw e;
   });
   const r = v.round;
+  const finance = await getRoundFinanceView(c.id, r.id, user?.id);
   const base = { communityId: c.id, roundId: r.id };
   const now = new Date();
   const screenOpen =
@@ -60,6 +63,9 @@ export default async function FundingRoundDetail({
             {r.schemes.length === 1 ? "scheme" : "schemes"} · {c.currency} · one
             member, one vote
           </p>
+          <Badge tone={finance ? "green" : "neutral"}>
+            {finance ? "V2 · dedicated funding pool" : "V1 · decision only"}
+          </Badge>
         </div>
       </div>
       <ol className="round-stage-track" aria-label="Funding round stages">
@@ -85,6 +91,14 @@ export default async function FundingRoundDetail({
             <h3>The purpose</h3>
             <p className="prewrap">{r.description}</p>
           </section>
+          {finance && (
+            <RoundFunds
+              view={finance}
+              communityId={c.id}
+              roundId={r.id}
+              userId={user?.id}
+            />
+          )}
           {r.status === "DECIDED" && (
             <section className="panel padded round-result">
               <Trophy size={25} />
@@ -97,7 +111,9 @@ export default async function FundingRoundDetail({
                       ? "The selection ended in a tie"
                       : r.outcome === "NO_QUORUM"
                         ? "Selection did not reach quorum"
-                        : "No schemes qualified"}
+                        : r.outcome === "FUNDING_FAILED"
+                          ? "Funding did not proceed"
+                          : "No schemes qualified"}
                 </h3>
                 <p>
                   {winner
@@ -105,8 +121,9 @@ export default async function FundingRoundDetail({
                     : "No winning scheme was selected. A future round can invite a new decision."}
                 </p>
                 <p className="muted small-text">
-                  This records the community’s selection. No funds have been
-                  moved or reserved for this round.
+                  {finance
+                    ? "This is the recorded community decision. The separate funding panel shows whether money is held, reserved, paid, or refunded; a selected winner alone does not prove payment."
+                    : "This records the community’s selection. No funds have been moved or reserved for this round."}
                 </p>
               </div>
             </section>
@@ -197,6 +214,9 @@ export default async function FundingRoundDetail({
                       <Status value={s.status} />
                     </div>
                     <h3>{s.title}</h3>
+                    {s.category !== "UNSPECIFIED" && (
+                      <Badge>{titleCase(s.category)}</Badge>
+                    )}
                     <p className="prewrap">{s.description}</p>
                     <div className="round-request">
                       <strong>{moneyFormat(s.amount, c.currency)}</strong>
@@ -278,6 +298,7 @@ export default async function FundingRoundDetail({
                   communityId={c.id}
                   roundId={r.id}
                   currency={c.currency}
+                  funded={r.rulesVersion === 2}
                 />
               </section>
             ) : (
@@ -286,6 +307,8 @@ export default async function FundingRoundDetail({
                   <Link href="/login">
                     Sign in to check submission eligibility →
                   </Link>
+                ) : r.proposalPolicy === "STAFF" ? (
+                  "This round accepts schemes from the administrator and active moderators only."
                 ) : (
                   "This round accepts schemes from active community members only."
                 )}
@@ -378,7 +401,9 @@ export default async function FundingRoundDetail({
                 <dd>
                   {r.proposalPolicy === "EVERYONE"
                     ? "Any signed-in account*"
-                    : "Active members"}
+                    : r.proposalPolicy === "STAFF"
+                      ? "Administrator and active moderators"
+                      : "Active members"}
                 </dd>
               </div>
               <div>
@@ -499,8 +524,9 @@ export default async function FundingRoundDetail({
           <div className="notice">
             <ShieldCheck size={20} />
             <span>
-              Selection records the community’s preference. The treasury remains
-              unchanged by this round.{" "}
+              {finance
+                ? "The vote and the funding lifecycle are separate. Follow deposit, payout, and refund receipts in this round’s dedicated pool."
+                : "Selection records the community’s preference. The treasury remains unchanged by this round."}{" "}
               <Link href={`/communities/${slug}/activity`}>
                 View the decision trail →
               </Link>

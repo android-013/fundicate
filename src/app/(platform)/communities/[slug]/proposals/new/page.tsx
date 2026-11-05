@@ -5,10 +5,13 @@ import { ProposalForm } from "@/components/forms";
 import { PageHeading, Rule } from "@/components/ui";
 export default async function NewProposal({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ type?: string }>;
 }) {
   const { slug } = await params;
+  const { type } = await searchParams;
   const {
     community: c,
     user,
@@ -16,20 +19,34 @@ export default async function NewProposal({
     isStaff,
   } = await communityContext(slug);
   if (!user) redirect("/login");
-  if (!isMember || (!isStaff && !c.policy?.allowMemberProposals))
+  const strict = c.governanceProfile === "STRICT";
+  const removalOnly = strict && !isStaff && !c.policy?.allowMemberProposals;
+  if (!isMember || (!strict && !isStaff && !c.policy?.allowMemberProposals))
     return (
       <div className="notice">
         An active membership with proposal submission permission is required.
       </div>
     );
-  const members = await db.communityMembership.findMany({
-    where: {
-      communityId: c.id,
-      status: { in: ["ACTIVE", "SUSPENDED"] },
-      userId: { notIn: [c.adminId, user.id] },
-    },
-    include: { user: true },
-  });
+  const [members, successors] = await Promise.all([
+    db.communityMembership.findMany({
+      where: {
+        communityId: c.id,
+        status: { in: ["ACTIVE", "SUSPENDED"] },
+        userId: { notIn: strict ? [user.id] : [c.adminId, user.id] },
+      },
+      include: { user: { select: { displayName: true } } },
+    }),
+    strict
+      ? db.communityMembership.findMany({
+          where: {
+            communityId: c.id,
+            status: "ACTIVE",
+            userId: { not: c.adminId },
+          },
+          include: { user: { select: { displayName: true } } },
+        })
+      : Promise.resolve([]),
+  ]);
   return (
     <>
       <PageHeading
@@ -48,6 +65,14 @@ export default async function NewProposal({
               name: m.user.displayName,
             }))}
             isStaff={isStaff}
+            governanceProfile={strict ? "STRICT" : "LEGACY"}
+            adminId={c.adminId}
+            successors={successors.map((m) => ({
+              id: m.userId,
+              name: m.user.displayName,
+            }))}
+            removalOnly={removalOnly}
+            initialType={type === "REMOVAL" ? "REMOVAL" : "FUNDING"}
           />
         </section>
         <aside className="panel padded fit">
@@ -67,6 +92,13 @@ export default async function NewProposal({
             Funding votes approve an allocation. A separate authorized action
             records a simulated payout.
           </Rule>
+          {strict && (
+            <Rule title="Accountable administration">
+              Administrator removal publishes its successor before voting. Any
+              active member can open and finalize that ballot. Authority
+              transfer and successor departure are locked while it is open.
+            </Rule>
+          )}
         </aside>
       </div>
     </>

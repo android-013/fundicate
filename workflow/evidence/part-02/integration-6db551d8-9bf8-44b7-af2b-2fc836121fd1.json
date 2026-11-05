@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "integration",
+  "token": "6db551d8-9bf8-44b7-af2b-2fc836121fd1",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/test-db.mjs",
+      "integration"
+    ]
+  ],
+  "startedAt": "2026-11-05T16:27:09.702Z",
+  "finishedAt": "2026-11-05T16:28:00.126Z",
+  "exitCode": 0,
+  "sourceFingerprint": "c625c2f0b453324f67ef53b91857527f1081fd546d44045a919dd488413b3be0",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/integration-6db551d8-9bf8-44b7-af2b-2fc836121fd1.log",
+  "logHash": "6cefe34e548dcad350df3e92bcb73d35957ef084e23dc2f3f6b7c8b583f244ae"
+}

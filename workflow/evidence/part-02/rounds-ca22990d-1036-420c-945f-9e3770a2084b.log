@@ -1,0 +1,52 @@
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","scripts/test-db.mjs","rounds"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1793894585343_15628", schema "public" at "127.0.0.1:54329"
+
+6 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 1134ms
+✓ Running next.config.ts took 152ms
+AssertionError [ERR_ASSERTION]: {"error":": Unrecognized key: \"creatorId\""}
+
+400 !== 200
+
+    at post (C:\Users\Refat\Documents\git web\Startup\fundicate\tests\rounds.ts:40:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async <anonymous> (C:\Users\Refat\Documents\git web\Startup\fundicate\tests\rounds.ts:143:20)
+    at async check (C:\Users\Refat\Documents\git web\Startup\fundicate\tests\rounds.ts:18:3)
+    at async main (C:\Users\Refat\Documents\git web\Startup\fundicate\tests\rounds.ts:119:3) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 400,
+  expected: 200,
+  operator: 'strictEqual'
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "unit",
+  "token": "8981486f-d477-4ccb-befc-7154eac9d004",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/unit-tests.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-05T15:58:21.639Z",
+  "finishedAt": "2026-11-05T15:58:41.079Z",
+  "exitCode": 0,
+  "sourceFingerprint": "6479c2326d66532c90286504bd67a0d0e98899b1f0c91f0daf2f5e9f9d6ea57b",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/unit-8981486f-d477-4ccb-befc-7154eac9d004.log",
+  "logHash": "0868de916c9f498691faeaa725914854b084eec0fdb60d41853bee023bb8ba6c"
+}

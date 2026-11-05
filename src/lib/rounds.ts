@@ -4,6 +4,11 @@ import { access, atomic } from "./service";
 import { ensure } from "./errors";
 import { calculateOutcome } from "./governance";
 import {
+  initializeRoundFunding,
+  openRoundFunding,
+  freezeRoundFunding,
+} from "./funded-rounds";
+import {
   MAX_ROUND_SCHEMES,
   ROUND_STAGE_MS,
   roundSchema,
@@ -66,6 +71,7 @@ export async function createFundingRound(
   now = new Date(),
 ) {
   const data = roundSchema.parse(input);
+  const { funded, funding, ...roundData } = data;
   const closes = new Date(data.submissionsCloseAt);
   ensure(
     closes > now && closes.getTime() <= now.getTime() + 90 * ROUND_STAGE_MS,
@@ -76,12 +82,14 @@ export async function createFundingRound(
     await access(tx, data.communityId, userId, true);
     const round = await tx.fundingRound.create({
       data: {
-        ...data,
+        ...roundData,
+        rulesVersion: funded ? 2 : 1,
         creatorId: userId,
         submissionsCloseAt: closes,
         createdAt: now,
       },
     });
+    if (funding) await initializeRoundFunding(tx, round, funding, now);
     await event(tx, userId, round, "FUNDING_ROUND_CREATED");
     return round;
   });
@@ -113,6 +121,12 @@ export async function submitFundingScheme(
       "Only active community members can submit to this round.",
       403,
     );
+    if (round.proposalPolicy === "STAFF")
+      await access(tx, data.communityId, userId, true);
+    ensure(
+      round.rulesVersion === 1 || data.category !== "UNSPECIFIED",
+      "Choose a category for a funded scheme.",
+    );
     ensure(
       (await tx.fundingScheme.count({ where: { roundId: round.id } })) <
         MAX_ROUND_SCHEMES,
@@ -132,6 +146,7 @@ export async function submitFundingScheme(
         description: data.description,
         amount: data.amount,
         recipient: data.recipient,
+        category: data.category,
         supportingUrl: data.supportingUrl || null,
         createdAt: now,
       },
@@ -246,6 +261,7 @@ export async function fundingRoundAction(
         where: { id: round.id },
         data: { status: "SUBMISSIONS" },
       });
+      await openRoundFunding(tx, round, now);
       await event(tx, userId, round, "FUNDING_ROUND_OPENED");
     } else if (data.action === "cancel") {
       ensure(
@@ -265,6 +281,7 @@ export async function fundingRoundAction(
       const schemes = await tx.fundingScheme.count({
         where: { roundId: round.id },
       });
+      const funding = await freezeRoundFunding(tx, round, now);
       const members = await tx.communityMembership.findMany({
         where: { communityId: round.communityId, status: "ACTIVE" },
         select: { userId: true },
@@ -288,10 +305,19 @@ export async function fundingRoundAction(
       await event(tx, userId, round, "ROUND_SCREENING_OPENED", {
         eligible: members.length,
       });
-      if (!schemes) {
+      if (!schemes || !funding.ready) {
+        if (!funding.ready)
+          await tx.fundingScheme.updateMany({
+            where: { roundId: round.id },
+            data: { status: "REJECTED" },
+          });
         await tx.fundingRound.update({
           where: { id: round.id },
-          data: { status: "DECIDED", decidedAt: now, outcome: "NO_QUALIFIED" },
+          data: {
+            status: "DECIDED",
+            decidedAt: now,
+            outcome: funding.ready ? "NO_QUALIFIED" : "FUNDING_FAILED",
+          },
         });
         await event(tx, userId, round, "ROUND_SCREENING_CLOSED", {
           qualified: 0,
@@ -471,7 +497,8 @@ export async function getFundingRoundView(
         canSubmit: Boolean(
           userId &&
           !["SUSPENDED", "REMOVED"].includes(membership?.status ?? "") &&
-          (active || round.proposalPolicy === "EVERYONE"),
+          (round.proposalPolicy === "EVERYONE" ||
+            (round.proposalPolicy === "STAFF" ? staff : active)),
         ),
         ownScreens: Object.fromEntries(
           screens

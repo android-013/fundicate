@@ -1,16 +1,83 @@
 import { z } from "zod";
 import { money, uuid } from "./validation";
+import { fundsConfigSchema } from "./funds-core";
 
 export const ROUND_STAGE_MS = 24 * 60 * 60 * 1000;
 export const MAX_ROUND_SCHEMES = 50;
-export const roundSchema = z.object({
-  communityId: uuid,
-  title: z.string().trim().min(5).max(140),
-  description: z.string().trim().min(20).max(8000),
-  proposalPolicy: z.enum(["MEMBERS", "EVERYONE"]),
-  quorumBps: z.coerce.number().int().min(1).max(10000),
-  submissionsCloseAt: z.iso.datetime(),
-});
+export const roundSchema = z
+  .object({
+    communityId: uuid,
+    title: z.string().trim().min(5).max(140),
+    description: z.string().trim().min(20).max(8000),
+    proposalPolicy: z.enum(["STAFF", "MEMBERS", "EVERYONE"]),
+    quorumBps: z.coerce.number().int().min(1).max(10000),
+    submissionsCloseAt: z.iso.datetime(),
+    funded: z.boolean().default(false),
+    fundingTarget: z.unknown().optional(),
+    minimumContribution: z.unknown().optional(),
+    maximumContribution: z.unknown().optional(),
+    collectionClosesAt: z.unknown().optional(),
+    expiresAt: z.unknown().optional(),
+    vetoEnabled: z.unknown().optional(),
+    selectionMethod: z.unknown().optional(),
+    votingWeight: z.unknown().optional(),
+    allocationPolicy: z.unknown().optional(),
+  })
+  .strict()
+  .superRefine((data, context) => {
+    if (!data.funded) {
+      for (const key of [
+        "fundingTarget",
+        "minimumContribution",
+        "maximumContribution",
+        "collectionClosesAt",
+        "expiresAt",
+        "vetoEnabled",
+        "selectionMethod",
+        "votingWeight",
+        "allocationPolicy",
+      ] as const) {
+        if (data[key] !== undefined)
+          context.addIssue({
+            code: "custom",
+            path: [key],
+            message: "Funding settings require an explicitly funded round.",
+          });
+      }
+    }
+  })
+  .transform((data) => {
+    const {
+      funded,
+      fundingTarget,
+      minimumContribution,
+      maximumContribution,
+      collectionClosesAt,
+      expiresAt,
+      vetoEnabled,
+      selectionMethod,
+      votingWeight,
+      allocationPolicy,
+      ...round
+    } = data;
+    return {
+      ...round,
+      funded,
+      funding: funded
+        ? fundsConfigSchema.parse({
+            fundingTarget,
+            minimumContribution,
+            maximumContribution,
+            collectionClosesAt,
+            expiresAt,
+            vetoEnabled,
+            selectionMethod,
+            votingWeight,
+            allocationPolicy,
+          })
+        : null,
+    };
+  });
 export const schemeSchema = z.object({
   communityId: uuid,
   roundId: uuid,
@@ -18,6 +85,9 @@ export const schemeSchema = z.object({
   description: z.string().trim().min(20).max(8000),
   amount: money.refine((v) => v > 0n, "Request an amount greater than zero."),
   recipient: z.string().trim().min(2).max(150),
+  category: z
+    .enum(["UNSPECIFIED", "DONATION", "CROWDFUNDING", "INVESTMENT_REQUEST"])
+    .default("UNSPECIFIED"),
   supportingUrl: z
     .union([
       z.literal(""),

@@ -52,6 +52,18 @@ describe("funding round rules", () => {
     };
     expect(roundSchema.safeParse(r).success).toBe(true);
     expect(
+      roundSchema.safeParse({ ...r, proposalPolicy: "STAFF" }).success,
+    ).toBe(true);
+    expect(
+      roundSchema.safeParse({ ...r, funded: false, vetoEnabled: true }).success,
+    ).toBe(false);
+    expect(
+      roundSchema.safeParse({ ...r, selectionMethod: "IRV" }).success,
+    ).toBe(false);
+    expect(roundSchema.safeParse({ ...r, assetId: "near:token" }).success).toBe(
+      false,
+    );
+    expect(
       roundSchema.safeParse({ ...r, proposalPolicy: "ADMIN_WEIGHTED" }).success,
     ).toBe(false);
     expect(roundSchema.safeParse({ ...r, quorumBps: 0 }).success).toBe(false);

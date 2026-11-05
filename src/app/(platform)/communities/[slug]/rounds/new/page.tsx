@@ -26,7 +26,10 @@ export default async function NewFundingRound({
         </div>
       </div>
       <section className="panel padded round-form-panel">
-        <FundingRoundForm communityId={community.id} />
+        <FundingRoundForm
+          communityId={community.id}
+          currency={community.currency}
+        />
       </section>
     </>
   );

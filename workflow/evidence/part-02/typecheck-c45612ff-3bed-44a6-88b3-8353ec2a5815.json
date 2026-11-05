@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "typecheck",
+  "token": "c45612ff-3bed-44a6-88b3-8353ec2a5815",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ]
+  ],
+  "startedAt": "2026-11-05T16:25:41.063Z",
+  "finishedAt": "2026-11-05T16:26:00.103Z",
+  "exitCode": 0,
+  "sourceFingerprint": "c625c2f0b453324f67ef53b91857527f1081fd546d44045a919dd488413b3be0",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/typecheck-c45612ff-3bed-44a6-88b3-8353ec2a5815.log",
+  "logHash": "4e093d8239ee359b0b5296bbdef4caaf7edf826212d65dbb6925a1da25ffccf2"
+}

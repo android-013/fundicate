@@ -1,0 +1,10 @@
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","scripts/unit-tests.mjs"]
+
+ RUN  v4.1.12 C:/Users/Refat/Documents/git web/Startup/fundicate
+
+
+ Test Files  5 passed (5)
+      Tests  47 passed (47)
+   Start at  21:58:39
+   Duration  1.91s (transform 1.13s, setup 0ms, import 3.78s, tests 381ms, environment 2ms)
+

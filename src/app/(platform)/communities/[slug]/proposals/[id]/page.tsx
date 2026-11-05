@@ -32,6 +32,28 @@ export default async function ProposalDetail({
     },
   });
   if (!p) notFound();
+  const strictRemoval =
+    p.governanceProfile === "STRICT" && p.type === "REMOVAL";
+  const strictAdminRemoval =
+    p.governanceProfile === "STRICT" && p.type === "REMOVAL" && !!p.successorId;
+  const removalMembers =
+    p.type === "REMOVAL"
+      ? await db.communityMembership.findMany({
+          where: {
+            communityId: c.id,
+            userId: {
+              in: [p.targetUserId, p.successorId].filter(
+                (id): id is string => !!id,
+              ),
+            },
+          },
+          select: { userId: true, user: { select: { displayName: true } } },
+        })
+      : [];
+  const subject = removalMembers.find((m) => m.userId === p.targetUserId)?.user
+    .displayName;
+  const successor = removalMembers.find((m) => m.userId === p.successorId)?.user
+    .displayName;
   const result = calculateOutcome(
     p.votes,
     p.eligibleVoters.length,
@@ -73,6 +95,43 @@ export default async function ProposalDetail({
           <article className="panel padded">
             <h2>The idea</h2>
             <p className="prewrap proposal-body">{p.description}</p>
+            {p.type === "REMOVAL" && (
+              <div className="inset">
+                <h3>
+                  {strictAdminRemoval
+                    ? "Administrator removal and succession"
+                    : "Member removal"}
+                </h3>
+                <p>
+                  Member under consideration:{" "}
+                  <strong>{subject ?? "Recorded member"}</strong>.
+                </p>
+                {strictAdminRemoval && (
+                  <>
+                    <p>
+                      Published successor:{" "}
+                      <strong>
+                        {successor ?? "Recorded active successor"}
+                      </strong>
+                      . Approval removes the incumbent and appoints this
+                      successor atomically.
+                    </p>
+                    <p className="muted small-text">
+                      While this ballot is open, direct authority transfer and
+                      the successor’s departure or removal are locked. Any
+                      active member can finalize under the published deadline
+                      rules.
+                    </p>
+                  </>
+                )}
+                <p className="muted small-text">
+                  {p.governanceProfile === "STRICT" ? "Strict" : "Legacy"}{" "}
+                  governance was frozen for this ballot. The subject cannot
+                  vote; removal requires an exact two-thirds majority of yes/no
+                  votes and the published quorum.
+                </p>
+              </div>
+            )}
             {p.supportingUrl && (
               <a
                 href={p.supportingUrl}
@@ -260,14 +319,14 @@ export default async function ProposalDetail({
               </div>
             )}
           </section>
-          {isStaff && (
+          {(isStaff || (strictRemoval && isMember)) && (
             <section className="panel padded">
               <h2>Decision controls</h2>
               <p className="muted small-text">
                 All actions are authorized and recorded on the server.
               </p>
               <div className="stack">
-                {p.status === "DRAFT" && (
+                {isStaff && p.status === "DRAFT" && (
                   <ActionButton
                     operation="proposal-action"
                     body={{
@@ -293,7 +352,7 @@ export default async function ProposalDetail({
                     Finalize decision
                   </ActionButton>
                 )}
-                {p.status === "APPROVED" && p.type === "FUNDING" && (
+                {isStaff && p.status === "APPROVED" && p.type === "FUNDING" && (
                   <ActionButton
                     className="button primary"
                     operation="proposal-action"
@@ -308,7 +367,9 @@ export default async function ProposalDetail({
                   </ActionButton>
                 )}
               </div>
-              {["DRAFT", "OPEN"].includes(p.status) &&
+              {isStaff &&
+                !(p.governanceProfile === "STRICT" && p.status === "OPEN") &&
+                ["DRAFT", "OPEN"].includes(p.status) &&
                 p.type !== "SUSPENSION_REVIEW" && (
                   <details className="cancel-details">
                     <summary>Cancel this proposal</summary>

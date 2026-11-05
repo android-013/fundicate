@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "browser",
+  "token": "255a73dc-3b6b-429c-9e2d-c31fb951f435",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/browser-tests.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-05T16:31:54.866Z",
+  "finishedAt": "2026-11-05T16:33:11.721Z",
+  "exitCode": 0,
+  "sourceFingerprint": "c625c2f0b453324f67ef53b91857527f1081fd546d44045a919dd488413b3be0",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/browser-255a73dc-3b6b-429c-9e2d-c31fb951f435.log",
+  "logHash": "2de9ebf12a1f272bddb2c0030262d3b081831dbac9fc2ab025988ae3cc29ab67"
+}

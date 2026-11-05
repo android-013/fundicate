@@ -1,5 +1,11 @@
 import { requireUser } from "@/lib/auth";
-import { ActionForm, Field, Select, TextArea } from "@/components/forms";
+import {
+  ActionForm,
+  CommunityGovernanceFields,
+  Field,
+  Select,
+  TextArea,
+} from "@/components/forms";
 import { PageHeading, Rule } from "@/components/ui";
 export default async function NewCommunity() {
   await requireUser();
@@ -53,12 +59,7 @@ export default async function NewCommunity() {
                 max="9999999.99"
               />
             </div>
-            <TextArea
-              label="Membership questions (one per line, up to five)"
-              name="questions"
-              required={false}
-              placeholder="What would you like to contribute to our community?"
-            />
+            <CommunityGovernanceFields />
           </ActionForm>
         </section>
         <aside className="panel padded fit">
@@ -69,7 +70,13 @@ export default async function NewCommunity() {
           </Rule>
           <Rule title="Membership by majority">
             Applications go to a member vote by default, with a 50%
-            participation quorum.
+            participation quorum. Choose strict governance to keep admissions
+            and all removals under member ballots.
+          </Rule>
+          <Rule title="Declarations are promises">
+            A membership pledge records a contribution commitment. Actual round
+            deposits have separate receipts and never include unreceived
+            pledges.
           </Rule>
           <Rule title="An accountable treasury">
             All funds are simulated. Every posted transaction has balanced,

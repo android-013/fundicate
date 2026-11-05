@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { communityContext } from "@/lib/community";
-import { Rule, SectionTitle, Avatar } from "@/components/ui";
+import { Rule, SectionTitle, Avatar, Badge } from "@/components/ui";
 export default async function Governance({
   params,
 }: {
@@ -8,16 +8,20 @@ export default async function Governance({
 }) {
   const { slug } = await params;
   const { community: c, isMember, isStaff } = await communityContext(slug);
+  const strict = c.governanceProfile === "STRICT";
   return (
     <>
       <div className="section-title">
         <div>
           <h2>A fair way forward.</h2>
+          <Badge tone={strict ? "green" : "neutral"}>
+            {strict ? "Strict member governance" : "Legacy governance"}
+          </Badge>
           <p className="muted">
             The rules we share, and the decisions we make together.
           </p>
         </div>
-        {isMember && (isStaff || c.policy?.allowMemberProposals) && (
+        {isMember && (isStaff || c.policy?.allowMemberProposals || strict) && (
           <Link
             href={`/communities/${slug}/proposals/new`}
             className="button primary"
@@ -28,6 +32,19 @@ export default async function Governance({
       </div>
       <div className="two-column">
         <section className="panel padded">
+          <Rule
+            title={
+              strict
+                ? "Member governed, including leadership"
+                : "A versioned legacy profile"
+            }
+          >
+            {strict
+              ? "The founder and admitted members declare a contribution pledge. Admission always requires a majority ballot. Staff cannot unilaterally suspend members or remove their voting rights."
+              : "This community preserves its existing review, emergency suspension review, and authority transfer features. Historical contribution declarations that were never recorded remain unknown."}{" "}
+            Declarations record intent; only confirmed deposit receipts count as
+            received funds.
+          </Rule>
           <Rule title="One member. One voice.">
             Every eligible active member, moderator, and administrator gets
             exactly one vote. Opening a ballot freezes its eligible voter
@@ -61,8 +78,10 @@ export default async function Governance({
           </Rule>
           <Rule title="Removal requires a two-thirds vote">
             At least an exact two-thirds of valid yes/no votes, with the
-            configured quorum. The subject cannot vote. Transfer authority
-            before proposing removal of an administrator.
+            configured quorum. The subject cannot vote.{" "}
+            {strict
+              ? "Any active member can open an administrator-removal ballot with a published active successor. Approval removes the incumbent and transfers authority atomically. The incumbent cannot block the ballot."
+              : "Transfer authority before proposing removal of an administrator."}
           </Rule>
           <Rule
             title={
@@ -74,6 +93,8 @@ export default async function Governance({
             {c.policy!.allowMemberProposals
               ? "Members submit drafts for staff to open as formal ballots. Administrators and moderators may create and open agendas."
               : "Administrators and moderators create formal agendas. Changes to this permission must pass a governance vote."}
+            {strict &&
+              " Active members can always bring an administrator-removal ballot with a nominated successor."}
           </Rule>
         </section>
         <aside>
@@ -89,7 +110,9 @@ export default async function Governance({
             <p className="muted">
               One administrator at all times, stored as a required community
               reference. Only the administrator may appoint moderators or
-              explicitly transfer authority to an active member.
+              explicitly transfer authority to an active member.{" "}
+              {strict &&
+                "An approved administrator-removal ballot can also appoint its published successor. While that ballot is open, direct authority transfer and the successor’s departure or removal are locked."}
             </p>
             <Link href={`/communities/${slug}/members`} className="text-link">
               Meet the members ↗
@@ -113,6 +136,8 @@ export default async function Governance({
               voter has cast a ballot. No partial ballot can be closed early.
               The server calculates the result and records the decision
               atomically.
+              {strict &&
+                " Any active member can finalize an administrator-removal ballot under the same deadline rules."}
             </p>
           </section>
         </aside>

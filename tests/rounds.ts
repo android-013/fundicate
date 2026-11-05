@@ -140,11 +140,13 @@ async function main() {
         admin.cookie,
         400,
       );
-      const data = await post(
+      await post(
         "funding-round",
         { ...future, creatorId: outsider.user.id },
         admin.cookie,
+        400,
       );
+      const data = await post("funding-round", future, admin.cookie);
       const id = data.redirect.split("/").at(-1);
       assert.equal(
         (await db.fundingRound.findUniqueOrThrow({ where: { id } })).creatorId,

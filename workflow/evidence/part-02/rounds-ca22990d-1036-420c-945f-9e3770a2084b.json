@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "rounds",
+  "token": "ca22990d-1036-420c-945f-9e3770a2084b",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/test-db.mjs",
+      "rounds"
+    ]
+  ],
+  "startedAt": "2026-11-05T16:03:04.998Z",
+  "finishedAt": "2026-11-05T16:03:39.838Z",
+  "exitCode": 1,
+  "sourceFingerprint": "6479c2326d66532c90286504bd67a0d0e98899b1f0c91f0daf2f5e9f9d6ea57b",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/rounds-ca22990d-1036-420c-945f-9e3770a2084b.log",
+  "logHash": "714715d42c05530b451343c0b049925089fad26e2cca69b6b7ddcc33cf498b62"
+}

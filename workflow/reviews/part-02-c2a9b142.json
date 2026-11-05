@@ -1,0 +1,112 @@
+{
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "reviewer": "/root/part02_review",
+  "independent": true,
+  "verdict": "pass",
+  "sourceFingerprint": "c625c2f0b453324f67ef53b91857527f1081fd546d44045a919dd488413b3be0",
+  "receiptSetHash": "e24776d6baa624c461e49d3fd9b5e19516af11673deabd118aec19cbe7395674",
+  "handoffHash": "1dfbef6a2eabaf649b3efecfc359d095e0a7f42fd92622f16bcaf91689ed4990",
+  "requirementsReviewed": ["R07", "R08", "R09", "R10", "R11", "R12", "R13", "R14"],
+  "preservation": {
+    "legacyFeatures": true,
+    "historyPreserved": true,
+    "heldFundsIsolated": true,
+    "privacyPreserved": true
+  },
+  "scope": "Part 2 local simulated funding and governance foundation, assessed against the canonical five-part plan, R07-R14 and original project notes. Future weighted methods, veto, ratings and verified external NEAR operations remain in their assigned later parts.",
+  "independence": "This reviewer did not implement or edit product code, migrations, tests, the handoff or workflow state. Findings were sent to the coordinator and independently rechecked after implementation repairs.",
+  "evidence": {
+    "receiptVerification": "Independently read all 11 current receipts and their logs. Recomputed and matched each receipt file hash and log hash; verified run/part/check identities, exitCode 0, sourceUnchanged true and the final source fingerprint. Current status independently matched the source, receipt-set and handoff bindings above. Recomputed the handoff file hash. All 22 assigned acceptance criteria reference current-source evidence; no blocker or active check remains.",
+    "checks": {
+      "workflow-tests": "13 passed, zero failed/skipped",
+      "unit": "47 passed across 5 files",
+      "typecheck": "passed",
+      "lint": "passed",
+      "integration": "27 PostgreSQL integrity/security checks passed",
+      "build": "Prisma generation, TypeScript and production build passed",
+      "http": "61 end-to-end checks passed",
+      "browser": "75 layout/interaction checks passed with no browser runtime errors",
+      "rounds": "20 integrity/authorization/privacy/HTTP/browser checks and 14 zero-violation axe scans passed",
+      "funds": "32 funding/governance/HTTP/browser/recovery checks and 8 zero-violation axe scans passed",
+      "accessibility": "30 general application scans with zero violations"
+    },
+    "manualReview": [
+      "Reviewed strict founder/application declarations, exact two-thirds administrator removal, published successor revalidation, authority locks, atomic transfer and preservation of legacy REVIEW/suspension/transfer behavior.",
+      "Reviewed V1/V2 dispatch, supported-rule rejection, immutable asset/rule/contributor/allocation snapshots, separate round account tables, balanced postings and original-source ownership.",
+      "Reviewed request caps, exact largest-remainder refunds, failed-target/no-winner/unpayable/expiry handling, owner-bound idempotency, durable attempts, partial worker restart and concurrent processing.",
+      "Independently executed 2,000 deterministic randomized allocation cases against funds-core.ts: exact conservation, refund bounds, request caps and permutation-invariant remainder allocation passed. This was a manual reviewer check, not a workflow receipt.",
+      "Inspected the final regenerated desktop collecting and mobile settled screenshots, visible policy text and funding receipts. Reviewed stage-specific ballot reads and regression evidence for privacy preservation."
+    ]
+  },
+  "findings": [
+    {
+      "id": "P2-REVIEW-01",
+      "severity": "medium",
+      "requirements": ["R10"],
+      "file": "src/lib/rounds-core.ts",
+      "description": "Nonfunded V1 requests initially accepted known funding/future-rule fields and silently discarded them.",
+      "status": "resolved",
+      "resolution": "The schema rejects funding/rule fields unless funded is explicitly enabled; unsupported V2 settings and asset overrides are rejected. Current unit and funds evidence covers both paths."
+    },
+    {
+      "id": "P2-REVIEW-02",
+      "severity": "medium",
+      "requirements": ["R10", "R13"],
+      "file": "src/components/round-funds.tsx",
+      "description": "The initial UI did not explicitly publish veto-disabled rules and omitted precise residual/expiry semantics.",
+      "status": "resolved",
+      "resolution": "Creation and published funding views now state veto disabled. Detail text publishes largest-remainder rounding, original-source-ID ties and unprepared-only expiry, with queued plans resuming unchanged. Final desktop/mobile evidence was inspected."
+    },
+    {
+      "id": "P2-REVIEW-03",
+      "severity": "medium",
+      "requirements": ["R11", "R14"],
+      "file": "prisma/migrations/20261105020000_round_receipt_guard/migration.sql",
+      "description": "A forged contribution row could initially reference an unused non-contribution transaction without proving an original received deposit.",
+      "status": "resolved",
+      "resolution": "An additive BEFORE INSERT guard now requires a matching CONTRIBUTION transaction, round, amount, source, initiator and original owner. The current funds suite rejects a forged receipt referencing RESERVE."
+    },
+    {
+      "id": "P2-REVIEW-04",
+      "severity": "low",
+      "requirements": ["R12", "R13"],
+      "file": "src/app/(platform)/communities/[slug]/rounds/[roundId]/page.tsx",
+      "description": "Failed funding initially displayed the generic no-qualified-schemes result heading.",
+      "status": "resolved",
+      "resolution": "The result view now explicitly describes FUNDING_FAILED, while the separate funding panel records the refund lifecycle and reason."
+    },
+    {
+      "id": "P2-REVIEW-05",
+      "severity": "medium",
+      "requirements": ["R13", "R14"],
+      "file": "tests/funds.ts",
+      "description": "Initial integration coverage omitted unpayable winning recipients and expiry after a decision but before settlement preparation.",
+      "status": "resolved",
+      "resolution": "Both actual lifecycle cases now pass and refund original sources without payout. Existing queued-plan-after-expiry, separate-process restart, duplicate/concurrent execution and durable FAILED-to-CONFIRMED retry cases also pass."
+    },
+    {
+      "id": "P2-REVIEW-06",
+      "severity": "medium",
+      "requirements": ["R07", "R08"],
+      "file": "prisma/migrations/20261105030000_returning_declarations/migration.sql",
+      "description": "The first activation guard conflicted with preserved once-only declarations if a returning member applied after a higher community minimum.",
+      "status": "resolved",
+      "resolution": "New strict declarations meet the recording-time minimum even on inactive records; active strict memberships always require a known declaration; prior known amount/date remain immutable. A real leave, fixture minimum increase, new application, member ballot and approved rejoin preserves the old declaration while recording the new qualifying application pledge."
+    },
+    {
+      "id": "P2-REVIEW-07",
+      "severity": "low",
+      "requirements": ["R07", "R13"],
+      "file": "src/components/forms.tsx",
+      "description": "Browser verification exposed an overbroad governance-profile accessible name, and early screenshot evidence retained focus/scroll artifacts.",
+      "status": "resolved",
+      "resolution": "The governance selector has an explicit label reference; strict creation and pledge declaration browser flows pass. Snapshot capture resets focus/scroll and waits for rendering; final desktop/mobile images were inspected and eight funded/strict-form axe scans pass."
+    }
+  ],
+  "observations": [
+    "Historical failed attempts remain in evidence. A prior navigation failure was not reproduced in isolated reruns or the final serialized verification; diagnostics remain in the test. This review makes no load-capacity or product-timeout claim from that observation.",
+    "All monetary observations in this part are local simulation. No blockchain transfer, wallet signature or external finality claim is accepted here; real verified NEAR testnet operations remain mandatory in Part 5."
+  ],
+  "conclusion": "Part 2 meets its scoped acceptance gates with no unresolved material finding. Approval is bound only to the exact source, receipt set and handoff hashes above. The coordinator may register this report and formally close Part 2; Part 3 requires a fresh user next."
+}

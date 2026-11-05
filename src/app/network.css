@@ -3761,3 +3761,188 @@ td small {
     gap: 10px;
   }
 }
+
+/* Dedicated round finance: overview first, receipts and policy on demand. */
+.governance-founder,
+.round-funded-config {
+  display: grid;
+  gap: 20px;
+}
+.governance-founder h3,
+.round-funded-config h3 {
+  margin: 0;
+}
+.round-funding-choice .checkbox {
+  font-weight: 600;
+}
+.round-funding-choice > p {
+  margin-bottom: 0;
+}
+.round-funds {
+  border-color: #375567;
+  background: linear-gradient(135deg, #162936 0, #171f31 42%, #1c2035 100%);
+  min-width: 0;
+}
+.round-funds h3 {
+  margin: 3px 0 0;
+}
+.round-funds h4 {
+  color: var(--ink);
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+.round-funds-icon {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  border: 1px solid #4d6d7a;
+  border-radius: 12px;
+  background: #213b48;
+  color: #92e7eb;
+  flex-shrink: 0;
+}
+.round-funding-progress {
+  padding: 19px 0;
+}
+.round-funding-progress > .row {
+  gap: 6px 16px;
+  font-size: 12px;
+}
+.round-funding-progress progress {
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin: 12px 0 7px;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #2a3a50;
+  accent-color: #86dce8;
+}
+.round-funding-progress progress::-webkit-progress-bar {
+  background: #2a3a50;
+  border-radius: 8px;
+}
+.round-funding-progress progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #9c9cec, #82e4dc);
+  border-radius: 8px;
+}
+.round-funding-progress progress::-moz-progress-bar {
+  background: #82e4dc;
+}
+.round-fund-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 22px;
+}
+.round-fund-metrics > div {
+  background: #0f1b2a99;
+  border: 1px solid #34485e;
+  padding: 14px 12px;
+  border-radius: 11px;
+  min-width: 0;
+}
+.round-fund-metrics dt {
+  font-size: 11px;
+  color: #bbcade;
+}
+.round-fund-metrics dd {
+  margin: 5px 0 0;
+  font-size: clamp(14px, 1.35vw, 20px);
+  font-weight: 650;
+  color: #e8faff;
+  overflow-wrap: anywhere;
+}
+.round-contribution-form,
+.round-own-funds,
+.round-settlement-controls,
+.round-funding-details {
+  padding-top: 22px;
+  margin-top: 22px;
+  border-top: 1px solid #3a4c63;
+}
+.round-contribution-form .form {
+  max-width: 520px;
+}
+.round-fund-receipts {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.round-fund-receipts > article {
+  padding: 16px;
+  background: #121e30;
+  border: 1px solid #35485f;
+  border-radius: 10px;
+  min-width: 0;
+}
+.round-funds .detail-list {
+  margin-bottom: 0;
+}
+.round-funds .detail-list dt {
+  flex-shrink: 1;
+}
+.round-funds .detail-list dd {
+  max-width: 65%;
+}
+.round-fund-receipts .mono {
+  font-size: 10px;
+}
+.round-own-refunds {
+  display: grid;
+  gap: 12px;
+  padding-top: 18px;
+}
+.round-settlement-controls > .row {
+  align-items: flex-start;
+}
+.round-funding-details > summary {
+  font-size: 12px;
+}
+.round-funding-details table {
+  min-width: 630px;
+}
+.round-funding-details td > small {
+  display: block;
+  max-width: 250px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  margin-top: 5px;
+}
+.round-fund-assurance {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #bad5df;
+  font-size: 11px;
+  margin-top: 24px;
+}
+.round-fund-assurance svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+@media (max-width: 680px) {
+  .round-fund-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .round-fund-metrics dd {
+    font-size: 18px;
+  }
+  .round-funds > .row.between {
+    align-items: flex-start;
+  }
+  .round-funds > .row.between > .row {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+  .round-funds-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 9px;
+  }
+  .round-funds .eyebrow {
+    font-size: 9px;
+  }
+}

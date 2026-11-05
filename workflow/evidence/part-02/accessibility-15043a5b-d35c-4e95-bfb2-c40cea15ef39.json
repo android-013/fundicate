@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 2,
+  "runId": "c2a9b142-58d8-4b5c-9e2d-4f23ce6d9c01",
+  "check": "accessibility",
+  "token": "15043a5b-d35c-4e95-bfb2-c40cea15ef39",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/browser-tests.mjs",
+      "accessibility"
+    ]
+  ],
+  "startedAt": "2026-11-05T16:33:13.566Z",
+  "finishedAt": "2026-11-05T16:34:53.790Z",
+  "exitCode": 0,
+  "sourceFingerprint": "c625c2f0b453324f67ef53b91857527f1081fd546d44045a919dd488413b3be0",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-02/accessibility-15043a5b-d35c-4e95-bfb2-c40cea15ef39.log",
+  "logHash": "f69ec5cbd7319f5b8c0039c4b3bfeeeb5b5809f96860315bc15ba7afc82a34ff"
+}

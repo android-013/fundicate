@@ -2,7 +2,7 @@ import "dotenv/config";
 import pg from "pg";
 import { spawn, spawnSync } from "node:child_process";
 const mode = process.argv[2] || "integration";
-if (!["integration", "e2e", "rounds"].includes(mode))
+if (!["integration", "e2e", "rounds", "funds"].includes(mode))
   throw new Error("Unknown test mode");
 const databaseName = `fundicate_test_${Date.now()}_${process.pid}`;
 if (!/^fundicate_test_\d+_\d+$/.test(databaseName))
