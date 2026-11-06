@@ -9,252 +9,648 @@
       "method": "FPTP",
       "weight": "EQUAL",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "FPTP_POWER",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FPTP-EQUAL-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 FPTP-EQUAL-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FPTP-EQUAL-PROPORTIONAL",
       "method": "FPTP",
       "weight": "EQUAL",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "FPTP_POWER",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FPTP-EQUAL-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 FPTP-EQUAL-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FPTP-EQUAL-RANKED_CUTS",
       "method": "FPTP",
       "weight": "EQUAL",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "FPTP_POWER",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FPTP-EQUAL-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 FPTP-EQUAL-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FPTP-CONTRIBUTION-WINNER_ALL",
       "method": "FPTP",
       "weight": "CONTRIBUTION",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "FPTP_POWER",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FPTP-CONTRIBUTION-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 FPTP-CONTRIBUTION-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FPTP-CONTRIBUTION-PROPORTIONAL",
       "method": "FPTP",
       "weight": "CONTRIBUTION",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "FPTP_POWER",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FPTP-CONTRIBUTION-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 FPTP-CONTRIBUTION-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FPTP-CONTRIBUTION-RANKED_CUTS",
       "method": "FPTP",
       "weight": "CONTRIBUTION",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "FPTP_POWER",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FPTP-CONTRIBUTION-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 FPTP-CONTRIBUTION-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "IRV-EQUAL-WINNER_ALL",
       "method": "IRV",
       "weight": "EQUAL",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix IRV-EQUAL-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 IRV-EQUAL-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "IRV-EQUAL-PROPORTIONAL",
       "method": "IRV",
       "weight": "EQUAL",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix IRV-EQUAL-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 IRV-EQUAL-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "IRV-EQUAL-RANKED_CUTS",
       "method": "IRV",
       "weight": "EQUAL",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix IRV-EQUAL-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 IRV-EQUAL-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "IRV-CONTRIBUTION-WINNER_ALL",
       "method": "IRV",
       "weight": "CONTRIBUTION",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix IRV-CONTRIBUTION-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 IRV-CONTRIBUTION-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "IRV-CONTRIBUTION-PROPORTIONAL",
       "method": "IRV",
       "weight": "CONTRIBUTION",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix IRV-CONTRIBUTION-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 IRV-CONTRIBUTION-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "IRV-CONTRIBUTION-RANKED_CUTS",
       "method": "IRV",
       "weight": "CONTRIBUTION",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix IRV-CONTRIBUTION-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 IRV-CONTRIBUTION-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "STV-EQUAL-WINNER_ALL",
       "method": "STV",
       "weight": "EQUAL",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix STV-EQUAL-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 STV-EQUAL-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "STV-EQUAL-PROPORTIONAL",
       "method": "STV",
       "weight": "EQUAL",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix STV-EQUAL-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 STV-EQUAL-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "STV-EQUAL-RANKED_CUTS",
       "method": "STV",
       "weight": "EQUAL",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix STV-EQUAL-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 STV-EQUAL-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "STV-CONTRIBUTION-WINNER_ALL",
       "method": "STV",
       "weight": "CONTRIBUTION",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix STV-CONTRIBUTION-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 STV-CONTRIBUTION-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "STV-CONTRIBUTION-PROPORTIONAL",
       "method": "STV",
       "weight": "CONTRIBUTION",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix STV-CONTRIBUTION-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 STV-CONTRIBUTION-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "STV-CONTRIBUTION-RANKED_CUTS",
       "method": "STV",
       "weight": "CONTRIBUTION",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix STV-CONTRIBUTION-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 STV-CONTRIBUTION-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "ELO-EQUAL-WINNER_ALL",
       "method": "ELO",
       "weight": "EQUAL",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix ELO-EQUAL-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 ELO-EQUAL-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "ELO-EQUAL-PROPORTIONAL",
       "method": "ELO",
       "weight": "EQUAL",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix ELO-EQUAL-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 ELO-EQUAL-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "ELO-EQUAL-RANKED_CUTS",
       "method": "ELO",
       "weight": "EQUAL",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix ELO-EQUAL-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 ELO-EQUAL-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "ELO-CONTRIBUTION-WINNER_ALL",
       "method": "ELO",
       "weight": "CONTRIBUTION",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix ELO-CONTRIBUTION-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 ELO-CONTRIBUTION-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "ELO-CONTRIBUTION-PROPORTIONAL",
       "method": "ELO",
       "weight": "CONTRIBUTION",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix ELO-CONTRIBUTION-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 ELO-CONTRIBUTION-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "ELO-CONTRIBUTION-RANKED_CUTS",
       "method": "ELO",
       "weight": "CONTRIBUTION",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix ELO-CONTRIBUTION-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 ELO-CONTRIBUTION-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "GLICKO_2-EQUAL-WINNER_ALL",
       "method": "GLICKO_2",
       "weight": "EQUAL",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix GLICKO_2-EQUAL-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 GLICKO_2-EQUAL-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "GLICKO_2-EQUAL-PROPORTIONAL",
       "method": "GLICKO_2",
       "weight": "EQUAL",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix GLICKO_2-EQUAL-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 GLICKO_2-EQUAL-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "GLICKO_2-EQUAL-RANKED_CUTS",
       "method": "GLICKO_2",
       "weight": "EQUAL",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix GLICKO_2-EQUAL-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 GLICKO_2-EQUAL-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "GLICKO_2-CONTRIBUTION-WINNER_ALL",
       "method": "GLICKO_2",
       "weight": "CONTRIBUTION",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix GLICKO_2-CONTRIBUTION-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 GLICKO_2-CONTRIBUTION-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "GLICKO_2-CONTRIBUTION-PROPORTIONAL",
       "method": "GLICKO_2",
       "weight": "CONTRIBUTION",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix GLICKO_2-CONTRIBUTION-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 GLICKO_2-CONTRIBUTION-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "GLICKO_2-CONTRIBUTION-RANKED_CUTS",
       "method": "GLICKO_2",
       "weight": "CONTRIBUTION",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix GLICKO_2-CONTRIBUTION-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 GLICKO_2-CONTRIBUTION-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FORCED_PAIRWISE-EQUAL-WINNER_ALL",
       "method": "FORCED_PAIRWISE",
       "weight": "EQUAL",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FORCED_PAIRWISE-EQUAL-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 FORCED_PAIRWISE-EQUAL-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FORCED_PAIRWISE-EQUAL-PROPORTIONAL",
       "method": "FORCED_PAIRWISE",
       "weight": "EQUAL",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FORCED_PAIRWISE-EQUAL-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 FORCED_PAIRWISE-EQUAL-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FORCED_PAIRWISE-EQUAL-RANKED_CUTS",
       "method": "FORCED_PAIRWISE",
       "weight": "EQUAL",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FORCED_PAIRWISE-EQUAL-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 FORCED_PAIRWISE-EQUAL-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FORCED_PAIRWISE-CONTRIBUTION-WINNER_ALL",
       "method": "FORCED_PAIRWISE",
       "weight": "CONTRIBUTION",
       "allocation": "WINNER_ALL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FORCED_PAIRWISE-CONTRIBUTION-WINNER_ALL: replay, declared support and conserved monetary oracle",
+          "V4 FORCED_PAIRWISE-CONTRIBUTION-WINNER_ALL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FORCED_PAIRWISE-CONTRIBUTION-PROPORTIONAL",
       "method": "FORCED_PAIRWISE",
       "weight": "CONTRIBUTION",
       "allocation": "PROPORTIONAL",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FORCED_PAIRWISE-CONTRIBUTION-PROPORTIONAL: replay, declared support and conserved monetary oracle",
+          "V4 FORCED_PAIRWISE-CONTRIBUTION-PROPORTIONAL: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     },
     {
       "id": "FORCED_PAIRWISE-CONTRIBUTION-RANKED_CUTS",
       "method": "FORCED_PAIRWISE",
       "weight": "CONTRIBUTION",
       "allocation": "RANKED_CUTS",
-      "required": true
+      "required": true,
+      "specification": "docs/algorithms/part-04.md",
+      "rulesVersion": 4,
+      "supportTransform": "RANK_POINTS_V1",
+      "semantics": "Exact V3 allocator with immutable V4 method ranking and declared nonnegative support; original-source capped/tied/unused refunds; enabled veto holds all paths.",
+      "evidence": {
+        "checks": ["unit", "elections"],
+        "scenarios": [
+          "matrix FORCED_PAIRWISE-CONTRIBUTION-RANKED_CUTS: replay, declared support and conserved monetary oracle",
+          "V4 FORCED_PAIRWISE-CONTRIBUTION-RANKED_CUTS: full funded matrix, sealed ballot, exact allocation and immutable concurrent replay"
+        ]
+      }
     }
   ]
 }

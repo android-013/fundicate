@@ -1,25 +1,16 @@
 {
   "schemaVersion": 1,
-  "revision": 99,
+  "revision": 154,
   "totalParts": 5,
   "completedParts": [
     1,
     2,
-    3
+    3,
+    4
   ],
-  "nextPart": 4,
-  "status": "in_progress",
-  "activeRun": {
-    "id": "55d8970f-1e28-4df2-8cad-0cdb79dd7ade",
-    "part": 4,
-    "startedAt": "2026-11-06T03:16:14.895Z",
-    "checks": {},
-    "acceptance": {},
-    "blockers": {},
-    "checkpoints": [],
-    "review": null,
-    "activeCheck": null
-  },
+  "nextPart": 5,
+  "status": "waiting_for_next",
+  "activeRun": null,
   "parts": {
     "1": {
       "number": 1,
@@ -533,7 +524,287 @@
     "4": {
       "number": 4,
       "title": "Complete election methods and participation-based reputation",
-      "status": "in_progress"
+      "status": "complete",
+      "completedAt": "2026-11-06T12:16:07.209Z",
+      "run": {
+        "id": "55d8970f-1e28-4df2-8cad-0cdb79dd7ade",
+        "part": 4,
+        "startedAt": "2026-11-06T03:16:14.895Z",
+        "checks": {
+          "build": {
+            "path": "workflow/evidence/part-04/build-96cce761-6e82-40dc-8585-1e33d8b64ba4.json",
+            "hash": "aff99326098cb6317826e72930769e580eef5089c0d31b4aa1dcc765d93be9f8"
+          },
+          "elections": {
+            "path": "workflow/evidence/part-04/elections-a1e519bf-d5b1-40f5-ae03-26f201e9ec83.json",
+            "hash": "edc21211a6e44aa7dbb225d38d1c68a883a451c1ad777b7f751e2e34e931fa84"
+          },
+          "reputation": {
+            "path": "workflow/evidence/part-04/reputation-0ffc47cd-012a-45d4-bb7a-266f0c4e967d.json",
+            "hash": "f069ddba2d0f539081dc644a072dfb402d7d4ce05d69c56631e32ad1e9388b9a"
+          },
+          "workflow-tests": {
+            "path": "workflow/evidence/part-04/workflow-tests-3627e3bc-847f-413c-9e99-f604a4ea3845.json",
+            "hash": "c4f05de7e7ae936f9d544e91ac08cec3dfa1f25ec79f3d6cd6a5e527fb307c95"
+          },
+          "unit": {
+            "path": "workflow/evidence/part-04/unit-9028ae92-f2cf-4eec-822f-a70629b73ac4.json",
+            "hash": "cfadd7248c79fd5097433511c5cddc95236b7b6122e98499e4cb845089573e33"
+          },
+          "typecheck": {
+            "path": "workflow/evidence/part-04/typecheck-023fb2f9-0d33-4704-ba0b-60f3a3cd7a46.json",
+            "hash": "3dbc5c79615fc14e60311a2d7c900355acae432b965ce4fbbff10b69945f7d79"
+          },
+          "lint": {
+            "path": "workflow/evidence/part-04/lint-fdf5b715-4ad5-4b09-9ba2-1bb7431b46d5.json",
+            "hash": "b31a5cb07824365d7c29bf4358fb8f82ce6b0c77e1b32a35abdc4c7aed775a7a"
+          },
+          "integration": {
+            "path": "workflow/evidence/part-04/integration-64511720-d02f-4f85-980a-a5ecdbb1b698.json",
+            "hash": "8bd61ce92994e3e85170ea064ca310edaeb62e73f3eb14c3a46ec09369478349"
+          },
+          "http": {
+            "path": "workflow/evidence/part-04/http-1a917c1d-3fc3-4799-b455-8b59055e3fe3.json",
+            "hash": "5043b1b108ff43e80cc28905467afea3af92819394ff8faaa3ac26cbcc7666de"
+          },
+          "rounds": {
+            "path": "workflow/evidence/part-04/rounds-5cbf17cd-ec76-40ad-be62-187d3464635f.json",
+            "hash": "c5e602d8042235852513db47899c343f6396af879b67fbed052a508f2e890d8e"
+          },
+          "funds": {
+            "path": "workflow/evidence/part-04/funds-57965405-3f12-4947-a8bc-6bc4c17b4acc.json",
+            "hash": "a118b4a2974bd1b4a95e7e3feac6ae492a5f6f440ca91af160b00507cfa92920"
+          },
+          "browser": {
+            "path": "workflow/evidence/part-04/browser-4d9b30cb-c2ad-465a-9340-9e0de8db9a43.json",
+            "hash": "9d5db940d6827c7ec696a151df5a07200a758db6a7740d2df0fdc09632c9f831"
+          },
+          "accessibility": {
+            "path": "workflow/evidence/part-04/accessibility-423b5e00-db4a-414a-bb2d-4d0b68acf35f.json",
+            "hash": "2730f017e635622ffbab26114c678387a99544e802c55330ce26969a8ac14720"
+          }
+        },
+        "acceptance": {
+          "R20": {
+            "1": {
+              "at": "2026-11-06T08:29:04.545Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed validated complete/partial IRV ranks, transferred C-to-B majority and exhausted preference vectors, published elimination-ID and final-tie rules, deterministic candidate/voter permutation replay, and all six equal/paid allocation cells with full funded settlement."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:04.545Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed validated complete/partial IRV ranks, transferred C-to-B majority and exhausted preference vectors, published elimination-ID and final-tie rules, deterministic candidate/voter permutation replay, and all six equal/paid allocation cells with full funded settlement."
+            }
+          },
+          "R21": {
+            "1": {
+              "at": "2026-11-06T08:29:06.628Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed Droop quota4 with exact surplus factors1/3 and1/5 and rational conservation, published seats clamped to qualified count, STV elected IDs distinct from rank-point money, actual integer-seat form, all six funded STV cells and immutable replay."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:06.628Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed Droop quota4 with exact surplus factors1/3 and1/5 and rational conservation, published seats clamped to qualified count, STV elected IDs distinct from rank-point money, actual integer-seat form, all six funded STV cells and immutable replay."
+            }
+          },
+          "R22": {
+            "1": {
+              "at": "2026-11-06T08:29:09.274Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed batch Elo1500/K32 wins/draws and paid-frequency updates, complete canonical pair scheduling and duplicate/reversed/foreign/ineligible/partial rejection, simultaneous deterministic transcript replay and all six funded Elo cells; actual50-candidate1225-pair HTTP ballot succeeds once."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:09.274Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed batch Elo1500/K32 wins/draws and paid-frequency updates, complete canonical pair scheduling and duplicate/reversed/foreign/ineligible/partial rejection, simultaneous deterministic transcript replay and all six funded Elo cells; actual50-candidate1225-pair HTTP ballot succeeds once."
+            }
+          },
+          "R23": {
+            "1": {
+              "at": "2026-11-06T08:29:10.361Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed actual Glicko-2 rating/deviation/volatility and inactivity, official full-precision worked-example values plus paper-rounded mu conversion, bounded convergence failures and repeated-game frequency equivalence; all six funded Glicko-2 cells, complete browser ballot and24-hour veto path pass."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:10.361Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed actual Glicko-2 rating/deviation/volatility and inactivity, official full-precision worked-example values plus paper-rounded mu conversion, bounded convergence failures and repeated-game frequency equivalence; all six funded Glicko-2 cells, complete browser ballot and24-hour veto path pass."
+            },
+            "3": {
+              "at": "2026-11-06T08:29:10.361Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed actual Glicko-2 rating/deviation/volatility and inactivity, official full-precision worked-example values plus paper-rounded mu conversion, bounded convergence failures and repeated-game frequency equivalence; all six funded Glicko-2 cells, complete browser ballot and24-hour veto path pass."
+            }
+          },
+          "R24": {
+            "1": {
+              "at": "2026-11-06T08:29:11.438Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed forced-choice positive/negative weighted net scores with zero-sum comparisons, explicit no-draw contract, complete pair validation and unique-voter participation denominator; all six funded forced-pairwise cells and sealed/revealed browser flow pass."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:11.438Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections"
+              ],
+              "note": "Executed forced-choice positive/negative weighted net scores with zero-sum comparisons, explicit no-draw contract, complete pair validation and unique-voter participation denominator; all six funded forced-pairwise cells and sealed/revealed browser flow pass."
+            }
+          },
+          "R25": {
+            "1": {
+              "at": "2026-11-06T08:29:12.574Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections",
+                "funds",
+                "rounds",
+                "http"
+              ],
+              "note": "Executed every36 required named method/weight/allocation cell through received deposits, frozen screening, immutable method ballot, exact published allocation, original-source refunds and concurrent replay. All six browser methods preserve own-only/anonymous secrecy before close and publish transcripts after close; actual1225-pair HTTP records participation once. Frozen rights survive departure and late joiners gain no power. Public full rules are source-bound and raw ratings never become monetary ratios; legacy regression suites preserve separate funding and decision flows."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:12.574Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections",
+                "funds",
+                "rounds",
+                "http"
+              ],
+              "note": "Executed every36 required named method/weight/allocation cell through received deposits, frozen screening, immutable method ballot, exact published allocation, original-source refunds and concurrent replay. All six browser methods preserve own-only/anonymous secrecy before close and publish transcripts after close; actual1225-pair HTTP records participation once. Frozen rights survive departure and late joiners gain no power. Public full rules are source-bound and raw ratings never become monetary ratios; legacy regression suites preserve separate funding and decision flows."
+            },
+            "3": {
+              "at": "2026-11-06T08:29:12.574Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections",
+                "funds",
+                "rounds",
+                "http"
+              ],
+              "note": "Executed every36 required named method/weight/allocation cell through received deposits, frozen screening, immutable method ballot, exact published allocation, original-source refunds and concurrent replay. All six browser methods preserve own-only/anonymous secrecy before close and publish transcripts after close; actual1225-pair HTTP records participation once. Frozen rights survive departure and late joiners gain no power. Public full rules are source-bound and raw ratings never become monetary ratios; legacy regression suites preserve separate funding and decision flows."
+            },
+            "4": {
+              "at": "2026-11-06T08:29:12.574Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "elections",
+                "funds",
+                "rounds",
+                "http"
+              ],
+              "note": "Executed every36 required named method/weight/allocation cell through received deposits, frozen screening, immutable method ballot, exact published allocation, original-source refunds and concurrent replay. All six browser methods preserve own-only/anonymous secrecy before close and publish transcripts after close; actual1225-pair HTTP records participation once. Frozen rights survive departure and late joiners gain no power. Public full rules are source-bound and raw ratings never become monetary ratios; legacy regression suites preserve separate funding and decision flows."
+            }
+          },
+          "R26": {
+            "1": {
+              "at": "2026-11-06T08:29:13.917Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "reputation"
+              ],
+              "note": "Executed written1-5-star reviews for member, scheme, proposal and round targets; latest visible revisions supply count/average and hidden scores leave public aggregates without deletion. Participation/presentation dimensions remain distinct from matching-confirmed-payment recipient experience, with no project-delivery claims."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:13.917Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "reputation"
+              ],
+              "note": "Executed written1-5-star reviews for member, scheme, proposal and round targets; latest visible revisions supply count/average and hidden scores leave public aggregates without deletion. Participation/presentation dimensions remain distinct from matching-confirmed-payment recipient experience, with no project-delivery claims."
+            }
+          },
+          "R27": {
+            "1": {
+              "at": "2026-11-06T08:29:15.096Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "reputation",
+                "integration"
+              ],
+              "note": "Executed actual completed shared participation, V4 ballot-only eligibility, denied electorate-only/self/duplicate/foreign and pending-veto-only leakage, concurrent unique roots and ordered immutable edits. SQL requires initial revision atomically. Abuse reports remain staff-private; moderation reasons, conflict restrictions, current-event appeals, different-moderator restoration and repeated cycles preserve raw history. Full create/edit/report/hide/appeal/restore browser cycle and four zero-violation scans pass."
+            },
+            "2": {
+              "at": "2026-11-06T08:29:15.096Z",
+              "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+              "checks": [
+                "unit",
+                "reputation",
+                "integration"
+              ],
+              "note": "Executed actual completed shared participation, V4 ballot-only eligibility, denied electorate-only/self/duplicate/foreign and pending-veto-only leakage, concurrent unique roots and ordered immutable edits. SQL requires initial revision atomically. Abuse reports remain staff-private; moderation reasons, conflict restrictions, current-event appeals, different-moderator restoration and repeated cycles preserve raw history. Full create/edit/report/hide/appeal/restore browser cycle and four zero-violation scans pass."
+            }
+          }
+        },
+        "blockers": {},
+        "checkpoints": [
+          {
+            "at": "2026-11-06T07:32:00.451Z",
+            "note": "Part 4 implemented: immutable V4 six methods, complete36 matrix, full published method spec, sealed ranked/pairwise UI, participation-qualified reputation and append-only moderation. Independent static/probe review found publication and initial-revision gaps, now repaired. Required current-source build and database/browser verification begin; no Part5 work."
+          }
+        ],
+        "review": {
+          "path": "workflow/reviews/part-04-55d8970f.json",
+          "hash": "4e1cb03fca0dd7cd2899ae5f52fabcf99b0a0890391ed88f7bc1e178e076f9dd",
+          "at": "2026-11-06T12:15:41.573Z"
+        },
+        "activeCheck": null
+      },
+      "handoff": "docs/parts/part-04.md",
+      "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+      "receiptSetHash": "2d0755e14fad86347d1d26bba91189eb8cbf8343d00d461207cf93efbfd0f99d",
+      "handoffHash": "3a0af80ec4c4d92662605ddd560fcff2ea67505400b39425b5b0628a8580b62a"
     },
     "5": {
       "number": 5,
@@ -606,28 +877,28 @@
       "status": "pending"
     },
     "R20": {
-      "status": "pending"
+      "status": "verified"
     },
     "R21": {
-      "status": "pending"
+      "status": "verified"
     },
     "R22": {
-      "status": "pending"
+      "status": "verified"
     },
     "R23": {
-      "status": "pending"
+      "status": "verified"
     },
     "R24": {
-      "status": "pending"
+      "status": "verified"
     },
     "R25": {
-      "status": "pending"
+      "status": "verified"
     },
     "R26": {
-      "status": "pending"
+      "status": "verified"
     },
     "R27": {
-      "status": "pending"
+      "status": "verified"
     },
     "R28": {
       "status": "pending"
@@ -657,5 +928,5 @@
       "status": "pending"
     }
   },
-  "updatedAt": "2026-11-06T03:16:14.897Z"
+  "updatedAt": "2026-11-06T12:16:07.210Z"
 }

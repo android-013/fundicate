@@ -22,7 +22,7 @@ export function RoundFunds({
   userId?: string;
 }) {
   const { settlement: s, totals } = view;
-  const v3 = s.rulesVersion === 3 ? getV3Settings(s) : null;
+  const v3 = [3, 4].includes(s.rulesVersion) ? getV3Settings(s) : null;
   const base = { communityId, roundId };
   const progress =
     Number(
@@ -62,7 +62,7 @@ export function RoundFunds({
       </p>
       <p className="muted small-text">
         {v3
-          ? `FPTP · ${titleCase(v3.allocationPolicy)} allocation · ${v3.vetoEnabled ? "24-hour rejection veto enabled. Payouts wait the complete window." : "veto disabled. Settlement may follow the final decision."}`
+          ? `${v3.selectionMethod} · ${titleCase(v3.allocationPolicy)} allocation · ${v3.vetoEnabled ? "24-hour rejection veto enabled. Payouts wait the complete window." : "veto disabled. Settlement may follow the final decision."}`
           : "Equal votes · FPTP · winner-all allocation · veto disabled. Settlement can be prepared immediately after the final decision."}
       </p>
       <div className="round-funding-progress">

@@ -213,7 +213,14 @@ export function fingerprint(root) {
       else if (e.isFile()) files.push(p);
     }
   }
-  for (const dir of ["src", "prisma", "scripts", "tests", "docs/algorithms"])
+  for (const dir of [
+    "src",
+    "prisma",
+    "scripts",
+    "tests",
+    "docs/algorithms",
+    "public/rules",
+  ])
     walk(join(root, dir));
   for (const name of [
     "package.json",

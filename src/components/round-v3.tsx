@@ -1,4 +1,5 @@
 import { ShieldCheck, Vote } from "lucide-react";
+import Link from "next/link";
 import type { getV3RoundView } from "@/lib/rounds-v3";
 import { dateTime, moneyFormat, titleCase } from "@/lib/format";
 import { ActionButton, ActionForm, Select } from "./forms";
@@ -65,7 +66,8 @@ export function RoundV3({
           <Vote size={22} aria-hidden="true" />
           <div>
             <span className="eyebrow">
-              FROZEN POWER · PUBLISHED ALLOCATION · V3
+              FROZEN POWER · PUBLISHED ALLOCATION ·{" "}
+              {"selectionSeats" in settings ? "V4" : "V3"}
             </span>
             <h3 id="round-v3-heading">Your voice, with the rules in view.</h3>
           </div>
@@ -107,10 +109,26 @@ export function RoundV3({
 
       <details className="v3-rule-details">
         <summary>Explore voting and allocation rules</summary>
+        {"selectionSeats" in settings && (
+          <p>
+            <Link href="/rules/fundicate-methods-v1">
+              Read the full published method specification
+            </Link>{" "}
+            · ballots, ties, exhaustion, STV transfers, rating parameters,
+            weight extensions and all allocation policies.
+          </p>
+        )}
         <dl className="detail-list">
           <div>
             <dt>Selection method</dt>
-            <dd>FPTP · one scheme choice per voter</dd>
+            <dd>
+              {settings.selectionMethod}
+              {"selectionSeats" in settings &&
+              settings.selectionMethod === "STV"
+                ? ` · ${settings.selectionSeats} published seats (limited by qualified schemes)`
+                : ""}{" "}
+              · one complete ballot per voter
+            </dd>
           </div>
           <div>
             <dt>Screening approval</dt>
@@ -161,6 +179,8 @@ export function RoundV3({
           </div>
         </dl>
         <p className="small-text muted">
+          {settings.selectionMethod !== "FPTP" &&
+            "Monetary support uses rank points: candidate count minus competition rank plus one. Method ties receive equal points. Proportional amounts are shares of rank points. Elected STV seats are separate from funding; nonelected candidates may receive proportional or ranked awards. Raw Elo/Glicko-2 ratings are never money ratios. "}
           {settings.allocationPolicy === "WINNER_ALL"
             ? "A unique positive-support leader receives min(pool, request). A top tie returns the entire pool."
             : settings.allocationPolicy === "PROPORTIONAL"
@@ -211,7 +231,9 @@ export function RoundV3({
             {power(view.selectionResult.participation)} /{" "}
             {power(view.selectionResult.eligible)} eligible power participated ·{" "}
             {power(view.selectionResult.quorumRequired)} required. Support is
-            the exact sum of each voter’s frozen selection power.
+            {settings.selectionMethod === "FPTP"
+              ? "the exact sum of each voter’s frozen selection power."
+              : "the published nonnegative rank-point transformation, separate from vote power."}
           </p>
           <div className="round-results">
             {view.selectionResult.ranking.map((rank) => (
@@ -223,6 +245,30 @@ export function RoundV3({
               </div>
             ))}
           </div>
+          {"transcript" in view.selectionResult &&
+            "elected" in view.selectionResult &&
+            Array.isArray(view.selectionResult.elected) && (
+              <details>
+                <summary>
+                  Election replay, seats and calculation details
+                </summary>
+                <p>
+                  Elected candidates:{" "}
+                  {view.selectionResult.elected
+                    .map((id: string) => names[id] ?? id)
+                    .join(", ") || "None"}
+                  . This list does not itself authorize a payment.
+                </p>
+                <pre
+                  className="method-transcript"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Published election replay transcript"
+                >
+                  {JSON.stringify(view.selectionResult.transcript, null, 2)}
+                </pre>
+              </details>
+            )}
         </div>
       )}
 

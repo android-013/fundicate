@@ -15,6 +15,7 @@ import {
   weightedScreeningOutcome,
   weightedSelectionOutcome,
 } from "./elections-core";
+import { V4_RULES_POLICY, tallyMethod } from "./methods-core";
 
 type Tx = Prisma.TransactionClient;
 type Stage = "screening" | "selection" | "veto";
@@ -35,6 +36,38 @@ const settingsSchema = z
     selectionMethod: z.literal("FPTP"),
   })
   .superRefine((value, context) => {
+    if (
+      value.allocationPolicy === "RANKED_CUTS"
+        ? !value.rankedSharesBps.length ||
+          value.rankedSharesBps.reduce((sum, share) => sum + share, 0) !== 10000
+        : value.rankedSharesBps.length !== 0
+    )
+      context.addIssue({
+        code: "custom",
+        path: ["rankedSharesBps"],
+        message: "Invalid published ranked shares.",
+      });
+  });
+const v4SettingsSchema = z
+  .object({
+    ...settingsSchema.shape,
+    selectionMethod: z.enum([
+      "FPTP",
+      "IRV",
+      "STV",
+      "ELO",
+      "GLICKO_2",
+      "FORCED_PAIRWISE",
+    ]),
+    selectionSeats: z.number().int().min(1).max(50),
+  })
+  .superRefine((value, context) => {
+    if (value.selectionMethod !== "STV" && value.selectionSeats !== 1)
+      context.addIssue({
+        code: "custom",
+        path: ["selectionSeats"],
+        message: "Only STV supports multiple seats.",
+      });
     if (
       value.allocationPolicy === "RANKED_CUTS"
         ? !value.rankedSharesBps.length ||
@@ -72,8 +105,9 @@ async function settlementFor(tx: Tx, round: FundingRound) {
     where: { roundId: round.id },
   });
   ensure(
-    round.rulesVersion === 3 && settlement?.rulesVersion === 3,
-    "This action requires a funded V3 round.",
+    [3, 4].includes(round.rulesVersion) &&
+      settlement?.rulesVersion === round.rulesVersion,
+    "This action requires a funded V3 or V4 round.",
     400,
   );
   getV3Settings(settlement);
@@ -81,7 +115,7 @@ async function settlementFor(tx: Tx, round: FundingRound) {
 }
 export function getV3Settings(settlement: RoundSettlement) {
   ensure(
-    settlement.rulesVersion === 3 &&
+    [3, 4].includes(settlement.rulesVersion) &&
       settlement.network === "local-simulation" &&
       settlement.decimals === 2 &&
       settlement.assetId === `fiat:${settlement.currency}`,
@@ -90,13 +124,15 @@ export function getV3Settings(settlement: RoundSettlement) {
   );
   const snapshot = settlement.rulesSnapshot as Record<string, unknown>;
   ensure(
-    Object.entries(V3_RULES_POLICY).every(
-      ([key, value]) => snapshot?.[key] === value,
-    ),
+    Object.entries(
+      settlement.rulesVersion === 4 ? V4_RULES_POLICY : V3_RULES_POLICY,
+    ).every(([key, value]) => snapshot?.[key] === value),
     "Unsupported V3 policy snapshot.",
     409,
   );
-  return settingsSchema.parse(snapshot);
+  return settlement.rulesVersion === 4
+    ? v4SettingsSchema.parse(snapshot)
+    : settingsSchema.parse(snapshot);
 }
 export function v3Weight(
   settlement: RoundSettlement,
@@ -111,7 +147,7 @@ export function v3Weight(
   return mode === "EQUAL" ? 1n : power.paidPower;
 }
 export async function seedV3Electorate(tx: Tx, round: FundingRound, now: Date) {
-  if (round.rulesVersion !== 3) return;
+  if (![3, 4].includes(round.rulesVersion)) return;
   const members = await tx.communityMembership.findMany({
     where: { communityId: round.communityId, status: "ACTIVE" },
     select: { userId: true },
@@ -137,7 +173,7 @@ export async function freezeV3Electorate(
   settlement: RoundSettlement,
   now: Date,
 ): Promise<{ ready: boolean; reason?: string }> {
-  if (round.rulesVersion !== 3) return { ready: true };
+  if (![3, 4].includes(round.rulesVersion)) return { ready: true };
   const settings = getV3Settings(settlement);
   ensure(
     now >= settlement.collectionClosesAt,
@@ -220,6 +256,34 @@ export async function tallyV3Screening(
 }
 export async function tallyV3Selection(tx: Tx, round: FundingRound) {
   const basis = await powerBasis(tx, round, "selection");
+  if (round.rulesVersion === 4) {
+    const settings = getV3Settings(basis.settlement);
+    const [schemes, ballots] = await Promise.all([
+      tx.fundingScheme.findMany({
+        where: { roundId: round.id, status: "QUALIFIED" },
+        select: { id: true },
+      }),
+      tx.roundMethodBallot.findMany({
+        where: { roundId: round.id },
+        orderBy: { userId: "asc" },
+      }),
+    ]);
+    return tallyMethod(
+      {
+        selectionMethod: settings.selectionMethod,
+        selectionSeats:
+          "selectionSeats" in settings ? settings.selectionSeats : 1,
+      },
+      schemes.map((scheme) => scheme.id),
+      ballots.map((entry) => ({
+        userId: entry.userId,
+        power: basis.weights.get(entry.userId) ?? 0n,
+        ballot: entry.ballot,
+      })),
+      basis.total,
+      round.quorumBps,
+    );
+  }
   const [schemes, votes] = await Promise.all([
     tx.fundingScheme.findMany({
       where: { roundId: round.id, status: "QUALIFIED" },
@@ -247,7 +311,7 @@ export async function publishRoundDecision(
   now: Date,
 ) {
   ensure(
-    round.rulesVersion === 3 && round.status === "DECIDED",
+    [3, 4].includes(round.rulesVersion) && round.status === "DECIDED",
     "A V3 decision must be final before publication.",
     409,
   );
@@ -297,7 +361,7 @@ export async function publishRoundDecision(
       vetoFinalizedAt: settings.vetoEnabled ? null : now,
       result: json({ ...(selection ?? {}), outcome: round.outcome }),
       allocation: json({
-        rulesVersion: 3,
+        rulesVersion: round.rulesVersion,
         assetId: settlement.assetId,
         received: settlement.received,
         payouts: allocation.payouts,
@@ -314,7 +378,7 @@ export async function publishRoundDecision(
       entityId: round.id,
       action: "ROUND_DECISION_PUBLISHED",
       details: {
-        rulesVersion: 3,
+        rulesVersion: round.rulesVersion,
         vetoEnabled: settings.vetoEnabled,
         publishedAt: now.toISOString(),
         vetoClosesAt: decision.vetoClosesAt?.toISOString() ?? null,
@@ -385,7 +449,8 @@ export async function assertRoundSettlementGate(
       "Unknown execution outcomes must be reconciled before submission or release.",
       409,
     );
-  if (round.rulesVersion !== 3) return { decision: null, rejected: false };
+  if (![3, 4].includes(round.rulesVersion))
+    return { decision: null, rejected: false };
   getV3Settings(settlement);
   const decision = await tx.roundDecision.findUnique({
     where: { roundId: round.id },
@@ -400,7 +465,7 @@ export async function assertRoundSettlementGate(
       settlement.preparedAt &&
       ["QUEUED", "REFUNDED"].includes(settlement.status) &&
       ["EXPIRED", "FUNDING_FAILED"].includes(settlement.reason ?? "") &&
-      plan?.rulesVersion === 3 &&
+      plan?.rulesVersion === round.rulesVersion &&
       plan.reason === settlement.reason &&
       plan.assetId === settlement.assetId &&
       plan.received === settlement.received.toString() &&
@@ -525,7 +590,7 @@ export async function getV3RoundView(
   return db.$transaction(
     async (tx) => {
       const round = await findRound(tx, { communityId, roundId });
-      if (round.rulesVersion !== 3) return null;
+      if (![3, 4].includes(round.rulesVersion)) return null;
       const settlement = await settlementFor(tx, round);
       const membership = userId
         ? await tx.communityMembership.findUnique({

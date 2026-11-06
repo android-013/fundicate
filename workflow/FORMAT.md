@@ -26,6 +26,8 @@ node scripts/progress.mjs checkpoint --run-id UUID --note "Current integrated be
 
 Read status first. Use an actual UUID and the reported revision. A begin for the active part with the same run ID resumes it; another part/run is rejected. Resume does not erase prior failures, blockers or evidence. A source snapshot is a SHA-256 fingerprint of source, schema, scripts, tests, selected config and canonical policy files. Generated build output, local databases, screenshots, status/journal/evidence and handoff prose are excluded.
 
+Published versioned rule documents under `public/rules` are included in the source snapshot. Changing a public specification invalidates old verification just as changing an engine does; the V4 unit suite also checks that the published copy exactly matches its frozen algorithm document.
+
 Do not begin Part 2 during a planning-only request. A fresh user next selects the eligible part once. Another next while it is running does not queue the following part. Identical later messages cannot be perfectly deduplicated without a stable client message ID; explicit part/run/revision selection prevents accidental active-run replacement and skipping.
 
 ## Run actual checks

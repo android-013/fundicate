@@ -2,6 +2,7 @@ import { z } from "zod";
 import { money, uuid } from "./validation";
 import { fundsConfigSchema } from "./funds-core";
 import { v3FundsConfigSchema } from "./elections-core";
+import { v4FundsConfigSchema } from "./methods-core";
 
 export const ROUND_STAGE_MS = 24 * 60 * 60 * 1000;
 export const MAX_ROUND_SCHEMES = 50;
@@ -14,7 +15,7 @@ export const roundSchema = z
     quorumBps: z.coerce.number().int().min(1).max(10000),
     submissionsCloseAt: z.iso.datetime(),
     funded: z.boolean().default(false),
-    fundedVersion: z.enum(["V2", "V3"]).optional(),
+    fundedVersion: z.enum(["V2", "V3", "V4"]).optional(),
     fundingTarget: z.unknown().optional(),
     minimumContribution: z.unknown().optional(),
     maximumContribution: z.unknown().optional(),
@@ -28,6 +29,7 @@ export const roundSchema = z
     selectionWeight: z.unknown().optional(),
     vetoWeight: z.unknown().optional(),
     rankedSharesBps: z.unknown().optional(),
+    selectionSeats: z.unknown().optional(),
   })
   .strict()
   .superRefine((data, context) => {
@@ -47,6 +49,7 @@ export const roundSchema = z
         "selectionWeight",
         "vetoWeight",
         "rankedSharesBps",
+        "selectionSeats",
       ] as const) {
         if (data[key] !== undefined)
           context.addIssue({
@@ -74,6 +77,7 @@ export const roundSchema = z
       selectionWeight,
       vetoWeight,
       rankedSharesBps,
+      selectionSeats,
       ...round
     } = data;
     return {
@@ -81,9 +85,11 @@ export const roundSchema = z
       funded,
       fundedVersion: funded ? (fundedVersion ?? "V2") : undefined,
       funding: funded
-        ? (fundedVersion === "V3"
-            ? v3FundsConfigSchema
-            : fundsConfigSchema
+        ? (fundedVersion === "V4"
+            ? v4FundsConfigSchema
+            : fundedVersion === "V3"
+              ? v3FundsConfigSchema
+              : fundsConfigSchema
           ).parse(
             Object.fromEntries(
               Object.entries({
@@ -100,6 +106,7 @@ export const roundSchema = z
                 selectionWeight,
                 vetoWeight,
                 rankedSharesBps,
+                selectionSeats,
               }).filter(([, value]) => value !== undefined),
             ),
           )

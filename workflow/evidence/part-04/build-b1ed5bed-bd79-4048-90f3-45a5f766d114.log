@@ -1,0 +1,112 @@
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","node_modules/prisma/build/index.js","generate"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.10.1) to .\node_modules\@prisma\client in 2.15s
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","node_modules/typescript/bin/tsc","--noEmit"]
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","scripts/build.mjs"]
+▲ Next.js 16.4.3 (webpack)
+- Environments: .env
+✓ Running next.config.ts took 781ms
+- Experiments (use with caution):
+  · cpus: 1
+  · staticGenerationMaxConcurrency: 1
+  ⨯ webpackBuildWorker
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 68s
+  Collecting page data using 1 worker ...
+  Finalizing page optimization ...
+  Collecting build traces ...
+  Build ran with "compile" mode, to finalize the build run either "generate" or "generate-env" mode as well
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /analytics/[[...path]]
+├ ƒ /api/[operation]
+├ ƒ /api/analytics/export
+├ ƒ /communities/[slug]
+├ ƒ /communities/[slug]/activity
+├ ƒ /communities/[slug]/governance
+├ ƒ /communities/[slug]/members
+├ ƒ /communities/[slug]/proposals
+├ ƒ /communities/[slug]/proposals/[id]
+├ ƒ /communities/[slug]/proposals/new
+├ ƒ /communities/[slug]/reputation
+├ ƒ /communities/[slug]/rounds
+├ ƒ /communities/[slug]/rounds/[roundId]
+├ ƒ /communities/[slug]/rounds/new
+├ ƒ /communities/[slug]/treasury
+├ ƒ /communities/new
+├ ƒ /dashboard
+├ ƒ /explore
+├ ƒ /icon.svg
+├ ƒ /login
+├ ƒ /register
+├ ƒ /rules/fundicate-methods-v1
+├ ƒ /settings/profile
+└ ƒ /settings/security
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
+▲ Next.js 16.4.3 (webpack)
+- Environments: .env
+✓ Running next.config.ts took 302ms
+- Experiments (use with caution):
+  · cpus: 1
+  · staticGenerationMaxConcurrency: 1
+  ⨯ webpackBuildWorker
+
+  Creating an optimized production build ...
+  Collecting page data using 1 worker ...
+  Inlining static env ...
+  Generating static pages using 1 worker (0/8) ...
+  Generating static pages using 1 worker (2/8) 
+  Generating static pages using 1 worker (4/8) 
+  Generating static pages using 1 worker (6/8) 
+✓ Generating static pages using 1 worker (8/8) in 429ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /analytics/[[...path]]
+├ ƒ /api/[operation]
+├ ƒ /api/analytics/export
+├ ƒ /communities/[slug]
+├ ƒ /communities/[slug]/activity
+├ ƒ /communities/[slug]/governance
+├ ƒ /communities/[slug]/members
+├ ƒ /communities/[slug]/proposals
+├ ƒ /communities/[slug]/proposals/[id]
+├ ƒ /communities/[slug]/proposals/new
+├ ƒ /communities/[slug]/reputation
+├ ƒ /communities/[slug]/rounds
+├ ƒ /communities/[slug]/rounds/[roundId]
+├ ƒ /communities/[slug]/rounds/new
+├ ƒ /communities/[slug]/treasury
+├ ƒ /communities/new
+├ ƒ /dashboard
+├ ƒ /explore
+├ ○ /icon.svg
+├ ○ /login
+├ ○ /register
+├ ƒ /rules/fundicate-methods-v1
+├ ƒ /settings/profile
+└ ƒ /settings/security
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

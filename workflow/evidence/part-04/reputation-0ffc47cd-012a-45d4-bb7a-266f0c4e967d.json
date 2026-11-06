@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 4,
+  "runId": "55d8970f-1e28-4df2-8cad-0cdb79dd7ade",
+  "check": "reputation",
+  "token": "0ffc47cd-012a-45d4-bb7a-266f0c4e967d",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/test-db.mjs",
+      "reputation"
+    ]
+  ],
+  "startedAt": "2026-11-06T08:13:32.162Z",
+  "finishedAt": "2026-11-06T08:14:52.741Z",
+  "exitCode": 0,
+  "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-04/reputation-0ffc47cd-012a-45d4-bb7a-266f0c4e967d.log",
+  "logHash": "7d23542a3c01f4c5e63a44c562be51606163f88a73cd484df70e296a4c087235"
+}

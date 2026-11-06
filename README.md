@@ -2,11 +2,13 @@
 
 **Fund together. Decide together.** A functional local social-money governance app for the NEAR ecosystem hackathon brief. All treasury activity is explicitly simulated; no real money or blockchain transactions occur.
 
-The user-directed [five-part delivery plan](docs/MASTER-PLAN.md) treats **all current product work as Part 1/5**. Each fresh **next** request runs one of Parts 2–5 through the saved agent/verification loop. Use `npm run progress -- status` for current state; see [the workflow contract](workflow/FORMAT.md). Planning does not start Part 2. Final Part 5 completion requires the user's confirmed real NEAR testnet verification.
+The user-directed [five-part delivery plan](docs/MASTER-PLAN.md) treats **all work before that plan as Part 1/5**. Each fresh **next** request runs one eligible part through the saved agent/verification loop, resuming an unfinished part first. Use `npm run progress -- status` for current state; see [the workflow contract](workflow/FORMAT.md). Final Part 5 completion requires the user's confirmed real NEAR testnet verification.
 
 The redesigned workspace uses a blockchain-inspired dark indigo, violet and cyan theme around networking, voting and collective growth. The customizable dashboard keeps the overview simple, while six analytics areas support deeper investigation, saved views, source-record inspection and CSV exports. See [the analytics guide](docs/ANALYTICS.md) for filters and exact metric definitions.
 
-Community **Funding rounds** add a separate multi-scheme workflow: staff publish a round, eligible accounts submit competing schemes, frozen members screen them in a 24-hour majority ballot, then select a qualified scheme in a separate 24-hour first-past-the-post election. Ballots stay hidden from other application users until their stage is finalized. Existing proposals and treasury workflows remain available. The first two capability phases record a decision without moving or reserving funds; see [the phased upgrade guide](docs/UPGRADE-PHASES.md) for current rules and the remaining allocation, refund, veto and reputation work.
+Community **Funding rounds** provide a separate multi-scheme workflow with 24-hour screening and selection stages. V1 remains decision-only; V2 retains its equal-weight FPTP funding rules; V3 adds independent received-contribution weights, three allocation policies and an optional full 24-hour rejection veto. New V4 rounds support FPTP, IRV, multi-winner STV, Elo, actual Glicko-2 and forced-choice pairwise ballots across all 36 method/weight/allocation combinations. Received local funds stay physically separate from the legacy treasury, with immutable payout plans and original-source refunds. Ballots stay hidden until their stage closes. The [frozen method specification](docs/algorithms/part-04.md) is also available inside the app at `/rules/fundicate-methods-v1` before creating or voting in a V4 round.
+
+The community **Reputation** tab adds participation-qualified 1–5-star written reviews for members, schemes, proposals and rounds. Presentation and participation ratings stay separate from receipt-backed recipient experience. Revisions, moderation reasons, abuse reports and appeals preserve history; hidden reviews leave public averages without deleting raw ratings. See [the reputation guide](docs/REPUTATION.md). Existing networking, dashboards, analytics, proposals and treasury flows remain available. [Earlier upgrade phases](docs/UPGRADE-PHASES.md) document the historical decision-only baseline.
 
 ## Run locally on this Windows computer
 
@@ -88,6 +90,9 @@ npm run test:integration
 npm run build
 npm run test:e2e
 npm run test:rounds
+npm run test:funds
+npm run test:elections
+npm run test:reputation
 npm start
 # With the seeded app running at APP_ORIGIN:
 npm run test:browser

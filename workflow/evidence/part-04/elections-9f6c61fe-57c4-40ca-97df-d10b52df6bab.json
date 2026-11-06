@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 4,
+  "runId": "55d8970f-1e28-4df2-8cad-0cdb79dd7ade",
+  "check": "elections",
+  "token": "9f6c61fe-57c4-40ca-97df-d10b52df6bab",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/test-db.mjs",
+      "elections"
+    ]
+  ],
+  "startedAt": "2026-11-06T07:39:08.750Z",
+  "finishedAt": "2026-11-06T07:41:52.408Z",
+  "exitCode": 1,
+  "sourceFingerprint": "7e2e4aeff13924857aece93dc563262cdb297f0818ea8941ed5597ffa6ecd314",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-04/elections-9f6c61fe-57c4-40ca-97df-d10b52df6bab.log",
+  "logHash": "80cedf837c0e20db1eb6d8e134bb3d3f7438f42a0039a057b0b7f6d95c6b227f"
+}

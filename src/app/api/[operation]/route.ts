@@ -20,6 +20,7 @@ import {
 } from "@/lib/funded-rounds";
 import { castRoundVetoVote, closeRoundVeto } from "@/lib/rounds-v3";
 import * as service from "@/lib/service";
+import * as reputation from "@/lib/reputation";
 import { profileSchema, uuid } from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
 import {
@@ -28,6 +29,7 @@ import {
   fundingRoundAction,
   castScreeningVote,
   castSelectionVote,
+  castMethodSelectionVote,
 } from "@/lib/rounds";
 
 export const runtime = "nodejs";
@@ -48,12 +50,12 @@ export async function POST(
       415,
     );
     ensure(
-      Number(req.headers.get("content-length") ?? 0) <= 40000,
+      Number(req.headers.get("content-length") ?? 0) <= 250000,
       "Request too large.",
       413,
     );
     const raw = await req.text();
-    ensure(raw.length <= 40000, "Request too large.", 413);
+    ensure(raw.length <= 250000, "Request too large.", 413);
     let body: unknown;
     try {
       body = JSON.parse(raw);
@@ -104,6 +106,12 @@ export async function POST(
         "application",
         "round-screen-vote",
         "round-selection-vote",
+        "round-method-vote",
+        "reputation-create",
+        "reputation-edit",
+        "reputation-report",
+        "reputation-moderate",
+        "reputation-appeal",
         "round-action",
         "round-scheme",
         "round-contribute",
@@ -116,6 +124,34 @@ export async function POST(
     )
       await rateLimit(`${operation}:${user.id}`, 30, 60);
     switch (operation) {
+      case "round-method-vote":
+        await castMethodSelectionVote(user.id, body);
+        result = {
+          message: "Your complete selection ballot is sealed and recorded.",
+        };
+        break;
+      case "reputation-create":
+        await reputation.createReputationReview(user.id, body);
+        result = { message: "Review recorded." };
+        break;
+      case "reputation-edit":
+        await reputation.editReputationReview(user.id, body);
+        result = {
+          message: "Review revision recorded; earlier versions preserved.",
+        };
+        break;
+      case "reputation-report":
+        await reputation.reportReputationReview(user.id, body);
+        result = { message: "Abuse report recorded." };
+        break;
+      case "reputation-moderate":
+        await reputation.moderateReputationReview(user.id, body);
+        result = { message: "Moderation decision recorded with its reason." };
+        break;
+      case "reputation-appeal":
+        await reputation.appealReputationReview(user.id, body);
+        result = { message: "Appeal recorded." };
+        break;
       case "round-veto":
         await castRoundVetoVote(user.id, body);
         result = {

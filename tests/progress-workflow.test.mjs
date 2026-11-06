@@ -343,6 +343,24 @@ test("source edits invalidate previously executed checks and review", () => {
     String(status(root).revision),
   );
 });
+
+test("published method rules are part of the verified source snapshot", () => {
+  const root = fixture();
+  put(
+    root,
+    "public/rules/fundicate-methods-v1.txt",
+    "Frozen published rule version",
+  );
+  ok(root, "init");
+  const run = begin(root);
+  ready(root, run);
+  put(
+    root,
+    "public/rules/fundicate-methods-v1.txt",
+    "Altered rules after review",
+  );
+  fails(root, /Failed or stale/, "validate", "--run-id", run);
+});
 test("no completion without criterion evidence, handoff and independent review", () => {
   const root = fixture();
   ok(root, "init");

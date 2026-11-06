@@ -1,0 +1,2 @@
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","scripts/browser-tests.mjs"]
+PASS 75 browser layout/interaction checks, no browser runtime errors. Screenshots: test-results

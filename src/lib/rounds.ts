@@ -3,6 +3,9 @@ import { db } from "./db";
 import { access, atomic } from "./service";
 import { ensure } from "./errors";
 import { calculateOutcome } from "./governance";
+import { validateMethodBallot } from "./methods-core";
+import { z } from "zod";
+import { uuid } from "./validation";
 import {
   v3Weight,
   tallyV3Screening,
@@ -63,7 +66,7 @@ async function voter(
   stage: "screening" | "selection",
 ) {
   const round = await findRound(tx, communityId, roundId);
-  if (round.rulesVersion === 3) {
+  if ([3, 4].includes(round.rulesVersion)) {
     const [settlement, power] = await Promise.all([
       tx.roundSettlement.findUniqueOrThrow({ where: { roundId } }),
       tx.roundVotingPower.findUnique({
@@ -104,7 +107,13 @@ export async function createFundingRound(
     const round = await tx.fundingRound.create({
       data: {
         ...roundData,
-        rulesVersion: funded ? (fundedVersion === "V3" ? 3 : 2) : 1,
+        rulesVersion: funded
+          ? fundedVersion === "V4"
+            ? 4
+            : fundedVersion === "V3"
+              ? 3
+              : 2
+          : 1,
         creatorId: userId,
         submissionsCloseAt: closes,
         createdAt: now,
@@ -232,6 +241,10 @@ export async function castSelectionVote(
   return atomic(async (tx) => {
     await lock(tx, data.communityId);
     const round = await findRound(tx, data.communityId, data.roundId);
+    ensure(
+      round.rulesVersion !== 4,
+      "Use the published method ballot for this V4 round.",
+    );
     await voter(tx, data.communityId, round.id, userId, "selection");
     ensure(
       round.status === "SELECTION" &&
@@ -257,6 +270,71 @@ export async function castSelectionVote(
         roundId: round.id,
         schemeId: data.schemeId,
         userId,
+        createdAt: now,
+      },
+    });
+  });
+}
+
+const methodVoteSchema = z
+  .object({ communityId: uuid, roundId: uuid, ballot: z.unknown() })
+  .strict();
+export async function castMethodSelectionVote(
+  userId: string,
+  input: unknown,
+  now = new Date(),
+) {
+  const data = methodVoteSchema.parse(input);
+  return atomic(async (tx) => {
+    await lock(tx, data.communityId);
+    const round = await findRound(tx, data.communityId, data.roundId);
+    ensure(round.rulesVersion === 4, "Method ballots require a V4 round.");
+    await voter(tx, data.communityId, round.id, userId, "selection");
+    ensure(
+      round.status === "SELECTION" &&
+        round.selectionOpensAt! <= now &&
+        now < round.selectionClosesAt!,
+      "Selection is not open for voting.",
+    );
+    const settings = getV3Settings(
+      await tx.roundSettlement.findUniqueOrThrow({
+        where: { roundId: round.id },
+      }),
+    );
+    const schemes = await tx.fundingScheme.findMany({
+      where: { roundId: round.id, status: "QUALIFIED" },
+      select: { id: true },
+    });
+    let ballot;
+    try {
+      ballot = validateMethodBallot(
+        {
+          selectionMethod: settings.selectionMethod,
+          selectionSeats:
+            "selectionSeats" in settings ? settings.selectionSeats : 1,
+        },
+        schemes.map((s) => s.id),
+        data.ballot,
+      );
+    } catch (error) {
+      ensure(
+        false,
+        error instanceof Error ? error.message : "Invalid method ballot.",
+      );
+    }
+    ensure(
+      !(await tx.roundMethodBallot.findUnique({
+        where: { roundId_userId: { roundId: round.id, userId } },
+      })),
+      "Your selection ballot is already recorded.",
+      409,
+    );
+    await tx.roundMethodBallot.create({
+      data: {
+        roundId: round.id,
+        userId,
+        method: settings.selectionMethod,
+        ballot: ballot as Prisma.InputJsonValue,
         createdAt: now,
       },
     });
@@ -303,24 +381,24 @@ export async function fundingRoundAction(
         where: { roundId: round.id },
       });
       const funding = await freezeRoundFunding(tx, round, now);
-      const members =
-        round.rulesVersion === 3
-          ? await tx.roundVotingPower.findMany({
-              where: {
-                roundId: round.id,
-                eligible: true,
-                frozenAt: { not: null },
-              },
-              select: { userId: true },
-              take: 10001,
-            })
-          : await tx.communityMembership.findMany({
-              where: { communityId: round.communityId, status: "ACTIVE" },
-              select: { userId: true },
-              take: 10001,
-            });
+      const members = [3, 4].includes(round.rulesVersion)
+        ? await tx.roundVotingPower.findMany({
+            where: {
+              roundId: round.id,
+              eligible: true,
+              frozenAt: { not: null },
+            },
+            select: { userId: true },
+            take: 10001,
+          })
+        : await tx.communityMembership.findMany({
+            where: { communityId: round.communityId, status: "ACTIVE" },
+            select: { userId: true },
+            take: 10001,
+          });
       ensure(
-        (members.length > 0 || (round.rulesVersion === 3 && !funding.ready)) &&
+        (members.length > 0 ||
+          ([3, 4].includes(round.rulesVersion) && !funding.ready)) &&
           members.length <= 10000,
         "This round supports between 1 and 10,000 eligible voters.",
       );
@@ -366,12 +444,11 @@ export async function fundingRoundAction(
       const eligible = await tx.roundElectorate.count({
         where: { roundId: round.id },
       });
-      const weighted =
-        round.rulesVersion === 3
-          ? await Promise.all(
-              schemes.map((scheme) => tallyV3Screening(tx, round, scheme.id)),
-            )
-          : null;
+      const weighted = [3, 4].includes(round.rulesVersion)
+        ? await Promise.all(
+            schemes.map((scheme) => tallyV3Screening(tx, round, scheme.id)),
+          )
+        : null;
       ensure(
         round.screeningClosesAt! <= now ||
           (weighted
@@ -424,8 +501,9 @@ export async function fundingRoundAction(
         }),
         tx.roundElectorate.count({ where: { roundId: round.id } }),
       ]);
-      const weighted =
-        round.rulesVersion === 3 ? await tallyV3Selection(tx, round) : null;
+      const weighted = [3, 4].includes(round.rulesVersion)
+        ? await tallyV3Selection(tx, round)
+        : null;
       ensure(
         round.selectionClosesAt! <= now ||
           (weighted
@@ -442,7 +520,7 @@ export async function fundingRoundAction(
           round.quorumBps,
         );
       const allocationSelected =
-        round.rulesVersion === 3 &&
+        [3, 4].includes(round.rulesVersion) &&
         getV3Settings(
           await tx.roundSettlement.findUniqueOrThrow({
             where: { roundId: round.id },
@@ -467,7 +545,7 @@ export async function fundingRoundAction(
     const updated = await tx.fundingRound.findUniqueOrThrow({
       where: { id: round.id },
     });
-    if (updated.rulesVersion === 3 && updated.status === "DECIDED")
+    if ([3, 4].includes(updated.rulesVersion) && updated.status === "DECIDED")
       await publishRoundDecision(tx, updated, userId, now);
     return updated;
   });
@@ -511,7 +589,7 @@ export async function getFundingRoundView(
       );
       const eligible = Boolean(
         userId &&
-        (round.rulesVersion === 3 || active) &&
+        ([3, 4].includes(round.rulesVersion) || active) &&
         (await tx.roundElectorate.findUnique({
           where: { roundId_userId: { roundId, userId } },
         })),
@@ -535,8 +613,25 @@ export async function getFundingRoundView(
         select: { schemeId: true, user: { select: identity } },
         orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       });
+      const methodBallots =
+        round.rulesVersion === 4
+          ? await tx.roundMethodBallot.findMany({
+              where: {
+                roundId,
+                ...(!showSelection
+                  ? { userId: { in: userId ? [userId] : [] } }
+                  : {}),
+              },
+              select: {
+                ballot: true,
+                method: true,
+                user: { select: identity },
+              },
+              orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+            })
+          : [];
       const screeningResults =
-        showScreening && round.rulesVersion !== 3
+        showScreening && ![3, 4].includes(round.rulesVersion)
           ? round.schemes.map((s) => ({
               schemeId: s.id,
               ...calculateOutcome(
@@ -548,7 +643,7 @@ export async function getFundingRoundView(
             }))
           : null;
       const selectionResults =
-        showSelection && round.rulesVersion !== 3
+        showSelection && ![3, 4].includes(round.rulesVersion)
           ? selectionOutcome(
               round.schemes
                 .filter((s) => s.status === "QUALIFIED")
@@ -575,6 +670,10 @@ export async function getFundingRoundView(
         ),
         ownSelection:
           selections.find((v) => v.user.id === userId)?.schemeId ?? null,
+        ownMethodBallot:
+          methodBallots.find((v) => v.user.id === userId)?.ballot ?? null,
+        methodBallots:
+          showSelection && round.rulesVersion === 4 ? methodBallots : null,
         screeningResults,
         selectionResults,
         screeningBallots: showScreening ? screens : null,

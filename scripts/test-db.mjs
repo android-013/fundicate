@@ -1,8 +1,21 @@
 import "dotenv/config";
 import pg from "pg";
 import { spawn, spawnSync } from "node:child_process";
+import { mkdirSync } from "node:fs";
+import { resolve } from "node:path";
+const browserTemp = resolve(".local/browser-temp");
+mkdirSync(browserTemp, { recursive: true });
 const mode = process.argv[2] || "integration";
-if (!["integration", "e2e", "rounds", "funds", "elections"].includes(mode))
+if (
+  ![
+    "integration",
+    "e2e",
+    "rounds",
+    "funds",
+    "elections",
+    "reputation",
+  ].includes(mode)
+)
   throw new Error("Unknown test mode");
 const databaseName = `fundicate_test_${Date.now()}_${process.pid}`;
 if (!/^fundicate_test_\d+_\d+$/.test(databaseName))
@@ -23,6 +36,10 @@ try {
     ...process.env,
     DATABASE_URL: testUrl.href,
     APP_ORIGIN: "http://127.0.0.1:3001",
+    TEMP: browserTemp,
+    TMP: browserTemp,
+    PLAYWRIGHT_BROWSERS_PATH:
+      process.env.PLAYWRIGHT_BROWSERS_PATH ?? resolve(".local/browsers"),
   };
   const migrate = spawnSync(
     process.execPath,

@@ -1,0 +1,153 @@
+{
+  "part": 4,
+  "runId": "55d8970f-1e28-4df2-8cad-0cdb79dd7ade",
+  "reviewer": "/root/part04_review",
+  "independent": true,
+  "verdict": "pass",
+  "reviewDate": "2026-11-06",
+  "sourceFingerprint": "5d014afd692d8bc8d0dbcd1070893d774806eae55c477dc52117b50f7bc842a6",
+  "receiptSetHash": "2d0755e14fad86347d1d26bba91189eb8cbf8343d00d461207cf93efbfd0f99d",
+  "handoffHash": "3a0af80ec4c4d92662605ddd560fcff2ea67505400b39425b5b0628a8580b62a",
+  "requirementsReviewed": ["R20", "R21", "R22", "R23", "R24", "R25", "R26", "R27"],
+  "preservation": {
+    "legacyFeatures": true,
+    "historyPreserved": true,
+    "heldFundsIsolated": true,
+    "privacyPreserved": true
+  },
+  "scope": "Independent source, specification, migration, evidence, acceptance and handoff review of Part 4 only. The reviewer did not implement product code or mutate canonical workflow state. Manual review probes and the review JSON were written only in the chat workspace.",
+  "evidenceIntegrity": {
+    "sourceFingerprintIndependentlyRecomputed": true,
+    "receiptSetHashIndependentlyRecomputed": true,
+    "handoffHashIndependentlyRecomputed": true,
+    "allReceiptAndLogHashesIndependentlyVerified": true,
+    "requiredChecks": 13,
+    "allRequiredChecksExitZero": true,
+    "allRequiredChecksSourceUnchanged": true,
+    "allRequiredChecksMatchFinalSource": true,
+    "allAssignedCriteriaAccepted": 19,
+    "activeCheck": null,
+    "unresolvedBlockers": 0,
+    "requiredMatrixCells": 36,
+    "fundedMatrixPassLinesIndividuallyVerified": 36,
+    "publicSpecificationMatchesCanonicalExactly": true,
+    "failedOrSupersededReceiptsWereNotUsedAsPassingEvidence": true
+  },
+  "verificationObserved": {
+    "workflowTests": 14,
+    "unitTests": 114,
+    "unitFiles": 8,
+    "postgresqlChecks": 27,
+    "httpChecks": 61,
+    "electionChecks": 69,
+    "reputationChecks": 14,
+    "legacyRoundChecks": 20,
+    "fundedGovernanceChecks": 32,
+    "legacyBrowserChecks": 75,
+    "zeroViolationAccessibilityScans": {
+      "v4Methods": 24,
+      "v3ElectionVeto": 4,
+      "reputation": 4,
+      "legacyRounds": 14,
+      "funds": 8,
+      "existingApplication": 30,
+      "total": 84
+    },
+    "notes": "These are observations from the current registered receipts/logs, not new test receipts created by the reviewer. Typecheck, lint and complete production build also exited zero. The six actual method browser flows and actual 50-candidate/1,225-comparison HTTP ballot are present in the current election log. Representative method and reputation screenshots were inspected alongside responsive overflow and accessibility assertions."
+  },
+  "requirementEvidence": {
+    "R20": {
+      "checks": ["unit", "elections"],
+      "conclusion": "Strict ranked ballot validation, optional preference exhaustion, active-majority IRV transfers, published elimination/final tie rules and deterministic replay are implemented for equal and paid power. All six IRV allocation cells execute full funded settlement."
+    },
+    "R21": {
+      "checks": ["unit", "elections"],
+      "conclusion": "STV is the named exact inclusive Gregory variant, with integer Droop quota, fixed published seats/effective candidate limit, rational surplus factors, retained/live/exhausted conservation and replayed tie decisions. Elected IDs remain separate from the declared financial ranking; all six STV cells pass."
+    },
+    "R22": {
+      "checks": ["unit", "elections"],
+      "conclusion": "Batch Elo has fresh 1500 ratings, K32, simultaneous pre-period expected scores, draws and separately named paid-frequency semantics. Complete pair assignment, validation, replay and all six funded Elo cells are exercised."
+    },
+    "R23": {
+      "checks": ["unit", "elections"],
+      "conclusion": "The engine implements actual Glicko-2 rating, deviation, volatility, inactivity and bounded Illinois convergence. Official worked-example calculations and weighted repeated-game equivalence are tested. The unrounded rating1464.0506705393013 is consistent with the paper's1464.06 after its intermediate rounding, rather than an engine substitution. All six Glicko-2 cells pass."
+    },
+    "R24": {
+      "checks": ["unit", "elections"],
+      "conclusion": "Forced comparisons use exact signed +power/-power, no draws, complete canonical pair coverage, one immutable ballot and unique-voter participation. Duplicate, incomplete, foreign and ineligible ballots fail; all six funded cells pass."
+    },
+    "R25": {
+      "checks": ["unit", "elections", "funds", "rounds", "http", "browser", "accessibility"],
+      "conclusion": "All36 mandatory cells retain named versioned semantics and actual unit/funded evidence. FPTP uses vote power; advanced methods use explicit nonnegative competition-rank points with ties, never raw ratings as money ratios. Frozen rights, sealed UI/read/audit/export boundaries, canonical transcripts, SQL immutability, full veto gates, source refunds and conserved concurrent settlement remain intact. The complete pre-vote specification is now publicly linked and source-bound."
+    },
+    "R26": {
+      "checks": ["unit", "reputation"],
+      "conclusion": "Members, schemes, legacy proposals and rounds support written1-5-star reviews. Current visible revisions determine separate target/dimension count and average. Presentation/participation and receipt-backed recipient experience are distinct; local payments do not claim project delivery or real-world performance verification."
+    },
+    "R27": {
+      "checks": ["unit", "reputation", "integration"],
+      "conclusion": "Recorded completed shared participation is required; self, duplicate, electorate-only, cross-community/context and pending-veto-only claims are denied. Ordered edits, reports, moderation reasons and current-event appeals preserve raw history. Hidden content is excluded from public scores/history, reports remain staff-private, moderation conflicts are rejected and appealed restoration requires a different unconflicted moderator. Initial revision creation is atomic and aggregates fail closed."
+    }
+  },
+  "manualReviewEvidence": {
+    "label": "Independent manual review, not an automated workflow receipt",
+    "rerunAgainstFinalSource": true,
+    "probeFile": "C:/Users/Refat/Documents/Codex/2026-11-02/c-users-refat-documents-git-web/work/part-04-review-probe.ts",
+    "evidenceVerifierFile": "C:/Users/Refat/Documents/Codex/2026-11-02/c-users-refat-documents-git-web/work/part-04-review-evidence.mjs",
+    "randomizedPools": 500,
+    "methodWeightTallies": 6000,
+    "allocationCases": 18000,
+    "assertions": 51011,
+    "results": "Passed permutation replay, unique participation, complete ranking, nonnegative supports, exact allocation conservation, per-event rational STV retained+live+exhausted conservation, official Glicko calculations, weighted frequency versus repeated games equivalence and finite1e13-frequency calculations. No product writes or database changes were performed by these probes.",
+    "primaryReferences": [
+      "https://www.glicko.net/glicko/glicko2.pdf",
+      "https://www.aec.gov.au/learn/preferential-voting.htm",
+      "https://www.legislation.gov.uk/ssi/2011/399/schedule/1/rule/49/made",
+      "https://handbook.fide.com/chapter/B022024"
+    ]
+  },
+  "findings": [
+    {
+      "id": "P4-PRIVACY-01",
+      "severity": "medium",
+      "requirement": "R25/R27",
+      "file": "src/lib/reputation.ts",
+      "status": "resolved",
+      "description": "DECIDED rounds initially included still-sealed veto-only participation in reputation options/eligibility, allowing pending participation to be inferred.",
+      "resolution": "The complete round context is unavailable until an enabled veto deadline passes, in both service reads/eligibility and SQL participant validation. Current reputation check11 proves options and eligibility remain unchanged for a pending veto-only participant."
+    },
+    {
+      "id": "P4-PUBLICATION-02",
+      "severity": "medium",
+      "requirement": "R20/R21/R22/R23/R25",
+      "file": "src/app/(platform)/rules/fundicate-methods-v1/page.tsx",
+      "status": "resolved",
+      "description": "The full method contract existed in the repository but voters initially had no public pre-vote access to detailed elimination, surplus, rating and tie parameters.",
+      "resolution": "Every V4 round and creation/ballot UI links the anonymous published specification. The public text exactly matches the canonical frozen document, is included in source fingerprints, and equality/stale-evidence plus anonymous pre-vote browser checks pass."
+    },
+    {
+      "id": "P4-REPUTATION-INTEGRITY-03",
+      "severity": "medium",
+      "requirement": "R26/R27",
+      "file": "prisma/migrations/20261106020000_reputation_completeness/migration.sql",
+      "status": "resolved",
+      "description": "The coordinator identified that an orphan review root could lack a revision and a fallback could manufacture a one-star aggregate; the independent reviewer inspected the repair.",
+      "resolution": "An additive deferred constraint requires revision1 before commit and the read path fails closed on missing revisions. The isolated SQL reputation check rolls back a valid scoped root without its initial revision, and final aggregates use actual immutable scores only."
+    },
+    {
+      "id": "P4-DOCUMENTATION-04",
+      "severity": "low",
+      "requirement": "R27",
+      "file": "docs/REPUTATION.md",
+      "status": "resolved",
+      "description": "Reputation documentation originally described slash-separated operations and omitted the pending-veto exclusion.",
+      "resolution": "The final documentation uses the actual hyphenated router operations and explains full-context veto privacy and its eligibility boundary."
+    }
+  ],
+  "limitationsAndBoundary": [
+    "All Part4 financial and recipient-experience fixtures are local simulations. This review does not claim a real chain transfer, wallet approval, deployment or NEAR finality.",
+    "The declared STV and rating-period variants are versioned Fundicate specifications, not claims to reproduce every jurisdiction or an external rating federation.",
+    "Part5 real NEAR testnet operations, integrated analytics/templates/recovery and final audit remain outside this passing Part4 review; no mandatory Part4 item was waived."
+  ],
+  "unresolvedMaterialFindings": 0
+}

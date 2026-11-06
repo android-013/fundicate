@@ -22,6 +22,8 @@ import {
   getV3RoundView,
 } from "../src/lib/rounds-v3";
 import { runElectionFinanceChecks } from "./elections-finance";
+import { runMethodChecks } from "./methods";
+import { runMethodBrowserChecks } from "./methods-browser";
 
 const origin = process.env.APP_ORIGIN!;
 const day = 86400000;
@@ -807,6 +809,8 @@ async function main() {
   );
 
   await runElectionFinanceChecks(check);
+  await runMethodChecks(check);
+  await runMethodBrowserChecks(check);
 
   const live = await completed({}, new Date());
   await check(
@@ -1063,7 +1067,7 @@ async function main() {
     },
   );
   console.log(
-    `PASS ${checks} V3 weighted election/allocation/veto integrity, HTTP, browser and recovery checks.`,
+    `PASS ${checks} V3/V4 election/allocation/veto integrity, HTTP, browser and recovery checks.`,
   );
 }
 main()

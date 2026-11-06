@@ -95,6 +95,11 @@ model User {
   roundOperations RoundOperation[] @relation("RoundBeneficiary")
   roundVotingPowers RoundVotingPower[]
   roundVetoVotes RoundVetoVote[]
+  methodBallots RoundMethodBallot[]
+  reputationAuthored ReputationReview[] @relation("ReputationAuthor")
+  reputationModerated ReputationModeration[] @relation("ReputationModerator")
+  reputationReported ReputationReport[] @relation("ReputationReporter")
+  reputationAppealed ReputationAppeal[] @relation("ReputationAppellant")
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -130,6 +135,7 @@ model Community {
   auditEvents AuditEvent[]
   notifications Notification[]
   fundingRounds FundingRound[]
+  reputationReviews ReputationReview[]
   @@index([createdAt])
 }
 model GovernancePolicy {
@@ -377,6 +383,7 @@ model FundingRound {
   powers RoundVotingPower[]
   decision RoundDecision?
   vetoVotes RoundVetoVote[]
+  methodBallots RoundMethodBallot[]
   @@index([communityId,createdAt])
 }
 
@@ -445,7 +452,89 @@ model RoundElectorate {
   user User @relation(fields:[userId], references:[id], onDelete:Restrict)
   screeningVotes SchemeScreeningVote[]
   selectionVote RoundSelectionVote?
+  methodBallot RoundMethodBallot?
   @@id([roundId,userId])
+}
+
+model RoundMethodBallot {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  userId String @db.Uuid
+  round FundingRound @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  voter RoundElectorate @relation(fields:[roundId,userId],references:[roundId,userId],onDelete:Restrict)
+  method String
+  ballot Json
+  createdAt DateTime @default(now())
+  @@unique([roundId,userId])
+}
+
+model ReputationReview {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  community Community @relation(fields:[communityId],references:[id],onDelete:Restrict)
+  authorId String @db.Uuid
+  author User @relation("ReputationAuthor",fields:[authorId],references:[id],onDelete:Restrict)
+  targetType String
+  targetId String @db.Uuid
+  dimension String
+  contextType String
+  contextId String @db.Uuid
+  createdAt DateTime @default(now())
+  revisions ReputationRevision[]
+  moderations ReputationModeration[]
+  reports ReputationReport[]
+  appeals ReputationAppeal[]
+  @@unique([communityId,authorId,targetType,targetId,dimension])
+  @@index([communityId,createdAt])
+}
+
+model ReputationRevision {
+  id String @id @default(uuid()) @db.Uuid
+  reviewId String @db.Uuid
+  review ReputationReview @relation(fields:[reviewId],references:[id],onDelete:Restrict)
+  revision Int
+  score Int
+  text String
+  createdAt DateTime @default(now())
+  @@unique([reviewId,revision])
+}
+
+model ReputationModeration {
+  id String @id @default(uuid()) @db.Uuid
+  reviewId String @db.Uuid
+  review ReputationReview @relation(fields:[reviewId],references:[id],onDelete:Restrict)
+  actorId String @db.Uuid
+  actor User @relation("ReputationModerator",fields:[actorId],references:[id],onDelete:Restrict)
+  sequence Int
+  action String
+  reason String
+  createdAt DateTime @default(now())
+  appeal ReputationAppeal?
+  @@unique([reviewId,sequence])
+}
+
+model ReputationReport {
+  id String @id @default(uuid()) @db.Uuid
+  reviewId String @db.Uuid
+  review ReputationReview @relation(fields:[reviewId],references:[id],onDelete:Restrict)
+  reporterId String @db.Uuid
+  reporter User @relation("ReputationReporter",fields:[reporterId],references:[id],onDelete:Restrict)
+  reason String
+  createdAt DateTime @default(now())
+  @@unique([reviewId,reporterId])
+}
+
+model ReputationAppeal {
+  id String @id @default(uuid()) @db.Uuid
+  reviewId String @db.Uuid
+  review ReputationReview @relation(fields:[reviewId],references:[id],onDelete:Restrict)
+  moderationId String @unique @db.Uuid
+  moderation ReputationModeration @relation(fields:[moderationId],references:[id],onDelete:Restrict)
+  authorId String @db.Uuid
+  author User @relation("ReputationAppellant",fields:[authorId],references:[id],onDelete:Restrict)
+  statement String
+  createdAt DateTime @default(now())
 }
 
 model SchemeScreeningVote {

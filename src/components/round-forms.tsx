@@ -1,5 +1,6 @@
 "use client";
 import { useId, useState } from "react";
+import Link from "next/link";
 import { ActionForm, Field, Select, TextArea } from "./forms";
 
 export function FundingRoundForm({
@@ -10,12 +11,13 @@ export function FundingRoundForm({
   currency: string;
 }) {
   const [funded, setFunded] = useState(false);
-  const [fundedVersion, setFundedVersion] = useState("V3");
+  const [fundedVersion, setFundedVersion] = useState("V4");
+  const [selectionMethod, setSelectionMethod] = useState("FPTP");
   const [allocation, setAllocation] = useState("WINNER_ALL");
   const [vetoEnabled, setVetoEnabled] = useState(true);
   const versionLabelId = useId();
   const allocationLabelId = useId();
-  const advanced = funded && fundedVersion === "V3";
+  const advanced = funded && ["V3", "V4"].includes(fundedVersion);
   const [deadline] = useState(() => {
     const d = new Date(Date.now() + 7 * 86400000);
     return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
@@ -98,6 +100,9 @@ export function FundingRoundForm({
               aria-labelledby={versionLabelId}
               onChange={(event) => setFundedVersion(event.target.value)}
             >
+              <option value="V4">
+                V4 · all six election methods, weights, allocations and veto
+              </option>
               <option value="V3">
                 V3 · stage weights, allocation policies and optional veto
               </option>
@@ -157,6 +162,58 @@ export function FundingRoundForm({
           />
           {advanced ? (
             <>
+              {fundedVersion === "V4" && (
+                <>
+                  <p>
+                    <Link href="/rules/fundicate-methods-v1">
+                      Read the full published method specification
+                    </Link>{" "}
+                    before creating a round.
+                  </p>
+                  <label className="field">
+                    <span>Selection method</span>
+                    <select
+                      name="selectionMethod"
+                      value={selectionMethod}
+                      onChange={(e) => setSelectionMethod(e.target.value)}
+                    >
+                      <option value="FPTP">FPTP · single choice</option>
+                      <option value="IRV">IRV · ranked choice</option>
+                      <option value="STV">
+                        STV · multiple transferable seats
+                      </option>
+                      <option value="ELO">Elo · batch pairwise ratings</option>
+                      <option value="GLICKO_2">
+                        Glicko-2 · rating, deviation and volatility
+                      </option>
+                      <option value="FORCED_PAIRWISE">
+                        Forced pairwise · +1 / −1
+                      </option>
+                    </select>
+                  </label>
+                  {selectionMethod === "STV" ? (
+                    <Field
+                      name="selectionSeats"
+                      label="STV seats"
+                      type="number"
+                      step="1"
+                      min="1"
+                      max="50"
+                      defaultValue="2"
+                      help="Seats are separate from money. If fewer schemes qualify, effective seats reduce to that count."
+                    />
+                  ) : (
+                    <input type="hidden" name="selectionSeats" value="1" />
+                  )}
+                  <p className="muted small-text">
+                    Ranked methods allow partial preferences. Pairwise methods
+                    require every pair: up to 1,225 comparisons for 50 schemes.
+                    FPTP allocations use vote power; other methods use published
+                    rank points, with ties preserved. Seats and raw ratings do
+                    not set money shares.
+                  </p>
+                </>
+              )}
               <div className="v3-form-rule-grid">
                 {[
                   { name: "screeningWeight", label: "Screening voting power" },
@@ -288,14 +345,14 @@ export function FundingRoundForm({
       />
       <p className="notice">
         {advanced
-          ? "Screening needs strictly more YES than NO power, plus rounded-up quorum. Abstentions count toward screening participation, never approval. Selection is FPTP with one scheme choice, no abstention ballot, and stage-specific power. "
+          ? `Screening needs strictly more YES than NO power, plus rounded-up quorum. Abstentions count toward screening participation, never approval. Selection uses ${fundedVersion === "V4" ? selectionMethod : "FPTP"}, one complete method ballot, no abstention ballot, and stage-specific power. `
           : "Each scheme needs more than 50% YES among YES/NO ballots, plus quorum. "}
         Screening and selection each last 24 hours.{" "}
         {advanced
           ? "Each eligible positive-power voter has"
           : "Every eligible member has"}
-        one ballot per scheme in screening and one choice in selection. Results
-        stay sealed until their stage closes.
+        one ballot per scheme in screening and one complete ballot in selection.
+        Results stay sealed until their stage closes.
       </p>
     </ActionForm>
   );

@@ -17,6 +17,7 @@ import {
   winnerAllPlan,
 } from "./funds-core";
 import { type V3FundsConfig, V3_RULES_POLICY } from "./elections-core";
+import { type V4FundsConfig, V4_RULES_POLICY } from "./methods-core";
 import {
   assertRoundSettlementGate,
   freezeV3Electorate,
@@ -43,7 +44,7 @@ async function findSettlement(tx: Tx, round: FundingRound) {
     where: { roundId: round.id },
   });
   ensure(
-    [2, 3].includes(round.rulesVersion) &&
+    [2, 3, 4].includes(round.rulesVersion) &&
       settlement &&
       settlement.rulesVersion === round.rulesVersion,
     "This is a decision-only round; it has no payment authority.",
@@ -53,7 +54,7 @@ async function findSettlement(tx: Tx, round: FundingRound) {
   return settlement;
 }
 function assertRules(settlement: RoundSettlement) {
-  if (settlement.rulesVersion === 3) {
+  if ([3, 4].includes(settlement.rulesVersion)) {
     ensure(
       settlement.network === "local-simulation" &&
         settlement.decimals === 2 &&
@@ -210,11 +211,11 @@ async function postLedger(
 export async function initializeRoundFunding(
   tx: Tx,
   round: FundingRound,
-  config: FundsConfig | V3FundsConfig,
+  config: FundsConfig | V3FundsConfig | V4FundsConfig,
   now: Date,
 ) {
   ensure(
-    [2, 3].includes(round.rulesVersion) && round.status === "DRAFT",
+    [2, 3, 4].includes(round.rulesVersion) && round.status === "DRAFT",
     "Only a new supported funded draft can receive funding rules.",
   );
   const cutoff = new Date(config.collectionClosesAt),
@@ -232,7 +233,7 @@ export async function initializeRoundFunding(
     config.fundingTarget > 0n &&
       config.minimumContribution > 0n &&
       config.maximumContribution >= config.minimumContribution &&
-      config.selectionMethod === "FPTP",
+      (round.rulesVersion === 4 || config.selectionMethod === "FPTP"),
     "Unsupported funding configuration.",
   );
   if (round.rulesVersion === 2)
@@ -269,7 +270,11 @@ export async function initializeRoundFunding(
         ...(round.rulesVersion === 2
           ? V2_FUNDS_POLICY
           : {
-              ...V3_RULES_POLICY,
+              ...(round.rulesVersion === 4 ? V4_RULES_POLICY : V3_RULES_POLICY),
+              selectionMethod: config.selectionMethod,
+              ...(round.rulesVersion === 4
+                ? { selectionSeats: (config as V4FundsConfig).selectionSeats }
+                : {}),
               screeningWeight: (config as V3FundsConfig).screeningWeight,
               selectionWeight: (config as V3FundsConfig).selectionWeight,
               vetoWeight: (config as V3FundsConfig).vetoWeight,
@@ -306,7 +311,8 @@ export async function openRoundFunding(tx: Tx, round: FundingRound, now: Date) {
     where: { roundId: round.id },
     data: { status: "COLLECTING" },
   });
-  if (round.rulesVersion === 3) await seedV3Electorate(tx, round, now);
+  if ([3, 4].includes(round.rulesVersion))
+    await seedV3Electorate(tx, round, now);
 }
 
 function decodeShares(settlement: RoundSettlement): ContributionShare[] {
@@ -345,7 +351,7 @@ async function freezeBasis(
   now: Date,
 ) {
   if (settlement.frozenAt) {
-    if (round.rulesVersion === 3)
+    if ([3, 4].includes(round.rulesVersion))
       await freezeV3Electorate(tx, round, settlement, now);
     return settlement;
   }
@@ -388,7 +394,7 @@ async function freezeBasis(
       })),
     },
   });
-  if (round.rulesVersion === 3)
+  if ([3, 4].includes(round.rulesVersion))
     await freezeV3Electorate(tx, round, frozen, now);
   return frozen;
 }
@@ -401,7 +407,7 @@ async function queuePlan(
   now: Date,
   forceRefundReason?: string,
 ) {
-  if (round.rulesVersion === 3)
+  if ([3, 4].includes(round.rulesVersion))
     return queueV3Plan(tx, round, settlement, actorId, now, forceRefundReason);
   if (["QUEUED", "SETTLED", "REFUNDED"].includes(settlement.status))
     return settlement;
@@ -572,7 +578,7 @@ async function publishedPayouts(
 ): Promise<PlanPayout[]> {
   const plan = jsonRecord(allocation, "The published allocation is invalid.");
   ensure(
-    plan.rulesVersion === 3 &&
+    plan.rulesVersion === settlement.rulesVersion &&
       plan.assetId === settlement.assetId &&
       exactAmount(plan.received, "Invalid published received amount.") ===
         settlement.received &&
@@ -741,7 +747,7 @@ async function queueV3Plan(
   }
   if (settlement.received > 0n)
     await postLedger(tx, settlement, {
-      key: "reserve:v3",
+      key: `reserve:v${round.rulesVersion}`,
       kind: "RESERVE",
       amount: settlement.received,
       sourceId: held.id,
@@ -757,7 +763,7 @@ async function queueV3Plan(
       settledAt: settlement.received === 0n ? now : null,
       reason,
       allocationSnapshot: {
-        rulesVersion: 3,
+        rulesVersion: round.rulesVersion,
         assetId: settlement.assetId,
         reason,
         decisionRoundId: gate.decision?.roundId ?? null,
@@ -781,7 +787,7 @@ async function queueV3Plan(
     },
   });
   await audit(tx, actorId, round, "ROUND_SETTLEMENT_PREPARED", {
-    rulesVersion: 3,
+    rulesVersion: round.rulesVersion,
     reason,
     payout: payoutTotal.toString(),
     refunded: refundTotal.toString(),
@@ -800,10 +806,9 @@ export async function freezeRoundFunding(
   if (["QUEUED", "SETTLED", "REFUNDED"].includes(settlement.status))
     return { ready: false, reason: settlement.reason ?? "FUNDING_FAILED" };
   settlement = await freezeBasis(tx, round, settlement, now);
-  const power =
-    round.rulesVersion === 3
-      ? await freezeV3Electorate(tx, round, settlement, now)
-      : { ready: true };
+  const power = [3, 4].includes(round.rulesVersion)
+    ? await freezeV3Electorate(tx, round, settlement, now)
+    : { ready: true };
   const reason =
     now >= settlement.expiresAt
       ? "EXPIRED"
@@ -957,7 +962,7 @@ export async function prepareRoundSettlement(
       settlement,
       userId,
       now,
-      round.rulesVersion === 3 && expired
+      [3, 4].includes(round.rulesVersion) && expired
         ? "EXPIRED"
         : settlement.received < settlement.fundingTarget
           ? "FUNDING_FAILED"
@@ -1346,10 +1351,9 @@ export async function getRoundFinanceView(
       const final = ["QUEUED", "SETTLED", "REFUNDED"].includes(
         settlement.status,
       );
-      const decision =
-        round.rulesVersion === 3
-          ? await tx.roundDecision.findUnique({ where: { roundId } })
-          : null;
+      const decision = [3, 4].includes(round.rulesVersion)
+        ? await tx.roundDecision.findUnique({ where: { roundId } })
+        : null;
       const unknown = operations.some(
         (operation) => operation.status === "UNKNOWN",
       );
@@ -1360,7 +1364,7 @@ export async function getRoundFinanceView(
         ? "An execution outcome is unknown. Reconcile its local receipt before retrying or releasing funds."
         : waitingForVeto
           ? "The full 24-hour rejection window must close before settlement or expiry recovery."
-          : round.rulesVersion === 3 && !decision && !expired
+          : [3, 4].includes(round.rulesVersion) && !decision && !expired
             ? "Publish the election decision and allocation before settlement."
             : null;
       const gateReady = settlementBlockedReason === null;

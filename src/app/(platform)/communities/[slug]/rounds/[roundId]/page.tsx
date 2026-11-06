@@ -12,6 +12,7 @@ import { ActionButton, ActionForm, Select } from "@/components/forms";
 import { FundingSchemeForm } from "@/components/round-forms";
 import { RoundFunds } from "@/components/round-funds";
 import { RoundV3 } from "@/components/round-v3";
+import { MethodBallotForm } from "@/components/method-ballot";
 import { Status, Empty, Badge } from "@/components/ui";
 import { LiveRefresh } from "@/components/live-refresh";
 export default async function FundingRoundDetail({
@@ -28,8 +29,9 @@ export default async function FundingRoundDetail({
   });
   const r = v.round;
   const finance = await getRoundFinanceView(c.id, r.id, user?.id);
-  const v3 =
-    r.rulesVersion === 3 ? await getV3RoundView(c.id, r.id, user?.id) : null;
+  const v3 = [3, 4].includes(r.rulesVersion)
+    ? await getV3RoundView(c.id, r.id, user?.id)
+    : null;
   const base = { communityId: c.id, roundId: r.id };
   const now = new Date();
   const screenOpen =
@@ -102,6 +104,18 @@ export default async function FundingRoundDetail({
             <h3>The purpose</h3>
             <p className="prewrap">{r.description}</p>
           </section>
+          {r.status === "SELECTION" && r.rulesVersion === 4 && v3 && (
+            <MethodBallotForm
+              communityId={c.id}
+              roundId={r.id}
+              method={v3.settings.selectionMethod}
+              schemes={qualified.map((s) => ({ id: s.id, title: s.title }))}
+              own={v.ownMethodBallot}
+              canVote={selectionEligible && selectionOpen}
+              power={v3.ownPower.selection.toString()}
+              totalPower={v3.totalPower.selection.toString()}
+            />
+          )}
           {v3 && (
             <RoundV3
               view={v3}
@@ -162,7 +176,7 @@ export default async function FundingRoundDetail({
               </span>
             </div>
           )}
-          {r.status === "SELECTION" && (
+          {r.status === "SELECTION" && r.rulesVersion !== 4 && (
             <section className="panel padded">
               <h3>
                 {v3
@@ -238,7 +252,11 @@ export default async function FundingRoundDetail({
                   (x) => x.schemeId === s.id,
                 );
                 return (
-                  <article className="panel padded" key={s.id}>
+                  <article
+                    className="panel padded"
+                    key={s.id}
+                    id={`scheme-${s.id}`}
+                  >
                     <div className="row between">
                       <span className="muted small-text">
                         By {s.author.displayName}
@@ -348,6 +366,31 @@ export default async function FundingRoundDetail({
                 )}
               </p>
             ))}
+          {v.methodBallots && (
+            <section className="panel padded">
+              <details>
+                <summary>Published method ballots</summary>
+                <p className="muted">
+                  Selection is closed. Showing up to 100 immutable ballots.
+                </p>
+                {v.methodBallots.slice(0, 100).map((ballot, i) => (
+                  <details key={i}>
+                    <summary>
+                      {ballot.user.displayName} · {ballot.method}
+                    </summary>
+                    <pre
+                      className="method-transcript"
+                      tabIndex={0}
+                      role="region"
+                      aria-label={`Published ballot by ${ballot.user.displayName}`}
+                    >
+                      {JSON.stringify(ballot.ballot, null, 2)}
+                    </pre>
+                  </details>
+                ))}
+              </details>
+            </section>
+          )}
           {(v.screeningBallots || v.selectionBallots) && (
             <section className="panel padded">
               <details>
@@ -467,13 +510,16 @@ export default async function FundingRoundDetail({
                 <dt>Voting weight</dt>
                 <dd>
                   {v3
-                    ? "Independent screening, selection and veto power; see published V3 rules"
+                    ? `Independent screening, selection and veto power; see published V${r.rulesVersion} rules`
                     : "One member, one vote"}
                 </dd>
               </div>
               <div>
                 <dt>Selection method</dt>
-                <dd>First past the post · one scheme per voter</dd>
+                <dd>
+                  {v3 ? v3.settings.selectionMethod : "First past the post"} ·
+                  one complete ballot per voter
+                </dd>
               </div>
               <div>
                 <dt>Tie rule</dt>

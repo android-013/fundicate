@@ -60,7 +60,9 @@ export function ActionForm({
             String(body.collectionClosesAt),
           ).toISOString();
           body.expiresAt = new Date(String(body.expiresAt)).toISOString();
-          if (body.fundedVersion === "V3") {
+          if (body.fundedVersion === "V4")
+            body.selectionSeats = Number(form.get("selectionSeats"));
+          if (["V3", "V4"].includes(String(body.fundedVersion))) {
             body.vetoEnabled = form.get("vetoEnabled") === "on";
             body.rankedSharesBps = [];
             if (body.allocationPolicy === "RANKED_CUTS") {
@@ -214,6 +216,7 @@ export function Field({
   min,
   max,
   help,
+  step,
 }: {
   label: string;
   name: string;
@@ -224,6 +227,7 @@ export function Field({
   min?: string | number;
   max?: string | number;
   help?: string;
+  step?: string | number;
 }) {
   const fieldId = useId();
   return (
@@ -237,7 +241,7 @@ export function Field({
         placeholder={placeholder}
         min={min}
         max={max}
-        step={type === "number" ? "0.01" : undefined}
+        step={step ?? (type === "number" ? "0.01" : undefined)}
         aria-labelledby={`${fieldId}-label`}
         aria-describedby={help ? `${fieldId}-help` : undefined}
       />
