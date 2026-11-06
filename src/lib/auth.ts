@@ -59,7 +59,7 @@ export async function createSession(userId: string) {
   const token = randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 7 * 86400000);
   await db.session.create({
-    data: { userId, tokenHash: hashToken(token), expiresAt },
+    data: { userId, tokenHash: hashToken(token), expiresAt, reauthenticatedAt: new Date() },
   });
   return { token, expiresAt };
 }

@@ -217,6 +217,7 @@ export function Field({
   max,
   help,
   step,
+  autoComplete,
 }: {
   label: string;
   name: string;
@@ -228,6 +229,7 @@ export function Field({
   max?: string | number;
   help?: string;
   step?: string | number;
+  autoComplete?: string;
 }) {
   const fieldId = useId();
   return (
@@ -235,6 +237,7 @@ export function Field({
       <span id={`${fieldId}-label`}>{label}</span>
       <input
         name={name}
+        autoComplete={autoComplete}
         type={type}
         required={required}
         defaultValue={defaultValue}

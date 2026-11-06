@@ -21,6 +21,9 @@ import {
 import { castRoundVetoVote, closeRoundVeto } from "@/lib/rounds-v3";
 import * as service from "@/lib/service";
 import * as reputation from "@/lib/reputation";
+import * as wallet from "@/lib/wallet";
+import * as chain from "@/lib/chain-service";
+import * as templates from "@/lib/round-templates";
 import { profileSchema, uuid } from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
 import {
@@ -97,7 +100,13 @@ export async function POST(
     }
     const user = await currentUser();
     ensure(user, "Please sign in to continue.", 401);
+    const token = req.cookies.get(sessionCookie)?.value ?? "";
     await rateLimit(`mutation:${user.id}`, 180, 60);
+    if (operation === "reauthenticate") await rateLimit(`reauth:${user.id}`, 5, 900);
+    if (["wallet-challenge", "wallet-verify", "wallet-revoke", "chain-create", "chain-prepare", "chain-authorize"].includes(operation) ||
+        (operation === "member" && typeof body === "object" && body !== null && "action" in body && ["moderator","member","transfer"].includes(String(body.action)))) {
+      await wallet.requireRecentAuthentication(user.id, token);
+    }
     if (
       [
         "vote",
@@ -124,6 +133,54 @@ export async function POST(
     )
       await rateLimit(`${operation}:${user.id}`, 30, 60);
     switch (operation) {
+      case "reauthenticate":
+        await wallet.reauthenticate(user.id, token, body);
+        result = { message: "Password confirmed for sensitive actions for five minutes." };
+        break;
+      case "wallet-challenge":
+        result = await wallet.createWalletChallenge(user.id, token, body);
+        break;
+      case "wallet-verify":
+        await wallet.verifyWalletChallenge(user.id, token, body);
+        result = { message: "Testnet wallet ownership verified." };
+        break;
+      case "wallet-revoke":
+        await wallet.revokeWalletLink(user.id, token, body);
+        result = { message: "Wallet link revoked. Historical transfers remain recorded." };
+        break;
+      case "chain-create": {
+        const vault = await chain.createChainVault(user.id, body);
+        result = { vaultId: vault.id, message: "Native NEAR pool rules saved. Register it with your controller wallet next." };
+        break;
+      }
+      case "chain-prepare":
+        result = await chain.prepareChainAction(user.id, body);
+        break;
+      case "chain-authorize":
+        await chain.authorizeChainWallet(user.id, body);
+        result = {message:"Wallet handoff recorded. Preserve and reconcile its receipt."};
+        break;
+      case "chain-submitted":
+        await chain.recordChainSubmission(user.id, body);
+        result = {message:"Transaction identity recorded; awaiting independent verification."};
+        break;
+      case "chain-reconcile":
+        result = await chain.reconcileChainOperation(user.id, body);
+        break;
+      case "template-save":
+        await templates.saveRoundTemplate(user.id, body);
+        result = {message:"Template revision saved. Published rounds retain their rules."};
+        break;
+      case "template-archive":
+        await templates.archiveRoundTemplate(user.id, body);
+        result = {message:"Template archived; revision history preserved."};
+        break;
+      case "template-instantiate": {
+        const round = await templates.instantiateRoundTemplate(user.id, body);
+        const community = await db.community.findUniqueOrThrow({where:{id:round.communityId},select:{slug:true}});
+        result = {redirect:`/communities/${community.slug}/rounds/${round.id}`};
+        break;
+      }
       case "round-method-vote":
         await castMethodSelectionVote(user.id, body);
         result = {

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { requireUser, hashToken, sessionCookie } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ActionButton } from "@/components/forms";
+import { ActionButton, ActionForm, Field } from "@/components/forms";
 import { PageHeading, Badge } from "@/components/ui";
 import { dateTime } from "@/lib/format";
 export default async function Security() {
@@ -25,6 +25,12 @@ export default async function Security() {
           Security
         </Link>
       </div>
+      <section className="panel padded narrow">
+        <h2>Confirm a sensitive action</h2>
+        <p className="muted">Password confirmation lasts five minutes for this session. Wallet links and authority changes require it.</p>
+        <ActionForm operation="reauthenticate" submit="Confirm password"><Field label="Current password" name="password" type="password" required autoComplete="current-password" /></ActionForm>
+        <Link href="/settings/wallet" className="button secondary">Manage testnet wallets</Link>
+      </section>
       <section className="panel padded narrow">
         <h2>Active sessions</h2>
         <p className="muted">

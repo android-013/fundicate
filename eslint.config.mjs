@@ -7,6 +7,7 @@ export default defineConfig([
   globalIgnores([
     ".next/**",
     ".local/**",
+    "**/target/**",
     "work/**",
     "test-results/**",
     "src/generated/**",

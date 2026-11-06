@@ -93,6 +93,7 @@ export async function createFundingRound(
   userId: string,
   input: unknown,
   now = new Date(),
+  templateRevisionId?: string,
 ) {
   const data = roundSchema.parse(input);
   const { funded, fundedVersion, funding, ...roundData } = data;
@@ -104,6 +105,13 @@ export async function createFundingRound(
   return atomic(async (tx) => {
     await lock(tx, data.communityId);
     await access(tx, data.communityId, userId, true);
+    if (templateRevisionId) {
+      const revision = await tx.roundTemplateRevision.findUnique({
+        where: { id: templateRevisionId }, include: { template: true },
+      });
+      ensure(revision?.template.communityId === data.communityId && !revision.template.archivedAt,
+        "This template revision is unavailable in this community.", 409);
+    }
     const round = await tx.fundingRound.create({
       data: {
         ...roundData,
@@ -115,6 +123,7 @@ export async function createFundingRound(
               : 2
           : 1,
         creatorId: userId,
+        templateRevisionId,
         submissionsCloseAt: closes,
         createdAt: now,
       },

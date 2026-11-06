@@ -10,6 +10,14 @@
 
 ## Planned product defaults — publish/version before use
 
+## Part 5 release direction — user confirmed 6 November 2026
+
+The user requested a production-ready, plug-and-play service which can run by itself, connect to NEAR, or support another execution system. Standalone operation keeps the existing simulated ledger and requires no wallet credentials. The optional native NEAR testnet provider uses a separate, explicitly denominated custody pool bound to a final V4 governance decision, with newly accepted native request caps and source-owned refunds. It never converts historical fiat balances or changes a published electorate. Provider implementations must satisfy the typed observation/precision/idempotency contract and pass conformance checks before enablement. No unimplemented provider is advertised as available.
+
+The prior mandatory real NEAR testnet deposit, payout, refund and independent finality gate remains. Production readiness requires actual verification and an honest deployment handoff; configuration files or simulated observations alone do not satisfy it. The user has not authorized mainnet or hosted publication. Additional release checks cover portable setup, current dependency audit, isolated restore, templates/analytics and the large fictional demo.
+
+## Planned product defaults — publish/version before use (continued)
+
 - New strict governance coexists with legacy profiles; do not rewrite historical public ballots, declarations, roles or votes. New PDF-conforming flows use stage-specific privacy.
 - Admission/screening approval is strict majority of valid YES/NO power with quorum; removal is exact two-thirds. The source's 24-hour requirement is scheme screening, not membership admission.
 - Founder/member contribution declarations are not payments. Unknown legacy amounts stay unknown. Actual verified/simulated received round funds determine financial ownership and any weighted snapshot.

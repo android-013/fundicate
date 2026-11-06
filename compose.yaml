@@ -1,0 +1,74 @@
+name: fundicate
+services:
+  db:
+    image: postgres:18-bookworm
+    environment:
+      POSTGRES_USER: fundicate
+      POSTGRES_DB: fundicate
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run node scripts/bootstrap.mjs --docker}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fundicate -d fundicate"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    networks: [database]
+  migrate:
+    build:
+      context: .
+      target: tools
+    env_file: .local/deploy/compose.env
+    environment:
+      NODE_ENV: production
+      ALLOW_DEMO_SEED: "false"
+    command: ["node", "node_modules/prisma/build/index.js", "migrate", "deploy"]
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [database]
+    restart: "no"
+  app:
+    build:
+      context: .
+      target: runtime
+    init: true
+    env_file: .local/deploy/compose.env
+    environment:
+      NODE_ENV: production
+      ALLOW_DEMO_SEED: "false"
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    networks: [database, outgoing]
+  maintenance:
+    profiles: [maintenance]
+    build:
+      context: .
+      target: tools
+    init: true
+    env_file: .local/deploy/compose.env
+    environment:
+      NODE_ENV: production
+      ALLOW_DEMO_SEED: "false"
+    command: ["node", "scripts/maintenance.mjs", "--once"]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    networks: [database, outgoing]
+    restart: "no"
+volumes:
+  postgres-data:
+networks:
+  database:
+    internal: true
+  outgoing:

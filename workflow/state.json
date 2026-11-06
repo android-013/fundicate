@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 154,
+  "revision": 156,
   "totalParts": 5,
   "completedParts": [
     1,
@@ -9,8 +9,23 @@
     4
   ],
   "nextPart": 5,
-  "status": "waiting_for_next",
-  "activeRun": null,
+  "status": "in_progress",
+  "activeRun": {
+    "id": "72fba785-3bf0-4f38-a257-558a5455442f",
+    "part": 5,
+    "startedAt": "2026-11-06T12:22:31.056Z",
+    "checks": {},
+    "acceptance": {},
+    "blockers": {},
+    "checkpoints": [
+      {
+        "at": "2026-11-06T12:53:50.463Z",
+        "note": "Part 5 release integration active: standalone portable setup, isolated backup/restore (49-table real PostgreSQL snapshot), isolated 100-member/100000-BDT funded demo, templates/system analytics, native custody app and wallet ownership implemented; contract locked WASM build and 35 runtime tests passed by domain worker. Independent review identified idempotency/provenance/readiness/receipt-binding gaps, being repaired with targeted tests. Dependency install audit reports zero vulnerabilities. Real NEAR testnet wallet/funding and operations are not yet performed; user public-account question pending. No completion claimed."
+      }
+    ],
+    "review": null,
+    "activeCheck": null
+  },
   "parts": {
     "1": {
       "number": 1,
@@ -809,7 +824,7 @@
     "5": {
       "number": 5,
       "title": "Verified NEAR testnet, integrated analytics and full-system audit",
-      "status": "pending"
+      "status": "in_progress"
     }
   },
   "requirements": {
@@ -928,5 +943,5 @@
       "status": "pending"
     }
   },
-  "updatedAt": "2026-11-06T12:16:07.210Z"
+  "updatedAt": "2026-11-06T12:53:50.466Z"
 }

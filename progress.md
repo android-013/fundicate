@@ -1,7 +1,7 @@
 <!-- delivery-status:start -->
 Current delivery: 4/5 parts complete. This is milestone count, not PDF feature coverage.
 
-State: waiting_for_next. Next eligible part: 5. Revision: 154.
+State: in_progress. Next eligible part: 5. Revision: 156.
 
 | Part | Scope | Status |
 | --- | --- | --- |
@@ -9,9 +9,9 @@ State: waiting_for_next. Next eligible part: 5. Revision: 154.
 | 2/5 | Funded rounds, accounting and governance foundation | complete |
 | 3/5 | Weighted governance, allocation policies and rejection veto | complete |
 | 4/5 | Complete election methods and participation-based reputation | complete |
-| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | pending |
+| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | in_progress |
 
-Waiting for a fresh user next request; planning does not start the next part.
+Active run: 72fba785-3bf0-4f38-a257-558a5455442f; part 5. Resume it before advancing.
 <!-- delivery-status:end -->
 
 The canonical plan is `docs/MASTER-PLAN.md`; machine state is `workflow/state.json`. All work recorded below is historical **Part 1/5**, including the earlier capability phases 1–2. The historical 100% labels describe that earlier scope, not the full PDF or this new five-part program. Milestone count and feature coverage are different measurements.

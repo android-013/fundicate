@@ -36,6 +36,12 @@ const CHECKS = {
   funds: [["scripts/test-db.mjs", "funds"]],
   elections: [["scripts/test-db.mjs", "elections"]],
   reputation: [["scripts/test-db.mjs", "reputation"]],
+  release: [["scripts/test-db.mjs", "release"]],
+  chain: [["scripts/test-db.mjs", "chain"]],
+  recovery: [["scripts/recovery-exercise.mjs", "--isolated"]],
+  "large-demo": [["scripts/demo-large.mjs", "--isolated"]],
+  contract: [["contracts/near-treasury/check.mjs"]],
+  "dependency-audit": [["scripts/dependency-audit.mjs"]],
   "near-testnet": [["scripts/verify-near-testnet.mjs"]],
 };
 const START = "<!-- delivery-status:start -->",
@@ -209,7 +215,7 @@ export function fingerprint(root) {
       const p = join(path, e.name);
       if (e.isSymbolicLink())
         throw new Error("Source symlinks require explicit review");
-      if (e.isDirectory()) walk(p);
+      if (e.isDirectory() && !["target","node_modules",".git"].includes(e.name)) walk(p);
       else if (e.isFile()) files.push(p);
     }
   }
@@ -220,6 +226,7 @@ export function fingerprint(root) {
     "tests",
     "docs/algorithms",
     "public/rules",
+    "contracts",
   ])
     walk(join(root, dir));
   for (const name of [
@@ -236,6 +243,14 @@ export function fingerprint(root) {
     "workflow/requirements.json",
     "workflow/method-matrix.json",
     "workflow/DECISIONS.md",
+    "Dockerfile",
+    "compose.yaml",
+    ".dockerignore",
+    ".env.example",
+    "docs/PRODUCTION.md",
+    "docs/OPERATIONS.md",
+    "docs/NEAR-CONTRACT.md",
+    "docs/INTEGRATIONS.md",
   ])
     if (existsSync(join(root, name))) files.push(join(root, name));
   const h = createHash("sha256");

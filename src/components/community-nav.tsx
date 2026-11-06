@@ -12,6 +12,8 @@ export function CommunityNav({ slug }: { slug: string }) {
         { p: "/proposals", l: "Proposals" },
         { p: "/rounds", l: "Funding rounds" },
         { p: "/reputation", l: "Reputation" },
+        { p: "/templates", l: "Templates" },
+        { p: "/chain", l: "NEAR testnet" },
         { p: "/governance", l: "Governance" },
         { p: "/activity", l: "Activity" },
       ].map((t) => {

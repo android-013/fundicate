@@ -14,6 +14,8 @@ if (
     "funds",
     "elections",
     "reputation",
+    "release",
+    "chain",
   ].includes(mode)
 )
   throw new Error("Unknown test mode");
@@ -35,6 +37,7 @@ try {
   const env = {
     ...process.env,
     DATABASE_URL: testUrl.href,
+    ALLOW_DEMO_SEED: "false",
     APP_ORIGIN: "http://127.0.0.1:3001",
     TEMP: browserTemp,
     TMP: browserTemp,
@@ -78,7 +81,7 @@ try {
   }
   const test = spawnSync(
     process.execPath,
-    ["node_modules/tsx/dist/cli.mjs", `tests/${mode}.ts`],
+    ["node_modules/tsx/dist/cli.mjs", `tests/${mode === "release" ? "release-analytics" : mode}.ts`],
     { env, stdio: "inherit", windowsHide: true },
   );
   process.exitCode = test.status ?? 1;

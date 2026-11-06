@@ -100,6 +100,11 @@ model User {
   reputationModerated ReputationModeration[] @relation("ReputationModerator")
   reputationReported ReputationReport[] @relation("ReputationReporter")
   reputationAppealed ReputationAppeal[] @relation("ReputationAppellant")
+  roundTemplates RoundTemplate[]
+  walletChallenges WalletChallenge[]
+  walletLinks WalletLink[]
+  chainVaults ChainVault[]
+  chainOperations ChainOperation[]
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -109,6 +114,7 @@ model Session {
   createdAt DateTime @default(now())
   expiresAt DateTime
   revokedAt DateTime?
+  reauthenticatedAt DateTime?
   @@index([userId, expiresAt])
 }
 model Community {
@@ -136,6 +142,8 @@ model Community {
   notifications Notification[]
   fundingRounds FundingRound[]
   reputationReviews ReputationReview[]
+  roundTemplates RoundTemplate[]
+  chainVaults ChainVault[]
   @@index([createdAt])
 }
 model GovernancePolicy {
@@ -337,6 +345,122 @@ model RateLimit {
   expiresAt DateTime
 }
 
+model RoundTemplate {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  authorId String @db.Uuid
+  community Community @relation(fields:[communityId],references:[id],onDelete:Restrict)
+  author User @relation(fields:[authorId],references:[id],onDelete:Restrict)
+  name String @db.VarChar(120)
+  description String
+  archivedAt DateTime?
+  createdAt DateTime @default(now())
+  revisions RoundTemplateRevision[]
+  @@index([communityId,createdAt])
+}
+model RoundTemplateRevision {
+  id String @id @default(uuid()) @db.Uuid
+  templateId String @db.Uuid
+  template RoundTemplate @relation(fields:[templateId],references:[id],onDelete:Restrict)
+  number Int
+  rules Json
+  createdAt DateTime @default(now())
+  rounds FundingRound[]
+  @@unique([templateId,number])
+}
+model WalletChallenge {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  sessionHash String
+  accountId String
+  network String
+  origin String
+  nonce String @unique
+  message String
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId,expiresAt])
+}
+model WalletLink {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  network String
+  accountId String
+  publicKey String
+  verifiedAt DateTime @default(now())
+  revokedAt DateTime?
+  @@unique([network,accountId])
+  @@index([userId,revokedAt])
+}
+// Native asset custody is additive and never reuses the fiat/minor-unit ledger.
+model ChainVault {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  creatorId String @db.Uuid
+  roundId String @db.Uuid
+  community Community @relation(fields:[communityId],references:[id],onDelete:Restrict)
+  creator User @relation(fields:[creatorId],references:[id],onDelete:Restrict)
+  round FundingRound @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  network String @default("testnet")
+  provider String @default("near-testnet")
+  assetId String @default("near:testnet:NEAR")
+  decimals Int @default(24)
+  contractId String
+  title String
+  rulesVersion Int @default(1)
+  rulesSnapshot Json
+  collectionClosesAt DateTime
+  expiresAt DateTime
+  vetoEnabled Boolean
+  allocationHash String?
+  plan Json?
+  publishedAt DateTime?
+  createdAt DateTime @default(now())
+  operations ChainOperation[]
+  observations ChainObservation[]
+  @@index([communityId,createdAt])
+}
+model ChainOperation {
+  id String @id @default(uuid()) @db.Uuid
+  vaultId String @db.Uuid
+  vault ChainVault @relation(fields:[vaultId],references:[id],onDelete:Restrict)
+  actorId String @db.Uuid
+  actor User @relation(fields:[actorId],references:[id],onDelete:Restrict)
+  operationKey String @unique
+  kind String
+  amount Decimal @db.Decimal(78,0)
+  recipient String
+  method String
+  args Json
+  attachedDeposit Decimal @db.Decimal(78,0)
+  expectedSigner String
+  status String @default("PREPARED")
+  transactionHash String? @unique
+  submittedAt DateTime?
+  confirmedAt DateTime?
+  createdAt DateTime @default(now())
+  observations ChainObservation[]
+  @@index([vaultId,status])
+}
+model ChainObservation {
+  id String @id @default(uuid()) @db.Uuid
+  vaultId String @db.Uuid
+  operationId String @db.Uuid
+  vault ChainVault @relation(fields:[vaultId],references:[id],onDelete:Restrict)
+  operation ChainOperation @relation(fields:[operationId],references:[id],onDelete:Restrict)
+  rpcUrl String
+  transactionHash String
+  finality String
+  status String
+  receiptIds Json
+  evidence Json
+  observedAt DateTime @default(now())
+  @@index([vaultId,observedAt])
+}
+
 model DashboardPreference {
   userId String @id @db.Uuid
   user User @relation(fields:[userId], references:[id], onDelete:Restrict)
@@ -384,6 +508,9 @@ model FundingRound {
   decision RoundDecision?
   vetoVotes RoundVetoVote[]
   methodBallots RoundMethodBallot[]
+  templateRevisionId String? @db.Uuid
+  templateRevision RoundTemplateRevision? @relation(fields:[templateRevisionId],references:[id],onDelete:Restrict)
+  chainVaults ChainVault[]
   @@index([communityId,createdAt])
 }
 

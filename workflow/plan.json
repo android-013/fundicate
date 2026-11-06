@@ -16,14 +16,30 @@
     {
       "number": 1,
       "title": "Existing application and first capability upgrades",
-      "requirements": ["R01", "R02", "R03", "R04", "R05", "R06"],
+      "requirements": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06"
+      ],
       "checks": [],
       "handoff": "docs/parts/part-01.md"
     },
     {
       "number": 2,
       "title": "Funded rounds, accounting and governance foundation",
-      "requirements": ["R07", "R08", "R09", "R10", "R11", "R12", "R13", "R14"],
+      "requirements": [
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14"
+      ],
       "checks": [
         "workflow-tests",
         "unit",
@@ -42,7 +58,12 @@
     {
       "number": 3,
       "title": "Weighted governance, allocation policies and rejection veto",
-      "requirements": ["R15", "R16", "R17", "R18"],
+      "requirements": [
+        "R15",
+        "R16",
+        "R17",
+        "R18"
+      ],
       "checks": [
         "workflow-tests",
         "unit",
@@ -62,7 +83,16 @@
     {
       "number": 4,
       "title": "Complete election methods and participation-based reputation",
-      "requirements": ["R20", "R21", "R22", "R23", "R24", "R25", "R26", "R27"],
+      "requirements": [
+        "R20",
+        "R21",
+        "R22",
+        "R23",
+        "R24",
+        "R25",
+        "R26",
+        "R27"
+      ],
       "checks": [
         "workflow-tests",
         "unit",
@@ -108,7 +138,13 @@
         "funds",
         "elections",
         "reputation",
-        "near-testnet"
+        "near-testnet",
+        "release",
+        "chain",
+        "recovery",
+        "large-demo",
+        "contract",
+        "dependency-audit"
       ],
       "handoff": "docs/parts/part-05.md"
     }

@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
+  output: "standalone",
   cleanDistDir: false, // scripts/build.mjs cleans and prepares the output synchronously.
   poweredByHeader: false,
   // Use a small Webpack worker pool for the development machine and Windows sandbox.
