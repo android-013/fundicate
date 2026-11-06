@@ -1,0 +1,90 @@
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","scripts/test-db.mjs","elections"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1793932115736_23200", schema "public" at "127.0.0.1:54329"
+
+10 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+
+┌─────────────────────────────────────────────────────────┐
+│  Update available 7.10.1 -> 8.0.0-rc.30                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 1481ms
+✓ Running next.config.ts took 428ms
+PASS V3 independently configures stage power, weighted approval and sealed stage results
+PASS post-cutoff departures and role changes preserve frozen power and ballot rights
+(node:27060) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS pre-cutoff membership tracking rejects zero paid-power elections and preserves refunds
+PASS a zero-paid moderator can screen equally but cannot gain contribution selection power
+PASS veto uses all frozen power, stays sealed and rejects exactly 90 percent only after 24 hours
+PASS equal veto counts nonvoters in its denominator and cannot close early when everyone votes
+(node:27436) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS V3 proportional caps preserve cents and original-source refunds across worker restart and expiry
+PASS V3 WINNER_ALL with EQUAL selection settles the exact published plan and replays safely
+PASS V3 WINNER_ALL with CONTRIBUTION selection settles the exact published plan and replays safely
+PASS V3 PROPORTIONAL with EQUAL selection settles the exact published plan and replays safely
+PASS V3 PROPORTIONAL with CONTRIBUTION selection settles the exact published plan and replays safely
+PASS V3 RANKED_CUTS with EQUAL selection settles the exact published plan and replays safely
+PASS V3 RANKED_CUTS with CONTRIBUTION selection settles the exact published plan and replays safely
+PASS V3 ranked cuts refund capped, tied, and empty positions without shifting entitlements
+PASS V3 proportional unpayable share and winner-all top ties refund without arbitrary awards
+PASS V3 exact 90-percent rejection waits 24 hours across prepare, process, SQL bypass, and expiry
+PASS V3 89-percent rejection includes abstaining and nonvoting power in the denominator
+PASS UNKNOWN blocks the entire plan until local non-posting proof records a durable same-intent retry
+PASS V3 atomic posting failures append durable attempts before retrying the same operation
+PASS V3 failed target freezes without queueing until the immutable decision is published
+PASS V3 unresolved expiry can queue, process and replay original-source full refunds with either target outcome
+(node:13364) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS veto HTTP enforces authentication, origin, strict input, eligibility and one immutable ballot
+PASS 4 V3 voting/veto WCAG A/AA scans; no violations.
+PASS V3 browser casts sealed veto and exposes exact rules and allocation responsively without runtime errors
+PASS 23 V3 weighted election/allocation/veto integrity, HTTP, browser and recovery checks.

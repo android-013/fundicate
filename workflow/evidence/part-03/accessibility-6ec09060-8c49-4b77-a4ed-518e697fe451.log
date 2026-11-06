@@ -1,0 +1,123 @@
+COMMAND ["C:\\Program Files\\nodejs\\node.exe","scripts/browser-tests.mjs","accessibility"]
+[
+  {
+    "path": "/",
+    "violations": []
+  },
+  {
+    "path": "/login",
+    "violations": []
+  },
+  {
+    "path": "/register",
+    "violations": []
+  },
+  {
+    "path": "/dashboard",
+    "violations": []
+  },
+  {
+    "path": "/explore",
+    "violations": []
+  },
+  {
+    "path": "/communities/new",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/treasury",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/members",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/proposals",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/proposals/new",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/governance",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/activity",
+    "violations": []
+  },
+  {
+    "path": "/settings/profile",
+    "violations": []
+  },
+  {
+    "path": "/settings/security",
+    "violations": []
+  },
+  {
+    "path": "/analytics",
+    "violations": []
+  },
+  {
+    "path": "/analytics/treasury",
+    "violations": []
+  },
+  {
+    "path": "/analytics/governance",
+    "violations": []
+  },
+  {
+    "path": "/analytics/network",
+    "violations": []
+  },
+  {
+    "path": "/analytics/personal",
+    "violations": []
+  },
+  {
+    "path": "/analytics/records",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/proposals/605af4e6-d66e-460a-9c4f-362ea6d0c459",
+    "violations": []
+  },
+  {
+    "path": "/ (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/dashboard (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/explore (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/treasury (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics/treasury (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics/network (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics/records (mobile)",
+    "violations": []
+  }
+]

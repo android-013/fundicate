@@ -4,12 +4,14 @@ import { LockKeyhole, ShieldCheck, Trophy, ArrowUpRight } from "lucide-react";
 import { communityContext } from "@/lib/community";
 import { getFundingRoundView } from "@/lib/rounds";
 import { getRoundFinanceView } from "@/lib/funded-rounds";
+import { getV3RoundView } from "@/lib/rounds-v3";
 import { AppError } from "@/lib/errors";
 import { uuid } from "@/lib/validation";
 import { dateTime, moneyFormat, titleCase } from "@/lib/format";
 import { ActionButton, ActionForm, Select } from "@/components/forms";
 import { FundingSchemeForm } from "@/components/round-forms";
 import { RoundFunds } from "@/components/round-funds";
+import { RoundV3 } from "@/components/round-v3";
 import { Status, Empty, Badge } from "@/components/ui";
 import { LiveRefresh } from "@/components/live-refresh";
 export default async function FundingRoundDetail({
@@ -26,6 +28,8 @@ export default async function FundingRoundDetail({
   });
   const r = v.round;
   const finance = await getRoundFinanceView(c.id, r.id, user?.id);
+  const v3 =
+    r.rulesVersion === 3 ? await getV3RoundView(c.id, r.id, user?.id) : null;
   const base = { communityId: c.id, roundId: r.id };
   const now = new Date();
   const screenOpen =
@@ -36,6 +40,8 @@ export default async function FundingRoundDetail({
     r.status === "SELECTION" &&
     r.selectionOpensAt! <= now &&
     r.selectionClosesAt! > now;
+  const screenEligible = v3 ? v3.ownPower.screening > 0n : v.eligible;
+  const selectionEligible = v3 ? v3.ownPower.selection > 0n : v.eligible;
   const winner = r.schemes.find((s) => s.id === r.winnerSchemeId);
   const qualified = r.schemes.filter((s) => s.status === "QUALIFIED");
   const names = Object.fromEntries(r.schemes.map((s) => [s.id, s.title]));
@@ -60,11 +66,15 @@ export default async function FundingRoundDetail({
           <h2 className="round-title">{r.title}</h2>
           <p className="muted">
             {r.schemes.length} competing{" "}
-            {r.schemes.length === 1 ? "scheme" : "schemes"} · {c.currency} · one
-            member, one vote
+            {r.schemes.length === 1 ? "scheme" : "schemes"} · {c.currency} ·{" "}
+            {v3
+              ? "published stage-specific voting power"
+              : "one member, one vote"}
           </p>
           <Badge tone={finance ? "green" : "neutral"}>
-            {finance ? "V2 · dedicated funding pool" : "V1 · decision only"}
+            {finance
+              ? `V${r.rulesVersion} · dedicated funding pool`
+              : "V1 · decision only"}
           </Badge>
         </div>
       </div>
@@ -82,7 +92,8 @@ export default async function FundingRoundDetail({
           </li>
         ))}
       </ol>
-      {["SUBMISSIONS", "SCREENING", "SELECTION"].includes(r.status) && (
+      {(["SUBMISSIONS", "SCREENING", "SELECTION"].includes(r.status) ||
+        v3?.veto.state === "OPEN") && (
         <LiveRefresh label="Round status refreshes every 15 seconds while this page is visible." />
       )}
       <div className="round-layout">
@@ -91,6 +102,15 @@ export default async function FundingRoundDetail({
             <h3>The purpose</h3>
             <p className="prewrap">{r.description}</p>
           </section>
+          {v3 && (
+            <RoundV3
+              view={v3}
+              communityId={c.id}
+              roundId={r.id}
+              currency={c.currency}
+              names={names}
+            />
+          )}
           {finance && (
             <RoundFunds
               view={finance}
@@ -113,12 +133,16 @@ export default async function FundingRoundDetail({
                         ? "Selection did not reach quorum"
                         : r.outcome === "FUNDING_FAILED"
                           ? "Funding did not proceed"
-                          : "No schemes qualified"}
+                          : r.outcome === "ALLOCATION_SELECTED"
+                            ? "The allocation decision is recorded"
+                            : "No schemes qualified"}
                 </h3>
                 <p>
                   {winner
                     ? `${moneyFormat(winner.amount, c.currency)} requested · ${winner.recipient}`
-                    : "No winning scheme was selected. A future round can invite a new decision."}
+                    : r.outcome === "ALLOCATION_SELECTED"
+                      ? "The published plan records each proposed award and original-source refund. A recorded allocation is not a payment receipt."
+                      : "No winning scheme was selected. A future round can invite a new decision."}
                 </p>
                 <p className="muted small-text">
                   {finance
@@ -140,16 +164,22 @@ export default async function FundingRoundDetail({
           )}
           {r.status === "SELECTION" && (
             <section className="panel padded">
-              <h3>Choose the scheme to take forward.</h3>
+              <h3>
+                {v3
+                  ? "Choose the scheme you support."
+                  : "Choose the scheme to take forward."}
+              </h3>
               <p>
                 Screening is complete. Select one qualified scheme. Interim
                 selection results stay sealed.
+                {v3 &&
+                  " Your choice contributes its frozen selection power to the published allocation policy."}
               </p>
               {v.ownSelection ? (
                 <div className="form-success">
                   Your recorded selection: {names[v.ownSelection]}
                 </div>
-              ) : v.eligible && selectionOpen ? (
+              ) : selectionEligible && selectionOpen ? (
                 <ActionForm
                   operation="round-selection-vote"
                   defaults={base}
@@ -169,8 +199,10 @@ export default async function FundingRoundDetail({
                 <p className="notice">
                   {!user
                     ? "Sign in to check your voting eligibility."
-                    : !v.eligible
-                      ? "You are not an active member in this round’s frozen electorate."
+                    : !selectionEligible
+                      ? v3
+                        ? "This account has no positive frozen selection power in this round."
+                        : "You are not an active member in this round’s frozen electorate."
                       : "Selection has closed for ballots. Results will appear when the stage is finalized."}
                 </p>
               )}
@@ -196,7 +228,7 @@ export default async function FundingRoundDetail({
           )}
           <section className="round-schemes">
             <h3>
-              {v.screeningResults
+              {v.screeningResults || v3?.screeningResults
                 ? "Schemes and screening results"
                 : "The schemes"}
             </h3>
@@ -249,7 +281,7 @@ export default async function FundingRoundDetail({
                         <p className="form-success">
                           Your recorded screening choice: {v.ownScreens[s.id]}
                         </p>
-                      ) : v.eligible && screenOpen ? (
+                      ) : screenEligible && screenOpen ? (
                         <ActionForm
                           operation="round-screen-vote"
                           defaults={{ ...base, schemeId: s.id }}
@@ -274,8 +306,10 @@ export default async function FundingRoundDetail({
                         </ActionForm>
                       ) : (
                         <p className="muted small-text">
-                          {!v.eligible
-                            ? "Only active members in the frozen electorate can vote."
+                          {!screenEligible
+                            ? v3
+                              ? "This account has no positive frozen screening power in this round."
+                              : "Only active members in the frozen electorate can vote."
                             : "The screening ballot window has ended."}
                         </p>
                       ))}
@@ -298,7 +332,7 @@ export default async function FundingRoundDetail({
                   communityId={c.id}
                   roundId={r.id}
                   currency={c.currency}
-                  funded={r.rulesVersion === 2}
+                  funded={r.rulesVersion >= 2}
                 />
               </section>
             ) : (
@@ -412,15 +446,30 @@ export default async function FundingRoundDetail({
               </div>
               <div>
                 <dt>Screening rule</dt>
-                <dd>More than 50% of YES/NO ballots</dd>
+                <dd>
+                  {v3
+                    ? "YES power strictly greater than NO power"
+                    : "More than 50% of YES/NO ballots"}
+                </dd>
               </div>
               <div>
-                <dt>Quorum, each stage</dt>
-                <dd>{r.quorumBps / 100}% of the frozen electorate</dd>
+                <dt>
+                  {v3 ? "Screening / selection quorum" : "Quorum, each stage"}
+                </dt>
+                <dd>
+                  {r.quorumBps / 100}% of{" "}
+                  {v3
+                    ? "all frozen stage power, rounded up"
+                    : "the frozen electorate"}
+                </dd>
               </div>
               <div>
                 <dt>Voting weight</dt>
-                <dd>One member, one vote</dd>
+                <dd>
+                  {v3
+                    ? "Independent screening, selection and veto power; see published V3 rules"
+                    : "One member, one vote"}
+                </dd>
               </div>
               <div>
                 <dt>Selection method</dt>
@@ -428,14 +477,24 @@ export default async function FundingRoundDetail({
               </div>
               <div>
                 <dt>Tie rule</dt>
-                <dd>No winner selected</dd>
+                <dd>
+                  {v3
+                    ? v3.settings.allocationPolicy === "PROPORTIONAL"
+                      ? "Equal support may share proportionally"
+                      : v3.settings.allocationPolicy === "RANKED_CUTS"
+                        ? "Tied positions are refunded, without shifting shares"
+                        : "Top tie refunds the pool"
+                    : "No winner selected"}
+                </dd>
               </div>
               <div>
                 <dt>Electorate</dt>
                 <dd>
                   {r._count.electorate
                     ? `${r._count.electorate} members frozen for both stages`
-                    : "Freezes when screening begins"}
+                    : v3
+                      ? "Membership and received basis freeze at collection cutoff"
+                      : "Freezes when screening begins"}
                 </dd>
               </div>
               {r.screeningClosesAt && (
@@ -452,16 +511,19 @@ export default async function FundingRoundDetail({
               )}
             </dl>
             <p className="small-text muted">
-              Each voting stage lasts 24 hours. Staff may finalize earlier only
-              after every eligible member votes on every scheme in screening, or
-              casts their selection. Abstentions count toward screening quorum,
-              not approval.
+              Each screening and selection stage lasts 24 hours. Staff may
+              finalize earlier only after every eligible member votes on every
+              scheme in screening, or casts their selection. Abstentions count
+              toward screening quorum, not approval.
+              {v3 &&
+                " Selection has one scheme choice and no abstention ballot. An enabled rejection veto always lasts its full 24 hours, without early payout."}
             </p>
             <p className="small-text muted">
-              Rules lock when submissions open. Late members do not enter this
-              round’s electorate. Suspended or removed members cannot cast new
-              votes. Limits: 50 schemes, five per account, and 10,000 eligible
-              members. *Suspended and removed accounts cannot submit.
+              {v3
+                ? "Rules are fixed at creation. Eligibility and received power use the collection cutoff. Frozen positive-power voters keep their ballot rights after later membership or role changes. "
+                : "Rules lock when submissions open. Late members do not enter this round’s electorate. Suspended or removed members cannot cast new votes. "}
+              Limits: 50 schemes, five per account, and 10,000 eligible members.
+              *Suspended and removed accounts cannot submit.
             </p>
           </section>
           {v.staff && !["DECIDED", "CANCELLED"].includes(r.status) && (
@@ -491,7 +553,11 @@ export default async function FundingRoundDetail({
                     <ActionButton
                       operation="round-action"
                       body={{ ...base, action: "screen" }}
-                      confirm="Freeze active voters and begin the 24-hour screening stage?"
+                      confirm={
+                        v3
+                          ? "Use the collection-cutoff membership and paid-power basis to begin the 24-hour screening stage?"
+                          : "Freeze active voters and begin the 24-hour screening stage?"
+                      }
                     >
                       Begin screening
                     </ActionButton>

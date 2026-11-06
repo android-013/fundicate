@@ -16,7 +16,9 @@ import {
   contributeToRound,
   prepareRoundSettlement,
   processRoundSettlement,
+  reconcileRoundSettlement,
 } from "@/lib/funded-rounds";
+import { castRoundVetoVote, closeRoundVeto } from "@/lib/rounds-v3";
 import * as service from "@/lib/service";
 import { profileSchema, uuid } from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
@@ -107,10 +109,33 @@ export async function POST(
         "round-contribute",
         "round-settle",
         "round-process",
+        "round-reconcile",
+        "round-veto",
+        "round-veto-close",
       ].includes(operation)
     )
       await rateLimit(`${operation}:${user.id}`, 30, 60);
     switch (operation) {
+      case "round-veto":
+        await castRoundVetoVote(user.id, body);
+        result = {
+          message: "Your rejection-window ballot is sealed and recorded.",
+        };
+        break;
+      case "round-veto-close":
+        await closeRoundVeto(user.id, body);
+        result = {
+          message:
+            "The full rejection window has closed and its decision is recorded.",
+        };
+        break;
+      case "round-reconcile":
+        await reconcileRoundSettlement(user.id, body);
+        result = {
+          message:
+            "Local atomic ledger reconciliation completed. Retry only the existing plan.",
+        };
+        break;
       case "declare-contribution":
         await service.declareContribution(user.id, body);
         result = {

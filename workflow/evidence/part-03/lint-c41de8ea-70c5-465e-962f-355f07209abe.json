@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 3,
+  "runId": "0fa01744-7c3e-4e22-a4e8-c25a2633236f",
+  "check": "lint",
+  "token": "c41de8ea-70c5-465e-962f-355f07209abe",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/eslint/bin/eslint.js",
+      "."
+    ]
+  ],
+  "startedAt": "2026-11-06T02:31:52.770Z",
+  "finishedAt": "2026-11-06T02:32:52.597Z",
+  "exitCode": 0,
+  "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-03/lint-c41de8ea-70c5-465e-962f-355f07209abe.log",
+  "logHash": "ea92ba464053b2592ff78be54ee7d4a4344e27ae586f0c02b357e5e23a158d9c"
+}

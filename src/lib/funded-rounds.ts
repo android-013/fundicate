@@ -6,14 +6,23 @@ import {
 import { db } from "./db";
 import { access, atomic } from "./service";
 import { AppError, ensure } from "./errors";
+import { uuid } from "./validation";
 import {
   type ContributionShare,
   type FundsConfig,
   V2_FUNDS_POLICY,
   roundContributionSchema,
   roundFinanceActionSchema,
+  proportionalRefunds,
   winnerAllPlan,
 } from "./funds-core";
+import { type V3FundsConfig, V3_RULES_POLICY } from "./elections-core";
+import {
+  assertRoundSettlementGate,
+  freezeV3Electorate,
+  getV3Settings,
+  seedV3Electorate,
+} from "./rounds-v3";
 
 type Tx = Prisma.TransactionClient;
 type Scope = { communityId: string; roundId: string };
@@ -34,7 +43,9 @@ async function findSettlement(tx: Tx, round: FundingRound) {
     where: { roundId: round.id },
   });
   ensure(
-    round.rulesVersion === 2 && settlement,
+    [2, 3].includes(round.rulesVersion) &&
+      settlement &&
+      settlement.rulesVersion === round.rulesVersion,
     "This is a decision-only round; it has no payment authority.",
     400,
   );
@@ -42,6 +53,17 @@ async function findSettlement(tx: Tx, round: FundingRound) {
   return settlement;
 }
 function assertRules(settlement: RoundSettlement) {
+  if (settlement.rulesVersion === 3) {
+    ensure(
+      settlement.network === "local-simulation" &&
+        settlement.decimals === 2 &&
+        settlement.assetId === `fiat:${settlement.currency}`,
+      "These settlement rules or asset are not supported.",
+      409,
+    );
+    getV3Settings(settlement);
+    return;
+  }
   const snapshot = settlement.rulesSnapshot as Record<string, unknown>;
   ensure(
     settlement.rulesVersion === 2 &&
@@ -100,6 +122,22 @@ async function postLedger(
     now: Date;
   },
 ) {
+  if (["RESERVE", "PAYOUT", "REFUND"].includes(input.kind)) {
+    const round = await tx.fundingRound.findUniqueOrThrow({
+      where: { id: settlement.roundId },
+    });
+    const gate = await assertRoundSettlementGate(
+      tx,
+      round,
+      settlement,
+      input.now,
+    );
+    ensure(
+      input.kind !== "PAYOUT" || !gate.rejected,
+      "A rejected round cannot pay a scheme.",
+      409,
+    );
+  }
   ensure(
     input.amount > 0n && input.sourceId !== input.destinationId,
     "Invalid round transfer.",
@@ -172,12 +210,12 @@ async function postLedger(
 export async function initializeRoundFunding(
   tx: Tx,
   round: FundingRound,
-  config: FundsConfig,
+  config: FundsConfig | V3FundsConfig,
   now: Date,
 ) {
   ensure(
-    round.rulesVersion === 2 && round.status === "DRAFT",
-    "Only a new V2 draft can receive funding rules.",
+    [2, 3].includes(round.rulesVersion) && round.status === "DRAFT",
+    "Only a new supported funded draft can receive funding rules.",
   );
   const cutoff = new Date(config.collectionClosesAt),
     expires = new Date(config.expiresAt);
@@ -194,19 +232,32 @@ export async function initializeRoundFunding(
     config.fundingTarget > 0n &&
       config.minimumContribution > 0n &&
       config.maximumContribution >= config.minimumContribution &&
-      config.vetoEnabled === false &&
-      config.selectionMethod === "FPTP" &&
-      config.votingWeight === "EQUAL" &&
-      config.allocationPolicy === "WINNER_ALL",
+      config.selectionMethod === "FPTP",
     "Unsupported funding configuration.",
   );
+  if (round.rulesVersion === 2)
+    ensure(
+      "votingWeight" in config &&
+        config.vetoEnabled === false &&
+        config.votingWeight === "EQUAL" &&
+        config.allocationPolicy === "WINNER_ALL",
+      "Unsupported V2 funding configuration.",
+    );
+  else
+    ensure(
+      "screeningWeight" in config &&
+        "selectionWeight" in config &&
+        "vetoWeight" in config &&
+        "rankedSharesBps" in config,
+      "V3 requires its published stage-specific configuration.",
+    );
   const community = await tx.community.findUniqueOrThrow({
     where: { id: round.communityId },
   });
   return tx.roundSettlement.create({
     data: {
       roundId: round.id,
-      rulesVersion: 2,
+      rulesVersion: round.rulesVersion,
       assetId: `fiat:${community.currency}`,
       currency: community.currency,
       fundingTarget: config.fundingTarget,
@@ -215,7 +266,17 @@ export async function initializeRoundFunding(
       collectionClosesAt: cutoff,
       expiresAt: expires,
       rulesSnapshot: {
-        ...V2_FUNDS_POLICY,
+        ...(round.rulesVersion === 2
+          ? V2_FUNDS_POLICY
+          : {
+              ...V3_RULES_POLICY,
+              screeningWeight: (config as V3FundsConfig).screeningWeight,
+              selectionWeight: (config as V3FundsConfig).selectionWeight,
+              vetoWeight: (config as V3FundsConfig).vetoWeight,
+              vetoEnabled: config.vetoEnabled,
+              allocationPolicy: config.allocationPolicy,
+              rankedSharesBps: (config as V3FundsConfig).rankedSharesBps,
+            }),
         fundingTarget: config.fundingTarget.toString(),
         minimumContribution: config.minimumContribution.toString(),
         maximumContribution: config.maximumContribution.toString(),
@@ -245,6 +306,7 @@ export async function openRoundFunding(tx: Tx, round: FundingRound, now: Date) {
     where: { roundId: round.id },
     data: { status: "COLLECTING" },
   });
+  if (round.rulesVersion === 3) await seedV3Electorate(tx, round, now);
 }
 
 function decodeShares(settlement: RoundSettlement): ContributionShare[] {
@@ -282,7 +344,11 @@ async function freezeBasis(
   settlement: RoundSettlement,
   now: Date,
 ) {
-  if (settlement.frozenAt) return settlement;
+  if (settlement.frozenAt) {
+    if (round.rulesVersion === 3)
+      await freezeV3Electorate(tx, round, settlement, now);
+    return settlement;
+  }
   ensure(
     settlement.status === "COLLECTING" && now >= settlement.collectionClosesAt,
     "Wait until the published collection cutoff to freeze received funds.",
@@ -311,7 +377,7 @@ async function freezeBasis(
     "Received funds do not reconcile with original sources.",
     409,
   );
-  return tx.roundSettlement.update({
+  const frozen = await tx.roundSettlement.update({
     where: { roundId: round.id },
     data: {
       status: "HELD",
@@ -322,6 +388,9 @@ async function freezeBasis(
       })),
     },
   });
+  if (round.rulesVersion === 3)
+    await freezeV3Electorate(tx, round, frozen, now);
+  return frozen;
 }
 
 async function queuePlan(
@@ -332,6 +401,8 @@ async function queuePlan(
   now: Date,
   forceRefundReason?: string,
 ) {
+  if (round.rulesVersion === 3)
+    return queueV3Plan(tx, round, settlement, actorId, now, forceRefundReason);
   if (["QUEUED", "SETTLED", "REFUNDED"].includes(settlement.status))
     return settlement;
   ensure(
@@ -476,6 +547,249 @@ async function queuePlan(
   return result;
 }
 
+type PlanPayout = {
+  schemeId: string;
+  amount: bigint;
+  recipient: string;
+  beneficiaryId: string;
+};
+function jsonRecord(value: Prisma.JsonValue, message: string) {
+  ensure(
+    value && typeof value === "object" && !Array.isArray(value),
+    message,
+    409,
+  );
+  return value as Record<string, Prisma.JsonValue>;
+}
+function exactAmount(value: Prisma.JsonValue | undefined, message: string) {
+  ensure(typeof value === "string" && /^\d+$/.test(value), message, 409);
+  return BigInt(value);
+}
+async function publishedPayouts(
+  tx: Tx,
+  settlement: RoundSettlement,
+  allocation: Prisma.JsonValue,
+): Promise<PlanPayout[]> {
+  const plan = jsonRecord(allocation, "The published allocation is invalid.");
+  ensure(
+    plan.rulesVersion === 3 &&
+      plan.assetId === settlement.assetId &&
+      exactAmount(plan.received, "Invalid published received amount.") ===
+        settlement.received &&
+      Array.isArray(plan.payouts) &&
+      plan.payouts.length <= 50,
+    "The published allocation does not match this round and asset.",
+    409,
+  );
+  const ids = new Set<string>();
+  const payouts = plan.payouts.map((value) => {
+    const entry = jsonRecord(value, "Invalid published payout intent.");
+    ensure(
+      typeof entry.schemeId === "string" &&
+        uuid.safeParse(entry.schemeId).success &&
+        typeof entry.beneficiaryId === "string" &&
+        uuid.safeParse(entry.beneficiaryId).success &&
+        typeof entry.recipient === "string" &&
+        entry.recipient.trim().length >= 2 &&
+        entry.recipient.length <= 150 &&
+        !/[\u0000-\u001f\u007f]/.test(entry.recipient),
+      "Invalid published payout identity.",
+      409,
+    );
+    const amount = exactAmount(
+      entry.amount,
+      "Invalid published payout amount.",
+    );
+    ensure(
+      amount > 0n && !ids.has(entry.schemeId),
+      "Payouts must be positive unique scheme intents.",
+      409,
+    );
+    ids.add(entry.schemeId);
+    return {
+      schemeId: entry.schemeId,
+      amount,
+      recipient: entry.recipient,
+      beneficiaryId: entry.beneficiaryId,
+    };
+  });
+  const schemes = await tx.fundingScheme.findMany({
+    where: {
+      id: { in: [...ids] },
+      roundId: settlement.roundId,
+      status: "QUALIFIED",
+    },
+  });
+  for (const payout of payouts) {
+    const scheme = schemes.find(
+      (candidate) => candidate.id === payout.schemeId,
+    );
+    ensure(
+      scheme &&
+        payout.amount <= scheme.amount &&
+        payout.recipient === scheme.recipient &&
+        payout.beneficiaryId === scheme.authorId,
+      "The published payout does not match its immutable scheme.",
+      409,
+    );
+  }
+  const refund = exactAmount(
+    plan.refundTotal,
+    "Invalid published refund total.",
+  );
+  ensure(
+    payouts.reduce((sum, payout) => sum + payout.amount, 0n) + refund ===
+      settlement.received,
+    "The published allocation does not conserve the received pool.",
+    409,
+  );
+  return payouts;
+}
+
+async function queueV3Plan(
+  tx: Tx,
+  round: FundingRound,
+  settlement: RoundSettlement,
+  actorId: string,
+  now: Date,
+  forceRefundReason?: string,
+) {
+  const gate = await assertRoundSettlementGate(tx, round, settlement, now);
+  if (["QUEUED", "SETTLED", "REFUNDED"].includes(settlement.status))
+    return settlement;
+  ensure(
+    settlement.status === "HELD" && settlement.frozenAt,
+    "Funds must be frozen before a settlement is prepared.",
+    409,
+  );
+  assertRules(settlement);
+  const reason =
+    forceRefundReason ??
+    (gate.rejected ? "VETO_REJECTED" : (round.outcome ?? "NO_WINNER"));
+  if (!forceRefundReason && !gate.rejected)
+    ensure(
+      gate.decision,
+      "Publish the immutable allocation before creating payout instructions.",
+      409,
+    );
+  const payouts =
+    forceRefundReason || gate.rejected
+      ? []
+      : await publishedPayouts(tx, settlement, gate.decision!.allocation);
+  const payoutTotal = payouts.reduce((sum, payout) => sum + payout.amount, 0n);
+  const refundTotal = settlement.received - payoutTotal;
+  const shares = decodeShares(settlement);
+  ensure(
+    shares.reduce((sum, share) => sum + share.amount, 0n) ===
+      settlement.received,
+    "Original source receipts do not reconcile.",
+    409,
+  );
+  const refunds = proportionalRefunds(refundTotal, shares);
+  const [held, reserved, paid] = await Promise.all([
+    account(tx, round.id, "HELD"),
+    account(tx, round.id, "RESERVED"),
+    account(tx, round.id, "PAID"),
+  ]);
+  ensure(
+    held.balance === settlement.received &&
+      reserved.balance === 0n &&
+      paid.balance === 0n,
+    "The unsettled contribution pool does not reconcile.",
+    409,
+  );
+  for (const payout of payouts)
+    await tx.roundOperation.create({
+      data: {
+        roundId: round.id,
+        operationKey: `payout:${payout.schemeId}`,
+        kind: "PAYOUT",
+        amount: payout.amount,
+        beneficiaryId: payout.beneficiaryId,
+        sourceAccountId: reserved.id,
+        destinationAccountId: paid.id,
+        recipient: payout.recipient,
+        schemeId: payout.schemeId,
+        createdAt: now,
+      },
+    });
+  for (const refund of refunds) {
+    if (!refund.refund) continue;
+    const original = await tx.roundAccount.findUnique({
+      where: { id: refund.sourceAccountId },
+    });
+    ensure(
+      original?.roundId === round.id &&
+        original.ownerId === refund.userId &&
+        original.key === `EXTERNAL:${refund.userId}`,
+      "Refunds must return to the immutable original payment source.",
+      409,
+    );
+    await tx.roundOperation.create({
+      data: {
+        roundId: round.id,
+        operationKey: `refund:${refund.sourceAccountId}`,
+        kind: "REFUND",
+        amount: refund.refund,
+        beneficiaryId: refund.userId,
+        sourceAccountId: reserved.id,
+        destinationAccountId: refund.sourceAccountId,
+        recipient: `original-source:${refund.sourceAccountId}`,
+        createdAt: now,
+      },
+    });
+  }
+  if (settlement.received > 0n)
+    await postLedger(tx, settlement, {
+      key: "reserve:v3",
+      kind: "RESERVE",
+      amount: settlement.received,
+      sourceId: held.id,
+      destinationId: reserved.id,
+      actorId,
+      now,
+    });
+  const result = await tx.roundSettlement.update({
+    where: { roundId: round.id },
+    data: {
+      status: settlement.received > 0n ? "QUEUED" : "REFUNDED",
+      preparedAt: now,
+      settledAt: settlement.received === 0n ? now : null,
+      reason,
+      allocationSnapshot: {
+        rulesVersion: 3,
+        assetId: settlement.assetId,
+        reason,
+        decisionRoundId: gate.decision?.roundId ?? null,
+        decisionPublishedAt: gate.decision?.publishedAt.toISOString() ?? null,
+        decisionAllocation: gate.decision?.allocation ?? null,
+        received: settlement.received.toString(),
+        payout: payoutTotal.toString(),
+        refunded: refundTotal.toString(),
+        payouts: payouts.map((payout) => ({
+          ...payout,
+          amount: payout.amount.toString(),
+        })),
+        refunds: refunds
+          .filter((refund) => refund.refund > 0n)
+          .map((refund) => ({
+            sourceAccountId: refund.sourceAccountId,
+            userId: refund.userId,
+            amount: refund.refund.toString(),
+          })),
+      },
+    },
+  });
+  await audit(tx, actorId, round, "ROUND_SETTLEMENT_PREPARED", {
+    rulesVersion: 3,
+    reason,
+    payout: payoutTotal.toString(),
+    refunded: refundTotal.toString(),
+    assetId: settlement.assetId,
+  });
+  return result;
+}
+
 export async function freezeRoundFunding(
   tx: Tx,
   round: FundingRound,
@@ -486,14 +800,21 @@ export async function freezeRoundFunding(
   if (["QUEUED", "SETTLED", "REFUNDED"].includes(settlement.status))
     return { ready: false, reason: settlement.reason ?? "FUNDING_FAILED" };
   settlement = await freezeBasis(tx, round, settlement, now);
+  const power =
+    round.rulesVersion === 3
+      ? await freezeV3Electorate(tx, round, settlement, now)
+      : { ready: true };
   const reason =
     now >= settlement.expiresAt
       ? "EXPIRED"
       : settlement.received < settlement.fundingTarget
         ? "FUNDING_FAILED"
-        : null;
+        : !power.ready
+          ? (power.reason ?? "ZERO_POWER")
+          : null;
   if (reason) {
-    await queuePlan(tx, round, settlement, round.creatorId, now, reason);
+    if (round.rulesVersion === 2)
+      await queuePlan(tx, round, settlement, round.creatorId, now, reason);
     return { ready: false, reason };
   }
   return { ready: true };
@@ -622,6 +943,7 @@ export async function prepareRoundSettlement(
       "Staff or an original contributor recovering expired funds is required.",
       403,
     );
+    await assertRoundSettlementGate(tx, round, settlement, now);
     if (["QUEUED", "SETTLED", "REFUNDED"].includes(settlement.status))
       return settlement;
     ensure(
@@ -635,11 +957,13 @@ export async function prepareRoundSettlement(
       settlement,
       userId,
       now,
-      settlement.received < settlement.fundingTarget
-        ? "FUNDING_FAILED"
-        : expired
-          ? "EXPIRED"
-          : undefined,
+      round.rulesVersion === 3 && expired
+        ? "EXPIRED"
+        : settlement.received < settlement.fundingTarget
+          ? "FUNDING_FAILED"
+          : expired
+            ? "EXPIRED"
+            : undefined,
     );
   });
 }
@@ -664,6 +988,12 @@ async function executeOperation(
       where: { id: operationId, roundId: round.id },
     });
     ensure(operation, "Settlement operation not found.", 404);
+    const gate = await assertRoundSettlementGate(tx, round, settlement, now);
+    ensure(
+      operation.kind !== "PAYOUT" || !gate.rejected,
+      "A rejected round cannot pay a scheme.",
+      409,
+    );
     if (operation.status === "CONFIRMED") return operation;
     ensure(
       settlement.status === "QUEUED" &&
@@ -745,7 +1075,13 @@ async function recordFailure(
     const operation = await tx.roundOperation.findFirst({
       where: { id: operationId, roundId: round.id },
     });
-    if (!operation || operation.status === "CONFIRMED") return;
+    // A failure while checking an unknown intent must never turn it into a retryable failure.
+    if (
+      !operation ||
+      operation.status === "CONFIRMED" ||
+      operation.status === "UNKNOWN"
+    )
+      return;
     const attempt = operation.attempts + 1;
     await tx.roundExecutionAttempt.create({
       data: {
@@ -786,6 +1122,7 @@ export async function processRoundSettlement(
       "Staff or an original contributor is required to process this plan.",
       403,
     );
+    await assertRoundSettlementGate(tx, round, settlement, now);
     if (["SETTLED", "REFUNDED"].includes(settlement.status)) return [];
     ensure(
       settlement.status === "QUEUED",
@@ -812,6 +1149,7 @@ export async function processRoundSettlement(
     await lock(tx, scope.communityId);
     const round = await findRound(tx, scope);
     const settlement = await findSettlement(tx, round);
+    await assertRoundSettlementGate(tx, round, settlement, now);
     const unfinished = await tx.roundOperation.count({
       where: { roundId: round.id, status: { not: "CONFIRMED" } },
     });
@@ -834,6 +1172,113 @@ export async function processRoundSettlement(
         settledAt: now,
       },
     });
+  });
+}
+
+/** Reconcile local atomic ledger evidence only; this never asserts external finality. */
+export async function reconcileRoundSettlement(
+  userId: string,
+  input: unknown,
+  now = new Date(),
+) {
+  const scope = roundFinanceActionSchema.parse(input);
+  return atomic(async (tx) => {
+    await lock(tx, scope.communityId);
+    const round = await findRound(tx, scope);
+    const settlement = await findSettlement(tx, round);
+    const rights = await authority(tx, round, userId);
+    ensure(
+      rights.isStaff || rights.isContributor,
+      "Staff or an original contributor is required to reconcile this plan.",
+      403,
+    );
+    ensure(
+      settlement.status === "QUEUED",
+      "There is no queued plan to reconcile.",
+      409,
+    );
+    await assertRoundSettlementGate(tx, round, settlement, now, {
+      allowUnknown: true,
+    });
+    ensure(
+      settlement.network === "local-simulation",
+      "External outcomes require their own observed reconciliation adapter.",
+      409,
+    );
+    const unknown = await tx.roundOperation.findMany({
+      where: { roundId: round.id, status: "UNKNOWN" },
+      orderBy: { operationKey: "asc" },
+    });
+    for (const operation of unknown) {
+      const receipt = await tx.roundLedgerTransaction.findUnique({
+        where: {
+          roundId_operationKey: {
+            roundId: round.id,
+            operationKey: `execute:${operation.id}`,
+          },
+        },
+        include: { entries: true },
+      });
+      if (receipt) {
+        ensure(
+          receipt.kind === operation.kind &&
+            receipt.amount === operation.amount &&
+            receipt.assetId === settlement.assetId &&
+            receipt.sourceAccountId === operation.sourceAccountId &&
+            receipt.destinationAccountId === operation.destinationAccountId &&
+            receipt.entries.length === 2 &&
+            receipt.entries.some(
+              (entry) =>
+                entry.accountId === operation.sourceAccountId &&
+                entry.amount === -operation.amount,
+            ) &&
+            receipt.entries.some(
+              (entry) =>
+                entry.accountId === operation.destinationAccountId &&
+                entry.amount === operation.amount,
+            ),
+          "The observed local receipt differs from the immutable execution intent; reconciliation remains blocked.",
+          409,
+        );
+      } else
+        ensure(
+          operation.transactionId === null && operation.completedAt === null,
+          "A claimed receipt is missing; reconciliation remains blocked.",
+          409,
+        );
+      const attempt = operation.attempts + 1;
+      const message = receipt
+        ? null
+        : "Local atomic ledger verified no posting; retry the same immutable operation.";
+      await tx.roundExecutionAttempt.create({
+        data: {
+          operationId: operation.id,
+          attempt,
+          status: receipt ? "CONFIRMED" : "FAILED",
+          error: message,
+          createdAt: now,
+        },
+      });
+      await tx.roundOperation.update({
+        where: { id: operation.id },
+        data: receipt
+          ? {
+              status: "CONFIRMED",
+              attempts: attempt,
+              lastError: null,
+              transactionId: receipt.id,
+              completedAt: receipt.createdAt,
+            }
+          : { status: "FAILED", attempts: attempt, lastError: message },
+      });
+      await audit(tx, userId, round, "ROUND_OPERATION_RECONCILED", {
+        operationId: operation.id,
+        network: "local-simulation",
+        outcome: receipt ? "POSTED" : "NOT_POSTED",
+        transactionId: receipt?.id ?? null,
+      });
+    }
+    return { reconciled: unknown.length, network: "local-simulation" };
   });
 }
 
@@ -901,6 +1346,24 @@ export async function getRoundFinanceView(
       const final = ["QUEUED", "SETTLED", "REFUNDED"].includes(
         settlement.status,
       );
+      const decision =
+        round.rulesVersion === 3
+          ? await tx.roundDecision.findUnique({ where: { roundId } })
+          : null;
+      const unknown = operations.some(
+        (operation) => operation.status === "UNKNOWN",
+      );
+      const waitingForVeto = Boolean(
+        decision?.vetoClosesAt && now < decision.vetoClosesAt,
+      );
+      const settlementBlockedReason = unknown
+        ? "An execution outcome is unknown. Reconcile its local receipt before retrying or releasing funds."
+        : waitingForVeto
+          ? "The full 24-hour rejection window must close before settlement or expiry recovery."
+          : round.rulesVersion === 3 && !decision && !expired
+            ? "Publish the election decision and allocation before settlement."
+            : null;
+      const gateReady = settlementBlockedReason === null;
       return {
         settlement,
         totals: {
@@ -931,12 +1394,21 @@ export async function getRoundFinanceView(
           ownContributed < settlement.maximumContribution,
         canPrepare:
           !final &&
+          gateReady &&
           ((rights.isStaff && (round.status === "DECIDED" || expired)) ||
             (rights.isContributor && expired)),
         canProcess:
           settlement.status === "QUEUED" &&
+          (rights.isStaff || rights.isContributor) &&
+          gateReady,
+        canRecover: !final && expired && rights.isContributor && gateReady,
+        canReconcile:
+          settlement.status === "QUEUED" &&
+          unknown &&
+          !waitingForVeto &&
+          settlement.network === "local-simulation" &&
           (rights.isStaff || rights.isContributor),
-        canRecover: !final && expired && rights.isContributor,
+        settlementBlockedReason,
       };
     },
     { isolationLevel: "RepeatableRead" },

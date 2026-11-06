@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 3,
+  "runId": "0fa01744-7c3e-4e22-a4e8-c25a2633236f",
+  "check": "http",
+  "token": "fb748e3e-5c15-443c-af9b-3dee753eca76",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/test-db.mjs",
+      "e2e"
+    ]
+  ],
+  "startedAt": "2026-11-06T02:33:24.739Z",
+  "finishedAt": "2026-11-06T02:34:10.835Z",
+  "exitCode": 0,
+  "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-03/http-fb748e3e-5c15-443c-af9b-3dee753eca76.log",
+  "logHash": "6c5f918640b7a6e721fa6f9a6024ae1f7a12c4cf5f6d88b0565405e550ff267c"
+}

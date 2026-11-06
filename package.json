@@ -17,6 +17,7 @@
     "test:e2e": "node scripts/test-db.mjs e2e",
     "test:rounds": "node scripts/test-db.mjs rounds",
     "test:funds": "node scripts/test-db.mjs funds",
+    "test:elections": "node scripts/test-db.mjs elections",
     "progress": "node scripts/progress.mjs",
     "test:progress": "node --test tests/progress-workflow.test.mjs",
     "db:local": "node scripts/local-db.mjs start",

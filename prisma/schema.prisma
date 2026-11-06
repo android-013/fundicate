@@ -93,6 +93,8 @@ model User {
   roundContributions RoundContribution[]
   roundLedgerTransactions RoundLedgerTransaction[]
   roundOperations RoundOperation[] @relation("RoundBeneficiary")
+  roundVotingPowers RoundVotingPower[]
+  roundVetoVotes RoundVetoVote[]
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -372,7 +374,47 @@ model FundingRound {
   electorate RoundElectorate[]
   screeningVotes SchemeScreeningVote[]
   selectionVotes RoundSelectionVote[]
+  powers RoundVotingPower[]
+  decision RoundDecision?
+  vetoVotes RoundVetoVote[]
   @@index([communityId,createdAt])
+}
+
+model RoundVotingPower {
+  roundId String @db.Uuid
+  userId String @db.Uuid
+  round FundingRound @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  eligible Boolean @default(true)
+  paidPower BigInt @default(0)
+  frozenAt DateTime?
+  createdAt DateTime @default(now())
+  vetoVotes RoundVetoVote[]
+  @@id([roundId,userId])
+}
+
+model RoundDecision {
+  roundId String @id @db.Uuid
+  round FundingRound @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  publishedAt DateTime
+  allocation Json
+  result Json
+  vetoClosesAt DateTime?
+  vetoFinalizedAt DateTime?
+  rejected Boolean @default(false)
+  totalVetoPower BigInt
+}
+
+model RoundVetoVote {
+  id String @id @default(uuid()) @db.Uuid
+  roundId String @db.Uuid
+  userId String @db.Uuid
+  round FundingRound @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  voter RoundVotingPower @relation(fields:[roundId,userId],references:[roundId,userId],onDelete:Restrict)
+  choice String
+  createdAt DateTime @default(now())
+  @@unique([roundId,userId])
 }
 
 model FundingScheme {

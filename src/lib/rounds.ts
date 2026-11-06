@@ -4,6 +4,13 @@ import { access, atomic } from "./service";
 import { ensure } from "./errors";
 import { calculateOutcome } from "./governance";
 import {
+  v3Weight,
+  tallyV3Screening,
+  tallyV3Selection,
+  publishRoundDecision,
+  getV3Settings,
+} from "./rounds-v3";
+import {
   initializeRoundFunding,
   openRoundFunding,
   freezeRoundFunding,
@@ -53,8 +60,22 @@ async function voter(
   communityId: string,
   roundId: string,
   userId: string,
+  stage: "screening" | "selection",
 ) {
-  await access(tx, communityId, userId);
+  const round = await findRound(tx, communityId, roundId);
+  if (round.rulesVersion === 3) {
+    const [settlement, power] = await Promise.all([
+      tx.roundSettlement.findUniqueOrThrow({ where: { roundId } }),
+      tx.roundVotingPower.findUnique({
+        where: { roundId_userId: { roundId, userId } },
+      }),
+    ]);
+    ensure(
+      power && v3Weight(settlement, power, stage) > 0n,
+      "You have no frozen voting power for this stage.",
+      403,
+    );
+  } else await access(tx, communityId, userId);
   ensure(
     await tx.roundElectorate.findUnique({
       where: { roundId_userId: { roundId, userId } },
@@ -71,7 +92,7 @@ export async function createFundingRound(
   now = new Date(),
 ) {
   const data = roundSchema.parse(input);
-  const { funded, funding, ...roundData } = data;
+  const { funded, fundedVersion, funding, ...roundData } = data;
   const closes = new Date(data.submissionsCloseAt);
   ensure(
     closes > now && closes.getTime() <= now.getTime() + 90 * ROUND_STAGE_MS,
@@ -83,7 +104,7 @@ export async function createFundingRound(
     const round = await tx.fundingRound.create({
       data: {
         ...roundData,
-        rulesVersion: funded ? 2 : 1,
+        rulesVersion: funded ? (fundedVersion === "V3" ? 3 : 2) : 1,
         creatorId: userId,
         submissionsCloseAt: closes,
         createdAt: now,
@@ -168,7 +189,7 @@ export async function castScreeningVote(
   return atomic(async (tx) => {
     await lock(tx, data.communityId);
     const round = await findRound(tx, data.communityId, data.roundId);
-    await voter(tx, data.communityId, round.id, userId);
+    await voter(tx, data.communityId, round.id, userId, "screening");
     ensure(
       round.status === "SCREENING" &&
         round.screeningOpensAt! <= now &&
@@ -211,7 +232,7 @@ export async function castSelectionVote(
   return atomic(async (tx) => {
     await lock(tx, data.communityId);
     const round = await findRound(tx, data.communityId, data.roundId);
-    await voter(tx, data.communityId, round.id, userId);
+    await voter(tx, data.communityId, round.id, userId, "selection");
     ensure(
       round.status === "SELECTION" &&
         round.selectionOpensAt! <= now &&
@@ -282,13 +303,25 @@ export async function fundingRoundAction(
         where: { roundId: round.id },
       });
       const funding = await freezeRoundFunding(tx, round, now);
-      const members = await tx.communityMembership.findMany({
-        where: { communityId: round.communityId, status: "ACTIVE" },
-        select: { userId: true },
-        take: 10001,
-      });
+      const members =
+        round.rulesVersion === 3
+          ? await tx.roundVotingPower.findMany({
+              where: {
+                roundId: round.id,
+                eligible: true,
+                frozenAt: { not: null },
+              },
+              select: { userId: true },
+              take: 10001,
+            })
+          : await tx.communityMembership.findMany({
+              where: { communityId: round.communityId, status: "ACTIVE" },
+              select: { userId: true },
+              take: 10001,
+            });
       ensure(
-        members.length > 0 && members.length <= 10000,
+        (members.length > 0 || (round.rulesVersion === 3 && !funding.ready)) &&
+          members.length <= 10000,
         "This round supports between 1 and 10,000 eligible voters.",
       );
       await tx.roundElectorate.createMany({
@@ -333,19 +366,31 @@ export async function fundingRoundAction(
       const eligible = await tx.roundElectorate.count({
         where: { roundId: round.id },
       });
+      const weighted =
+        round.rulesVersion === 3
+          ? await Promise.all(
+              schemes.map((scheme) => tallyV3Screening(tx, round, scheme.id)),
+            )
+          : null;
       ensure(
         round.screeningClosesAt! <= now ||
-          schemes.every((s) => s.screeningVotes.length === eligible),
+          (weighted
+            ? weighted.every(
+                (result) => result.participation === result.eligible,
+              )
+            : schemes.every((s) => s.screeningVotes.length === eligible)),
         "Wait for the screening deadline or every eligible ballot on every scheme.",
       );
       let qualified = 0;
-      for (const scheme of schemes) {
-        const result = calculateOutcome(
-          scheme.screeningVotes,
-          eligible,
-          round.quorumBps,
-          5001,
-        );
+      for (const [index, scheme] of schemes.entries()) {
+        const result = weighted
+          ? weighted[index]
+          : calculateOutcome(
+              scheme.screeningVotes,
+              eligible,
+              round.quorumBps,
+              5001,
+            );
         if (result.approved) qualified++;
         await tx.fundingScheme.update({
           where: { id: scheme.id },
@@ -379,31 +424,52 @@ export async function fundingRoundAction(
         }),
         tx.roundElectorate.count({ where: { roundId: round.id } }),
       ]);
+      const weighted =
+        round.rulesVersion === 3 ? await tallyV3Selection(tx, round) : null;
       ensure(
-        round.selectionClosesAt! <= now || votes.length === eligible,
+        round.selectionClosesAt! <= now ||
+          (weighted
+            ? weighted.participation === weighted.eligible
+            : votes.length === eligible),
         "Wait for the selection deadline or every eligible ballot.",
       );
-      const result = selectionOutcome(
-        schemes.map((s) => s.id),
-        votes,
-        eligible,
-        round.quorumBps,
-      );
+      const result =
+        weighted ??
+        selectionOutcome(
+          schemes.map((s) => s.id),
+          votes,
+          eligible,
+          round.quorumBps,
+        );
+      const allocationSelected =
+        round.rulesVersion === 3 &&
+        getV3Settings(
+          await tx.roundSettlement.findUniqueOrThrow({
+            where: { roundId: round.id },
+          }),
+        ).allocationPolicy !== "WINNER_ALL" &&
+        result.participation >= result.quorumRequired &&
+        Object.values(result.counts).some((power) => power > 0);
       await tx.fundingRound.update({
         where: { id: round.id },
         data: {
           status: "DECIDED",
           decidedAt: now,
-          outcome: result.outcome,
-          winnerSchemeId: result.winnerSchemeId,
+          outcome: allocationSelected ? "ALLOCATION_SELECTED" : result.outcome,
+          winnerSchemeId: allocationSelected ? null : result.winnerSchemeId,
         },
       });
       await event(tx, userId, round, "ROUND_SELECTION_CLOSED", {
-        outcome: result.outcome,
-        winnerSchemeId: result.winnerSchemeId,
+        outcome: allocationSelected ? "ALLOCATION_SELECTED" : result.outcome,
+        winnerSchemeId: allocationSelected ? null : result.winnerSchemeId,
       });
     }
-    return tx.fundingRound.findUniqueOrThrow({ where: { id: round.id } });
+    const updated = await tx.fundingRound.findUniqueOrThrow({
+      where: { id: round.id },
+    });
+    if (updated.rulesVersion === 3 && updated.status === "DECIDED")
+      await publishRoundDecision(tx, updated, userId, now);
+    return updated;
   });
 }
 
@@ -445,7 +511,7 @@ export async function getFundingRoundView(
       );
       const eligible = Boolean(
         userId &&
-        active &&
+        (round.rulesVersion === 3 || active) &&
         (await tx.roundElectorate.findUnique({
           where: { roundId_userId: { roundId, userId } },
         })),
@@ -469,27 +535,29 @@ export async function getFundingRoundView(
         select: { schemeId: true, user: { select: identity } },
         orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       });
-      const screeningResults = showScreening
-        ? round.schemes.map((s) => ({
-            schemeId: s.id,
-            ...calculateOutcome(
-              screens.filter((v) => v.schemeId === s.id),
+      const screeningResults =
+        showScreening && round.rulesVersion !== 3
+          ? round.schemes.map((s) => ({
+              schemeId: s.id,
+              ...calculateOutcome(
+                screens.filter((v) => v.schemeId === s.id),
+                round._count.electorate,
+                round.quorumBps,
+                5001,
+              ),
+            }))
+          : null;
+      const selectionResults =
+        showSelection && round.rulesVersion !== 3
+          ? selectionOutcome(
+              round.schemes
+                .filter((s) => s.status === "QUALIFIED")
+                .map((s) => s.id),
+              selections,
               round._count.electorate,
               round.quorumBps,
-              5001,
-            ),
-          }))
-        : null;
-      const selectionResults = showSelection
-        ? selectionOutcome(
-            round.schemes
-              .filter((s) => s.status === "QUALIFIED")
-              .map((s) => s.id),
-            selections,
-            round._count.electorate,
-            round.quorumBps,
-          )
-        : null;
+            )
+          : null;
       return {
         round,
         staff,

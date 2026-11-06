@@ -1,0 +1,96 @@
+{
+  "part": 3,
+  "runId": "0fa01744-7c3e-4e22-a4e8-c25a2633236f",
+  "reviewer": "/root/part03_review",
+  "independent": true,
+  "verdict": "pass",
+  "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+  "receiptSetHash": "6530628b6419ece24f98a172939dc0a2f1572795ae49d9271cacae4ef1472a27",
+  "handoffHash": "f07d15a65d375af3d2d34207828758eb38b2b536f8a4a570fcb86d305bff7cd4",
+  "requirementsReviewed": ["R15", "R16", "R17", "R18"],
+  "preservation": {
+    "legacyFeatures": true,
+    "historyPreserved": true,
+    "heldFundsIsolated": true,
+    "privacyPreserved": true
+  },
+  "scope": "Part 3 weighted funded V3 rounds, three allocation policies and optional rejection veto. Existing V1 decision-only and V2 equal/FPTP/winner-all/veto-disabled behavior is preserved. Optional capped weighting R19, Part 4 methods/reputation and Part 5 verified external NEAR operations are not claimed as completed here.",
+  "independence": "The reviewer did not implement or edit product source, migrations, tests, the handoff or workflow state. Findings were sent to the coordinator and implementation owners, then their repairs were independently rechecked. This report is the only file written by the reviewer.",
+  "evidence": {
+    "bindingVerification": "Independently recomputed the current source fingerprint, canonical receipt-set hash and exact handoff file hash. Recomputed all 12 current receipt file hashes and all associated log hashes. Verified each receipt's actual command arrays, run/part/check identities, exitCode 0, sourceUnchanged true and the final source fingerprint. All 12 mandatory R15-R18 criteria reference current-source checks; no blocker or active check remains. State revision was 96 during this verification.",
+    "checks": {
+      "workflow-tests": "13 passed, zero failed/skipped",
+      "unit": "57 passed across 6 files",
+      "typecheck": "passed",
+      "lint": "passed",
+      "integration": "27 PostgreSQL integrity/security checks passed",
+      "build": "Prisma generation, TypeScript, production compilation and static generation passed",
+      "http": "61 end-to-end checks passed",
+      "browser": "75 layout/interaction checks passed with no browser runtime errors",
+      "rounds": "20 integrity/authorization/privacy/HTTP/browser checks and 14 zero-violation axe scans passed",
+      "funds": "32 funded-round/governance/recovery checks and 8 zero-violation axe scans passed",
+      "elections": "23 V3 weighted election/allocation/veto/recovery checks and 4 zero-violation axe scans passed",
+      "accessibility": "30 general application axe scans with zero violations"
+    },
+    "manualReview": [
+      "Reviewed the prepublished V3 specification, validation and immutable version dispatch. V1 never acquires settlement authority; V2 rules retain their original interpretation; unsupported future methods, assets and capped weighting are rejected.",
+      "Reviewed active-at-cutoff membership tracking, received-contribution power, independent stage modes, zero-power denial, exact quorum/approval/abstention denominators and retained frozen ballot rights after membership or role changes.",
+      "Reviewed three exact allocation modes, request caps, zero support, tied/missing ranks, unpayable recipients, no redistribution and original-source refunds. Current evidence separately exercises all six equal/contribution selection-power and allocation-policy combinations using fixed payout/refund oracles.",
+      "Independently executed 3,000 deterministic randomized pools across all three allocation policies, totaling 9,000 plans, and repeated this against the final source. Exact conservation, payout bounds, unique payable supported recipients, immutable identities, permutation invariance and winner-all tie refunds passed. Exact weighted majority/abstention/selection edges also passed. This is manual reviewer evidence, not a workflow receipt.",
+      "Reviewed immutable decision/allocation publication, the complete 24-hour veto window, exact 90-percent-of-all-frozen-power rejection, pending veto secrecy and the lack of any all-voted early-close exception. Inspected preparation, queue, process, per-operation, ledger and reconciliation settlement gates plus database bypass rejection.",
+      "Reviewed owner-bound receipts, separate round accounts, durable immutable operations/attempts, separate-process worker recovery, queued-plan preservation through expiry, UNKNOWN blocking and local-only same-intent reconciliation before retry.",
+      "Inspected final desktop and 390px mobile veto screenshots, the four V3 accessibility records including 320px and the ranked-veto creation form, and the 30 general application accessibility records. Published power, proposed allocations, held funds, veto deadline and own sealed choice are clear; no pending other-voter tally is exposed. The complete accessibility evidence totals 56 zero-violation scans."
+    ],
+    "visualArtifacts": [
+      "test-results/fundicate-v3-veto-1440.png",
+      "test-results/fundicate-v3-veto-390.png",
+      ".local/elections-accessibility.json",
+      ".local/accessibility.json"
+    ]
+  },
+  "findings": [
+    {
+      "id": "P3-REVIEW-01",
+      "severity": "medium",
+      "requirements": ["R18"],
+      "file": "src/lib/rounds-v3.ts",
+      "description": "The first no-decision settlement gate required an unprepared settlement, preventing a valid expired unresolved full-refund plan from being processed after preparation set preparedAt.",
+      "status": "resolved",
+      "resolution": "The gate now permits only an already-locked EXPIRED/FUNDING_FAILED full-refund snapshot with matching V3 asset/received/reason, zero payout, no published decision reference and no PAYOUT operations, after the original expiry. It does not create payout authority. The current election finance suite executes unresolved-expiry preparation, processing and replay with both target outcomes, including an original contributor after leaving."
+    },
+    {
+      "id": "P3-REVIEW-02",
+      "severity": "medium",
+      "requirements": ["R15"],
+      "file": "prisma/migrations/20261106000000_v3_utc_cutoff/migration.sql",
+      "description": "The initial membership/power guards compared timestamptz clock_timestamp() against UTC-naive Prisma TIMESTAMP values, allowing a non-UTC PostgreSQL session timezone to shift the eligibility cutoff.",
+      "status": "resolved",
+      "resolution": "The additive migration explicitly normalizes database clock comparisons and trigger-created timestamps to UTC. The current integration fixture changes session TimeZone to Asia/Dhaka while exercising pre-cutoff membership tracking. The mixed-type comparison semantics were independently confirmed against PostgreSQL primary documentation; historical timestamp columns and data were not rewritten.",
+      "primarySource": "https://www.postgresql.org/docs/16/functions-datetime.html"
+    },
+    {
+      "id": "P3-REVIEW-03",
+      "severity": "low",
+      "requirements": ["R16"],
+      "file": "src/lib/rounds.ts",
+      "description": "The initial selection-closed audit event could record TIED or a sole winner while the persisted non-winner-all result was ALLOCATION_SELECTED with no sole winner.",
+      "status": "resolved",
+      "resolution": "The audit now records the same allocation-selected outcome and null sole-winner identity that are persisted for V3 proportional/ranked decisions. The revised source was inspected and current round/election regressions pass."
+    },
+    {
+      "id": "P3-INTEGRATION-04",
+      "severity": "medium",
+      "requirements": ["R18"],
+      "file": "prisma/migrations/20261105050000_v3_transfer_gate_fix/migration.sql",
+      "description": "An early integration trigger read operation-only fields on ledger transaction records, which could reject otherwise valid payout execution.",
+      "status": "resolved",
+      "resolution": "The additive replacement separates RoundOperation intent validation from RoundLedgerTransaction execution-key/source/destination validation. Current end-to-end payouts across all six mode/policy combinations execute through these guards; early-veto SQL bypass attempts still fail."
+    }
+  ],
+  "observations": [
+    "Historical failed checks remain in the evidence history. The repaired test fixtures preserve product restrictions: the veto-expiry case respects the minimum expiry interval, and the UNKNOWN case explicitly rejects a noncontributor before running concurrent authorized workers. Product authorization was not relaxed to force a passing test.",
+    "All financial observations in this part are local simulation. Local ledger absence is not represented as proof of external non-submission, inclusion or finality. Real verified NEAR testnet deposits, payouts and refunds remain mandatory Part 5 work.",
+    "Database/browser execution evidence is from the independently hash-verified coordinator-run workflow receipts and logs. The reviewer additionally ran the pure allocation checks directly and inspected source, tests and rendered artifacts without changing product data."
+  ],
+  "conclusion": "Part 3 satisfies its scoped mandatory acceptance criteria with no unresolved material finding. Approval is bound only to the exact source, receipt set and handoff hashes above. The coordinator may register this report and close Part 3; a fresh user next is required before Part 4."
+}

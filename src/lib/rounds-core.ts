@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { money, uuid } from "./validation";
 import { fundsConfigSchema } from "./funds-core";
+import { v3FundsConfigSchema } from "./elections-core";
 
 export const ROUND_STAGE_MS = 24 * 60 * 60 * 1000;
 export const MAX_ROUND_SCHEMES = 50;
@@ -13,6 +14,7 @@ export const roundSchema = z
     quorumBps: z.coerce.number().int().min(1).max(10000),
     submissionsCloseAt: z.iso.datetime(),
     funded: z.boolean().default(false),
+    fundedVersion: z.enum(["V2", "V3"]).optional(),
     fundingTarget: z.unknown().optional(),
     minimumContribution: z.unknown().optional(),
     maximumContribution: z.unknown().optional(),
@@ -22,11 +24,16 @@ export const roundSchema = z
     selectionMethod: z.unknown().optional(),
     votingWeight: z.unknown().optional(),
     allocationPolicy: z.unknown().optional(),
+    screeningWeight: z.unknown().optional(),
+    selectionWeight: z.unknown().optional(),
+    vetoWeight: z.unknown().optional(),
+    rankedSharesBps: z.unknown().optional(),
   })
   .strict()
   .superRefine((data, context) => {
     if (!data.funded) {
       for (const key of [
+        "fundedVersion",
         "fundingTarget",
         "minimumContribution",
         "maximumContribution",
@@ -36,6 +43,10 @@ export const roundSchema = z
         "selectionMethod",
         "votingWeight",
         "allocationPolicy",
+        "screeningWeight",
+        "selectionWeight",
+        "vetoWeight",
+        "rankedSharesBps",
       ] as const) {
         if (data[key] !== undefined)
           context.addIssue({
@@ -49,6 +60,7 @@ export const roundSchema = z
   .transform((data) => {
     const {
       funded,
+      fundedVersion,
       fundingTarget,
       minimumContribution,
       maximumContribution,
@@ -58,23 +70,39 @@ export const roundSchema = z
       selectionMethod,
       votingWeight,
       allocationPolicy,
+      screeningWeight,
+      selectionWeight,
+      vetoWeight,
+      rankedSharesBps,
       ...round
     } = data;
     return {
       ...round,
       funded,
+      fundedVersion: funded ? (fundedVersion ?? "V2") : undefined,
       funding: funded
-        ? fundsConfigSchema.parse({
-            fundingTarget,
-            minimumContribution,
-            maximumContribution,
-            collectionClosesAt,
-            expiresAt,
-            vetoEnabled,
-            selectionMethod,
-            votingWeight,
-            allocationPolicy,
-          })
+        ? (fundedVersion === "V3"
+            ? v3FundsConfigSchema
+            : fundsConfigSchema
+          ).parse(
+            Object.fromEntries(
+              Object.entries({
+                fundingTarget,
+                minimumContribution,
+                maximumContribution,
+                collectionClosesAt,
+                expiresAt,
+                vetoEnabled,
+                selectionMethod,
+                votingWeight,
+                allocationPolicy,
+                screeningWeight,
+                selectionWeight,
+                vetoWeight,
+                rankedSharesBps,
+              }).filter(([, value]) => value !== undefined),
+            ),
+          )
         : null,
     };
   });

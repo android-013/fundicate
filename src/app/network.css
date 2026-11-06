@@ -3923,6 +3923,120 @@ td small {
   flex-shrink: 0;
   margin-top: 2px;
 }
+
+/* V3 keeps the ordinary overview short and the exact rules/results inspectable. */
+.v3-form-rule-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.round-v3 > .row.between {
+  align-items: flex-start;
+  gap: 16px;
+}
+.round-v3 > .row.between > .row {
+  align-items: flex-start;
+}
+.round-v3 > .row.between svg {
+  flex-shrink: 0;
+  color: #9fe5df;
+  margin-top: 3px;
+}
+.v3-power-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+.v3-power-grid > article {
+  padding: 16px;
+  min-width: 0;
+  border: 1px solid #3a4b66;
+  border-radius: 11px;
+  background: #131e31;
+}
+.v3-power-grid h4 {
+  margin-bottom: 7px;
+}
+.v3-power-grid strong {
+  display: block;
+  margin: 9px 0;
+  color: #d8faf1;
+  font-size: 21px;
+  overflow-wrap: anywhere;
+}
+.v3-power-grid small {
+  display: block;
+  color: #b8cadd;
+  line-height: 1.5;
+}
+.v3-rule-details,
+.v3-closed-results,
+.v3-proposed-allocation,
+.v3-veto {
+  padding-top: 22px;
+  margin-top: 22px;
+  border-top: 1px solid #3a4b66;
+  min-width: 0;
+}
+.v3-rule-details summary {
+  font-size: 12px;
+}
+.round-v3 .detail-list dd {
+  max-width: 64%;
+}
+.v3-result-row {
+  padding: 15px 0;
+  border-bottom: 1px solid #334058;
+}
+.v3-result-row:last-child {
+  border-bottom: 0;
+}
+.v3-result-row p {
+  margin: 8px 0;
+}
+.v3-proposed-allocation table,
+.v3-veto-ballots table {
+  min-width: 460px;
+}
+.v3-proposed-allocation td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+  max-width: 240px;
+}
+.v3-veto > .row {
+  align-items: flex-start;
+}
+.v3-veto > .row svg {
+  flex-shrink: 0;
+  color: #a7e6d8;
+}
+.v3-veto .form {
+  max-width: 520px;
+  margin: 18px 0;
+}
+.v3-veto-ballots {
+  margin-top: 18px;
+}
+@media (max-width: 850px) {
+  .v3-form-rule-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 680px) {
+  .v3-power-grid {
+    grid-template-columns: 1fr;
+  }
+  .round-v3 > .row.between {
+    flex-wrap: wrap;
+  }
+  .round-v3 .detail-list dd {
+    max-width: 62%;
+  }
+  .round-v3 .eyebrow {
+    font-size: 9px;
+  }
+}
 @media (max-width: 680px) {
   .round-fund-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));

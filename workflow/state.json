@@ -1,14 +1,25 @@
 {
   "schemaVersion": 1,
-  "revision": 63,
+  "revision": 99,
   "totalParts": 5,
   "completedParts": [
     1,
-    2
+    2,
+    3
   ],
-  "nextPart": 3,
-  "status": "waiting_for_next",
-  "activeRun": null,
+  "nextPart": 4,
+  "status": "in_progress",
+  "activeRun": {
+    "id": "55d8970f-1e28-4df2-8cad-0cdb79dd7ade",
+    "part": 4,
+    "startedAt": "2026-11-06T03:16:14.895Z",
+    "checks": {},
+    "acceptance": {},
+    "blockers": {},
+    "checkpoints": [],
+    "review": null,
+    "activeCheck": null
+  },
   "parts": {
     "1": {
       "number": 1,
@@ -322,12 +333,207 @@
     "3": {
       "number": 3,
       "title": "Weighted governance, allocation policies and rejection veto",
-      "status": "pending"
+      "status": "complete",
+      "completedAt": "2026-11-06T02:54:16.375Z",
+      "run": {
+        "id": "0fa01744-7c3e-4e22-a4e8-c25a2633236f",
+        "part": 3,
+        "startedAt": "2026-11-05T16:52:45.973Z",
+        "checks": {
+          "build": {
+            "path": "workflow/evidence/part-03/build-92058124-2146-4a2f-835e-552eee551b66.json",
+            "hash": "38986b771fa8e943dcd304ed7d59813eb48b63ea4e4630cf25b7e7065cacbd64"
+          },
+          "elections": {
+            "path": "workflow/evidence/part-03/elections-f8da73c3-9e08-4cf4-8795-6a09ac1e1d87.json",
+            "hash": "9035099ebc9adfe172790269ef599f518e66b9d837198c81243fd02948cf1ac6"
+          },
+          "workflow-tests": {
+            "path": "workflow/evidence/part-03/workflow-tests-e10afb6f-5b63-41f3-bf99-03c201799bac.json",
+            "hash": "b26f90d730ea0ca7c438693cede228654d8b6fa5dec290c3b2307a75eb2f6769"
+          },
+          "unit": {
+            "path": "workflow/evidence/part-03/unit-dc920a45-d6ec-46d9-8b25-dc4530d30034.json",
+            "hash": "41e3630134d9b91ba6a0851c0e46c79dea2ed8c551af62b44bde12b84de9bad4"
+          },
+          "typecheck": {
+            "path": "workflow/evidence/part-03/typecheck-e19974cf-209d-4eba-bc9b-c419bfec8aad.json",
+            "hash": "10fbb0f716d3caa875b3db2402356a5d0cd92af87ace1d639877b067cbb275a8"
+          },
+          "lint": {
+            "path": "workflow/evidence/part-03/lint-c41de8ea-70c5-465e-962f-355f07209abe.json",
+            "hash": "47bb75d8a330530472902d6db014a4f8356be53897f002fafc1160f158a23229"
+          },
+          "integration": {
+            "path": "workflow/evidence/part-03/integration-750b53e5-1cdc-4a6f-8a05-e5ced9ea2012.json",
+            "hash": "5a89ab15cfccc4526d8171939f4ae17d58e8e1f7103635548a45839191016e31"
+          },
+          "http": {
+            "path": "workflow/evidence/part-03/http-fb748e3e-5c15-443c-af9b-3dee753eca76.json",
+            "hash": "fc837df09fa95c847fc45230a4779c436a62cc0b5833139444e3454f94c58a90"
+          },
+          "rounds": {
+            "path": "workflow/evidence/part-03/rounds-35481c0a-0597-4e07-bc51-f9a0f447409d.json",
+            "hash": "3c2d5fd35cfad9eef380a29f1e8a1441c413fa9bfb3da0a18a60a0073c35e4a8"
+          },
+          "funds": {
+            "path": "workflow/evidence/part-03/funds-b07c5b7d-22d3-41bd-9eb7-a58b9d07e328.json",
+            "hash": "3ee96fd60f02567582fa74c7e6ea0a594b5470539c8045efcc4ab0a2a7760a60"
+          },
+          "browser": {
+            "path": "workflow/evidence/part-03/browser-19c1d743-f24c-4e45-aa3d-921a9d7b6f9b.json",
+            "hash": "bf26d0351b7969dd17db4860b0f91bf6b8580620ce68aa5e1f388b315299d47d"
+          },
+          "accessibility": {
+            "path": "workflow/evidence/part-03/accessibility-6ec09060-8c49-4b77-a4ed-518e697fe451.json",
+            "hash": "0e7ddea729f0e5bae62a5d709efa18d7b06ea81866e58dc8d83368057d6d8520"
+          }
+        },
+        "acceptance": {
+          "R15": {
+            "1": {
+              "at": "2026-11-06T02:45:45.920Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit",
+                "rounds"
+              ],
+              "note": "Executed independent stage weight choices, actual received-basis power, strict majority/ABSTAIN/quorum arithmetic, zero-paid moderator denial, pre-cutoff membership tracking with one-hour Asia/Dhaka boundary, immutable post-cutoff membership/role/ballot power and stage privacy; V1/V2 regressions pass."
+            },
+            "2": {
+              "at": "2026-11-06T02:45:45.920Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit",
+                "rounds"
+              ],
+              "note": "Executed independent stage weight choices, actual received-basis power, strict majority/ABSTAIN/quorum arithmetic, zero-paid moderator denial, pre-cutoff membership tracking with one-hour Asia/Dhaka boundary, immutable post-cutoff membership/role/ballot power and stage privacy; V1/V2 regressions pass."
+            },
+            "3": {
+              "at": "2026-11-06T02:45:45.920Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit",
+                "rounds"
+              ],
+              "note": "Executed independent stage weight choices, actual received-basis power, strict majority/ABSTAIN/quorum arithmetic, zero-paid moderator denial, pre-cutoff membership tracking with one-hour Asia/Dhaka boundary, immutable post-cutoff membership/role/ballot power and stage privacy; V1/V2 regressions pass."
+            }
+          },
+          "R16": {
+            "1": {
+              "at": "2026-11-06T02:45:47.410Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit",
+                "funds"
+              ],
+              "note": "Six full funded FPTP policy-by-weight rounds passed fixed payout/refund oracles; ranked100-percent validation, tied/missing slots, caps, unpayable recipients, stable minor-unit remainders and original-source refunds reconcile; immutable published decisions supply every executable payout."
+            },
+            "2": {
+              "at": "2026-11-06T02:45:47.410Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit",
+                "funds"
+              ],
+              "note": "Six full funded FPTP policy-by-weight rounds passed fixed payout/refund oracles; ranked100-percent validation, tied/missing slots, caps, unpayable recipients, stable minor-unit remainders and original-source refunds reconcile; immutable published decisions supply every executable payout."
+            },
+            "3": {
+              "at": "2026-11-06T02:45:47.410Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit",
+                "funds"
+              ],
+              "note": "Six full funded FPTP policy-by-weight rounds passed fixed payout/refund oracles; ranked100-percent validation, tied/missing slots, caps, unpayable recipients, stable minor-unit remainders and original-source refunds reconcile; immutable published decisions supply every executable payout."
+            }
+          },
+          "R17": {
+            "1": {
+              "at": "2026-11-06T02:45:48.232Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit"
+              ],
+              "note": "Rules and veto mode are immutable before funding; actual UI/HTTP ballots remain sealed; 90/89-percent contribution and equal nonvoter/abstention denominator cases pass; all-voted early close, prepare/process/direct SQL and expiry bypasses fail until exact24-hour deadline, then rejection refunds all original principal."
+            },
+            "2": {
+              "at": "2026-11-06T02:45:48.232Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit"
+              ],
+              "note": "Rules and veto mode are immutable before funding; actual UI/HTTP ballots remain sealed; 90/89-percent contribution and equal nonvoter/abstention denominator cases pass; all-voted early close, prepare/process/direct SQL and expiry bypasses fail until exact24-hour deadline, then rejection refunds all original principal."
+            },
+            "3": {
+              "at": "2026-11-06T02:45:48.232Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "unit"
+              ],
+              "note": "Rules and veto mode are immutable before funding; actual UI/HTTP ballots remain sealed; 90/89-percent contribution and equal nonvoter/abstention denominator cases pass; all-voted early close, prepare/process/direct SQL and expiry bypasses fail until exact24-hour deadline, then rejection refunds all original principal."
+            }
+          },
+          "R18": {
+            "1": {
+              "at": "2026-11-06T02:45:49.271Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "funds",
+                "integration"
+              ],
+              "note": "Central gates cover prepare, queue, process, per-operation posting, reconciliation and SQL paths; UNKNOWN blocks whole plan before local no-posting proof; durable FAILED retries and separate-worker restart preserve one operation identity; all policies conserve received=held+reserved+paid+refunded, queued plans survive expiry, and legacy treasury remains physically segregated."
+            },
+            "2": {
+              "at": "2026-11-06T02:45:49.271Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "funds",
+                "integration"
+              ],
+              "note": "Central gates cover prepare, queue, process, per-operation posting, reconciliation and SQL paths; UNKNOWN blocks whole plan before local no-posting proof; durable FAILED retries and separate-worker restart preserve one operation identity; all policies conserve received=held+reserved+paid+refunded, queued plans survive expiry, and legacy treasury remains physically segregated."
+            },
+            "3": {
+              "at": "2026-11-06T02:45:49.271Z",
+              "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+              "checks": [
+                "elections",
+                "funds",
+                "integration"
+              ],
+              "note": "Central gates cover prepare, queue, process, per-operation posting, reconciliation and SQL paths; UNKNOWN blocks whole plan before local no-posting proof; durable FAILED retries and separate-worker restart preserve one operation identity; all policies conserve received=held+reserved+paid+refunded, queued plans survive expiry, and legacy treasury remains physically segregated."
+            }
+          }
+        },
+        "blockers": {},
+        "checkpoints": [],
+        "review": {
+          "path": "workflow/reviews/part-03-0fa01744.json",
+          "hash": "02b71fc510310b66a761d02ae19e87f63647b12a1f2c6b25db200d03ed4331d4",
+          "at": "2026-11-06T02:54:11.617Z"
+        },
+        "activeCheck": null
+      },
+      "handoff": "docs/parts/part-03.md",
+      "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+      "receiptSetHash": "6530628b6419ece24f98a172939dc0a2f1572795ae49d9271cacae4ef1472a27",
+      "handoffHash": "f07d15a65d375af3d2d34207828758eb38b2b536f8a4a570fcb86d305bff7cd4"
     },
     "4": {
       "number": 4,
       "title": "Complete election methods and participation-based reputation",
-      "status": "pending"
+      "status": "in_progress"
     },
     "5": {
       "number": 5,
@@ -385,16 +591,16 @@
       "status": "verified"
     },
     "R15": {
-      "status": "pending"
+      "status": "verified"
     },
     "R16": {
-      "status": "pending"
+      "status": "verified"
     },
     "R17": {
-      "status": "pending"
+      "status": "verified"
     },
     "R18": {
-      "status": "pending"
+      "status": "verified"
     },
     "R19": {
       "status": "pending"
@@ -451,5 +657,5 @@
       "status": "pending"
     }
   },
-  "updatedAt": "2026-11-05T16:41:16.807Z"
+  "updatedAt": "2026-11-06T03:16:14.897Z"
 }

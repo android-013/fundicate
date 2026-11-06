@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 3,
+  "runId": "0fa01744-7c3e-4e22-a4e8-c25a2633236f",
+  "check": "workflow-tests",
+  "token": "e10afb6f-5b63-41f3-bf99-03c201799bac",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--test",
+      "tests/progress-workflow.test.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-06T02:30:27.706Z",
+  "finishedAt": "2026-11-06T02:31:26.964Z",
+  "exitCode": 0,
+  "sourceFingerprint": "b96507e4312066d0aa906a7b8cf6dd23f007e6ad454167fa1c2d58af53d6f952",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-03/workflow-tests-e10afb6f-5b63-41f3-bf99-03c201799bac.log",
+  "logHash": "e3de1c45440a7e0e5c48d615078b5dcb64b82eddadd0173ac08019aef36963e8"
+}

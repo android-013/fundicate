@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowDownToLine, Layers3, ShieldCheck } from "lucide-react";
 import type { getRoundFinanceView } from "@/lib/funded-rounds";
+import { getV3Settings } from "@/lib/rounds-v3";
 import { dateTime, moneyFormat, titleCase } from "@/lib/format";
 import { ActionButton, ActionForm, Field } from "./forms";
 import { Status } from "./ui";
@@ -21,6 +22,7 @@ export function RoundFunds({
   userId?: string;
 }) {
   const { settlement: s, totals } = view;
+  const v3 = s.rulesVersion === 3 ? getV3Settings(s) : null;
   const base = { communityId, roundId };
   const progress =
     Number(
@@ -45,7 +47,9 @@ export function RoundFunds({
             <Layers3 size={21} aria-hidden="true" />
           </span>
           <div>
-            <span className="eyebrow">A DEDICATED ROUND POOL · V2</span>
+            <span className="eyebrow">
+              A DEDICATED ROUND POOL · V{s.rulesVersion}
+            </span>
             <h3 id="round-funds-heading">From contribution to outcome.</h3>
           </div>
         </div>
@@ -57,8 +61,9 @@ export function RoundFunds({
         no blockchain transaction or real wallet transfer.
       </p>
       <p className="muted small-text">
-        Equal votes · FPTP · winner-all allocation · veto disabled. Settlement
-        can be prepared immediately after the final decision.
+        {v3
+          ? `FPTP · ${titleCase(v3.allocationPolicy)} allocation · ${v3.vetoEnabled ? "24-hour rejection veto enabled. Payouts wait the complete window." : "veto disabled. Settlement may follow the final decision."}`
+          : "Equal votes · FPTP · winner-all allocation · veto disabled. Settlement can be prepared immediately after the final decision."}
       </p>
       <div className="round-funding-progress">
         <div className="row between">
@@ -94,6 +99,11 @@ export function RoundFunds({
       </dl>
       {s.reason && (
         <p className="notice">Settlement outcome: {titleCase(s.reason)}.</p>
+      )}
+      {view.settlementBlockedReason && (
+        <p className="notice" role="status">
+          {view.settlementBlockedReason}
+        </p>
       )}
       {view.canContribute ? (
         <div className="round-contribution-form">
@@ -195,7 +205,10 @@ export function RoundFunds({
           )}
         </div>
       )}
-      {(view.canPrepare || view.canProcess || view.canRecover) && (
+      {(view.canPrepare ||
+        view.canProcess ||
+        view.canRecover ||
+        view.canReconcile) && (
         <div className="round-settlement-controls">
           <h4>
             {view.canRecover
@@ -203,9 +216,11 @@ export function RoundFunds({
               : "Settle the published outcome"}
           </h4>
           <p className="muted small-text">
-            Preparation freezes the allocation and refund plan. Processing
-            executes pending local operations and preserves completed receipts
-            when retried.
+            {v3
+              ? "Preparation reserves the published allocation or justified original-source refund plan. "
+              : "Preparation freezes the allocation and refund plan. "}
+            Processing executes pending local operations and preserves completed
+            receipts when retried.
           </p>
           <div className="row">
             {(view.canPrepare || view.canRecover) && (
@@ -231,6 +246,15 @@ export function RoundFunds({
                 confirm="Process the pending simulated payout and refund operations? Completed operations will not be duplicated."
               >
                 Process pending operations
+              </ActionButton>
+            )}
+            {view.canReconcile && (
+              <ActionButton
+                operation="round-reconcile"
+                body={base}
+                confirm="Check the exact local ledger operation before any retry? This does not submit an external transfer or change recipients."
+              >
+                Reconcile unknown local outcomes
               </ActionButton>
             )}
           </div>
@@ -294,22 +318,38 @@ export function RoundFunds({
           <div>
             <dt>Rejection veto</dt>
             <dd>
-              Disabled · no additional holding period after the final decision
+              {v3?.vetoEnabled
+                ? "Enabled · every payout waits the full 24-hour window"
+                : "Disabled · no additional holding period after the final decision"}
             </dd>
           </div>
         </dl>
-        <p className="small-text muted">
-          The winner receives the smaller of its requested amount and the
-          received pool, after the funding target is met. Unused money returns
-          proportionally to the original contributors, using exact minor-unit
-          rounding. A tie, no quorum, no qualified winner, a missed target, or
-          unresolved expiry produces refunds. Contribution ownership survives
-          membership changes.
-        </p>
+        {v3 ? (
+          <p className="small-text muted">
+            Awards use the published{" "}
+            {titleCase(v3.allocationPolicy).toLowerCase()} plan and each
+            scheme’s request cap. Unused caps, missing ranked positions,
+            unpayable shares and rejected outcomes return to original sources
+            without hidden redistribution. No quorum, failed funding or zero
+            support produces no award. Contribution ownership survives
+            membership changes.
+          </p>
+        ) : (
+          <p className="small-text muted">
+            The winner receives the smaller of its requested amount and the
+            received pool, after the funding target is met. Unused money returns
+            proportionally to the original contributors, using exact minor-unit
+            rounding. A tie, no quorum, no qualified winner, a missed target, or
+            unresolved expiry produces refunds. Contribution ownership survives
+            membership changes.
+          </p>
+        )}
         <p className="small-text muted">
           Residual minor units use largest remainders, with ties ordered by
           original source ID. Expiry refunds only unprepared pools; queued plans
           resume unchanged.
+          {v3 &&
+            " Recovery respects any published veto window. An unknown local execution outcome must be reconciled before retry or release."}
         </p>
         {view.operations.length > 0 && (
           <>

@@ -60,6 +60,35 @@ export function ActionForm({
             String(body.collectionClosesAt),
           ).toISOString();
           body.expiresAt = new Date(String(body.expiresAt)).toISOString();
+          if (body.fundedVersion === "V3") {
+            body.vetoEnabled = form.get("vetoEnabled") === "on";
+            body.rankedSharesBps = [];
+            if (body.allocationPolicy === "RANKED_CUTS") {
+              const shares = String(form.get("rankedSharesBps") ?? "")
+                .split(",")
+                .map((value) => value.trim());
+              if (
+                !shares.length ||
+                shares.length > 50 ||
+                shares.some((share) => !/^\d{1,3}(?:\.\d{1,2})?$/.test(share))
+              )
+                throw new Error(
+                  "Enter 1–50 percentages separated by commas, with up to two decimal places each.",
+                );
+              const basisPoints = shares.map((share) => {
+                const [whole, fraction = ""] = share.split(".");
+                return Number(whole) * 100 + Number(fraction.padEnd(2, "0"));
+              });
+              if (
+                basisPoints.some((share) => share < 1 || share > 10000) ||
+                basisPoints.reduce((total, share) => total + share, 0) !== 10000
+              )
+                throw new Error(
+                  "Every ranked share must be positive and all shares must total exactly 100%.",
+                );
+              body.rankedSharesBps = basisPoints;
+            }
+          }
         }
       }
       if (["contribute", "round-contribute"].includes(operation)) {
