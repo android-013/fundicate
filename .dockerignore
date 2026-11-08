@@ -10,6 +10,11 @@ test-results
 playwright-report
 workflow/evidence
 workflow/reviews
+workflow/state.json
+workflow/history.jsonl
+progress.md
+docs/parts
+docs/security
 *.dump
 *.backup
 *.key

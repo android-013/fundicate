@@ -6,7 +6,7 @@
   "masterPlan": "docs/MASTER-PLAN.md",
   "confirmedDecisions": {
     "geccoMeans": "GLICKO_2",
-    "finalBlockchainTarget": "verified-near-testnet",
+    "finalBlockchainTarget": "standalone-no-blockchain-user-approved-2026-11-07",
     "allExistingWorkIsPart": 1,
     "trigger": "next",
     "partsPerTrigger": 1,
@@ -112,7 +112,7 @@
     },
     {
       "number": 5,
-      "title": "Verified NEAR testnet, integrated analytics and full-system audit",
+      "title": "Standalone governance, external payment records and security audit",
       "requirements": [
         "R28",
         "R29",
@@ -138,13 +138,13 @@
         "funds",
         "elections",
         "reputation",
-        "near-testnet",
         "release",
-        "chain",
         "recovery",
         "large-demo",
-        "contract",
-        "dependency-audit"
+        "dependency-audit",
+        "security",
+        "payment-records",
+        "secret-scan"
       ],
       "handoff": "docs/parts/part-05.md"
     }

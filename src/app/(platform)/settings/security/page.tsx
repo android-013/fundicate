@@ -27,9 +27,19 @@ export default async function Security() {
       </div>
       <section className="panel padded narrow">
         <h2>Confirm a sensitive action</h2>
-        <p className="muted">Password confirmation lasts five minutes for this session. Wallet links and authority changes require it.</p>
-        <ActionForm operation="reauthenticate" submit="Confirm password"><Field label="Current password" name="password" type="password" required autoComplete="current-password" /></ActionForm>
-        <Link href="/settings/wallet" className="button secondary">Manage testnet wallets</Link>
+        <p className="muted">
+          Password confirmation lasts five minutes for this session. Authority
+          changes and sensitive payment-record actions require it.
+        </p>
+        <ActionForm operation="reauthenticate" submit="Confirm password">
+          <Field
+            label="Current password"
+            name="password"
+            type="password"
+            required
+            autoComplete="current-password"
+          />
+        </ActionForm>
       </section>
       <section className="panel padded narrow">
         <h2>Active sessions</h2>

@@ -46,8 +46,9 @@ export default async function Treasury({
         <ShieldCheck size={19} />
         <span>
           <strong>This is a simulated treasury.</strong> Contributions and
-          payouts are local database records. No real money, NEAR tokens, or
-          blockchain transfers occur.
+          payouts are practice records. No money is collected, held or
+          transferred. To document payments made elsewhere, use{" "}
+          <Link href={`/communities/${slug}/payments`}>Payment records</Link>.
         </span>
       </div>
       <div className="two-column">

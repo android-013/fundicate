@@ -1,0 +1,67 @@
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","e2e"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794067155572_34608", schema "public" at "127.0.0.1:54329"
+
+15 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 48ms
+(node:26896) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS 61 HTTP end-to-end checks: register → create communities → apply → admission vote → member draft → open → vote → approve → execute simulation → treasury/audit → logout.

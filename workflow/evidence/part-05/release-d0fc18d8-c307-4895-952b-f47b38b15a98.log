@@ -1,0 +1,96 @@
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","release"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794068572524_19560", schema "public" at "127.0.0.1:54329"
+
+15 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 9ms
+(node:33284) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS 1. staff save complete versioned source rules without ballots or financial history
+PASS 2. ordinary members and foreign source rounds cannot edit a community template
+PASS 3. concurrent staff edits append ordered immutable revisions
+PASS 4. direct SQL cannot rewrite or delete an immutable template revision
+PASS 5. instantiating an earlier revision makes a fresh unfunded draft bound atomically to that revision
+PASS 6. stale shifted collection cutoffs fail before any draft is committed
+PASS 7. template API preserves same-origin, sign-in and community staff boundaries
+PASS 8. template library supports active member inspection but denies foreign memberships
+PASS 9. current asset totals reconcile exact received, held, reserved, paid and source refunds
+PASS 10. system report and CSV expose no open-context participation, voter IDs or raw ballots
+PASS 11. scope filters reject unauthorized communities and show complete cohorts only
+PASS 12. visible reputation aggregate uses latest real scores and removes hidden reviews without leaking text
+(node:25372) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS 13. scoped CSV endpoints enforce membership, repeated-filter rejection and private caching
+PASS 14. pending veto participation and published selection details stay absent from system analysis and CSV
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('a[href="/communities/bdt-insights/rounds/821c0c0e-ea4e-4cff-865e-a26cba47c2a3"]').first() to be visible[22m
+[2m    62 × locator resolved to hidden <a class="text-link" href="/communities/bdt-insights/rounds/821c0c0e-ea4e-4cff-865e-a26cba47c2a3">…</a>[22m
+
+    at <anonymous> (D:\Projects\fundicate\tests\release-analytics.ts:768:16)
+    at async check (D:\Projects\fundicate\tests\release-analytics.ts:40:3)
+    at async main (D:\Projects\fundicate\tests\release-analytics.ts:654:3) {
+  log: [
+    `  - waiting for locator('a[href="/communities/bdt-insights/rounds/821c0c0e-ea4e-4cff-865e-a26cba47c2a3"]').first() to be visible`,
+    '    62 × locator resolved to hidden <a class="text-link" href="/communities/bdt-insights/rounds/821c0c0e-ea4e-4cff-865e-a26cba47c2a3">…</a>'
+  ],
+  name: 'TimeoutError'
+}

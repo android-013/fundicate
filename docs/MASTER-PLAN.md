@@ -1,5 +1,14 @@
 # Fundicate — five-part delivery plan
 
+## Standalone branch scope — user approved 7 November 2026
+
+On codex/standalone-security-audit the user approved the proposed first release: community governance plus transparent tracking of externally handled payments, separate from blockchain. This explicitly supersedes NEAR-specific Part 5 acceptance on this branch. It does not mark unperformed testnet work complete. Existing historical milestones and evidence stay intact. The active Part 5 run is retained.
+
+No wallet, chain transfer, bank transfer or automated payment processing is offered. New append-only staff payment attestations are independently unverified, separate from simulated ledgers and never confer voting weight/payment rights. Corrections are full-source reversal records, not money refunds. Existing simulated treasury/rounds and V1-V4 published history remain intact. Chain models and old contract/source/evidence remain dormant historical material, not enabled product features. Switching FUNDICATE_MODE to near-testnet is rejected. No automatic restoration of these features or mainnet/hosted deployment is authorized.
+
+The branch replaces R28-R30 chain integration/observations with standalone isolation, external-record integrity and failure/concurrency recovery. R31-R36 retain analytics/privacy, templates, operational hardening, isolated fictional demo, fresh security/regression review and preservation, excluding real-chain demonstrations. Required checks add security and payment-records; archived chain/contract/testnet checks are no longer release gates by this explicit user-approved scope amendment. Remaining production limits must be reported honestly.
+
+
 This is the canonical delivery plan. **All work completed before this plan is Part 1/5**, including the earlier architecture/UI/analytics phases and the two funding-round capability phases. The remaining work is delivered in exactly four parts, numbered 2–5. Historical sub-phase numbers do not consume these four parts.
 
 The user saying **next** authorizes exactly one eligible part. Planning creates no authorization to run through the remaining parts automatically. If a part is unfinished, another next resumes it. Completing a part ends that execution cycle. After Part 5, next reports the completed sequence rather than creating a sixth part.

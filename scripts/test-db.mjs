@@ -16,6 +16,8 @@ if (
     "reputation",
     "release",
     "chain",
+    "payment-records",
+    "security",
   ].includes(mode)
 )
   throw new Error("Unknown test mode");
@@ -39,6 +41,8 @@ try {
     DATABASE_URL: testUrl.href,
     ALLOW_DEMO_SEED: "false",
     APP_ORIGIN: "http://127.0.0.1:3001",
+    HOSTNAME: "127.0.0.1",
+    PORT: "3001",
     TEMP: browserTemp,
     TMP: browserTemp,
     PLAYWRIGHT_BROWSERS_PATH:
@@ -51,18 +55,11 @@ try {
   );
   if (migrate.status !== 0) throw new Error("Test database migration failed");
   if (mode !== "integration") {
-    server = spawn(
-      process.execPath,
-      [
-        "node_modules/next/dist/bin/next",
-        "start",
-        "--hostname",
-        "127.0.0.1",
-        "--port",
-        "3001",
-      ],
-      { env, stdio: "inherit", windowsHide: true },
-    );
+    server = spawn(process.execPath, [".next/standalone/server.js"], {
+      env,
+      stdio: "inherit",
+      windowsHide: true,
+    });
     let ready = false;
     for (let i = 0; i < 60; i++) {
       try {
@@ -81,7 +78,10 @@ try {
   }
   const test = spawnSync(
     process.execPath,
-    ["node_modules/tsx/dist/cli.mjs", `tests/${mode === "release" ? "release-analytics" : mode}.ts`],
+    [
+      "node_modules/tsx/dist/cli.mjs",
+      `tests/${mode === "release" ? "release-analytics" : mode}.ts`,
+    ],
     { env, stdio: "inherit", windowsHide: true },
   );
   process.exitCode = test.status ?? 1;

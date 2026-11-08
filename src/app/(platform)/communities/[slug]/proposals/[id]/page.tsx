@@ -361,7 +361,7 @@ export default async function ProposalDetail({
                       proposalId: p.id,
                       action: "execute",
                     }}
-                    confirm={`Record a simulated payout of ${moneyFormat(p.amount, c.currency)}? No blockchain transaction will occur.`}
+                    confirm={`Record a simulated payout of ${moneyFormat(p.amount, c.currency)}? No real money will move.`}
                   >
                     Execute simulated payout
                   </ActionButton>

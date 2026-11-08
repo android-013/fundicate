@@ -42,7 +42,9 @@ export default function AuthLayout({
             </span>
           </div>
         </div>
-        <small>NEAR ecosystem project · local simulated treasury</small>
+        <small>
+          Community governance · transparent external payment records
+        </small>
       </section>
       <section className="auth-form-area">
         <Link href="/" className="back-link">

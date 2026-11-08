@@ -1,7 +1,7 @@
 <!-- delivery-status:start -->
 Current delivery: 4/5 parts complete. This is milestone count, not PDF feature coverage.
 
-State: in_progress. Next eligible part: 5. Revision: 156.
+State: needs_input. Next eligible part: 5. Revision: 198.
 
 | Part | Scope | Status |
 | --- | --- | --- |
@@ -9,7 +9,7 @@ State: in_progress. Next eligible part: 5. Revision: 156.
 | 2/5 | Funded rounds, accounting and governance foundation | complete |
 | 3/5 | Weighted governance, allocation policies and rejection veto | complete |
 | 4/5 | Complete election methods and participation-based reputation | complete |
-| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | in_progress |
+| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | needs_input |
 
 Active run: 72fba785-3bf0-4f38-a257-558a5455442f; part 5. Resume it before advancing.
 <!-- delivery-status:end -->

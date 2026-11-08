@@ -23,7 +23,7 @@ services:
     environment:
       NODE_ENV: production
       ALLOW_DEMO_SEED: "false"
-    command: ["node", "node_modules/prisma/build/index.js", "migrate", "deploy"]
+    command: ["node", "scripts/provision-runtime-role.mjs"]
     depends_on:
       db:
         condition: service_healthy
@@ -34,10 +34,14 @@ services:
       context: .
       target: runtime
     init: true
-    env_file: .local/deploy/compose.env
     environment:
       NODE_ENV: production
       ALLOW_DEMO_SEED: "false"
+      DATABASE_URL: ${RUNTIME_DATABASE_URL:?Regenerate deployment credentials with bootstrap}
+      APP_ORIGIN: ${APP_ORIGIN:?Configure the deployment origin}
+      FUNDICATE_MODE: standalone
+      DATABASE_ALLOW_INSECURE_INTERNAL: "true"
+      TRUSTED_CLIENT_IP_HEADER: ${TRUSTED_CLIENT_IP_HEADER:-}
     ports: ["127.0.0.1:3000:3000"]
     depends_on:
       db:
@@ -54,10 +58,14 @@ services:
       context: .
       target: tools
     init: true
-    env_file: .local/deploy/compose.env
     environment:
       NODE_ENV: production
       ALLOW_DEMO_SEED: "false"
+      DATABASE_URL: ${RUNTIME_DATABASE_URL:?Regenerate deployment credentials with bootstrap}
+      APP_ORIGIN: ${APP_ORIGIN:?Configure the deployment origin}
+      FUNDICATE_MODE: standalone
+      DATABASE_ALLOW_INSECURE_INTERNAL: "true"
+      MAINTENANCE_ACTOR_ID: ${MAINTENANCE_ACTOR_ID:-}
     command: ["node", "scripts/maintenance.mjs", "--once"]
     depends_on:
       db:

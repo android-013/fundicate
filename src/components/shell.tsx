@@ -62,7 +62,7 @@ export async function Shell({ children }: { children: ReactNode }) {
           <Link href="/analytics" className="protocol-sidebar-card">
             <span>
               <Boxes size={17} />
-              <span className="near-tag">NEAR ECOSYSTEM</span>
+              <span className="near-tag">COMMUNITY INSIGHTS</span>
             </span>
             <strong>
               Your network.

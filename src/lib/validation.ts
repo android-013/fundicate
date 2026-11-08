@@ -15,7 +15,7 @@ const positiveMoney = money.refine(
   "Amount must be greater than zero.",
 );
 const text = (min: number, max: number) => z.string().trim().min(min).max(max);
-export const registerSchema = z.object({
+export const registerSchema = z.strictObject({
   email: z
     .email()
     .max(200)
@@ -31,8 +31,11 @@ export const registerSchema = z.object({
   displayName: text(2, 80),
   password: z.string().min(12, "Use at least 12 characters.").max(128),
 });
-export const loginSchema = z.object({
-  email: z.email().transform((v) => v.toLowerCase()),
+export const loginSchema = z.strictObject({
+  email: z
+    .email()
+    .max(200)
+    .transform((v) => v.toLowerCase()),
   password: z.string().min(1).max(128),
 });
 export const communitySchema = z

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 156,
+  "revision": 198,
   "totalParts": 5,
   "completedParts": [
     1,
@@ -9,18 +9,89 @@
     4
   ],
   "nextPart": 5,
-  "status": "in_progress",
+  "status": "needs_input",
   "activeRun": {
     "id": "72fba785-3bf0-4f38-a257-558a5455442f",
     "part": 5,
     "startedAt": "2026-11-06T12:22:31.056Z",
-    "checks": {},
+    "checks": {
+      "build": {
+        "path": "workflow/evidence/part-05/build-d7a3d60a-f2e5-428a-9cdd-a891ff169936.json",
+        "hash": "600512cca3ff3449b12506b64f380ee0de914f17cfb8b3cf17593b7f654cb0a1"
+      },
+      "workflow-tests": {
+        "path": "workflow/evidence/part-05/workflow-tests-80420b49-7278-4091-8dfc-a5c2914f289c.json",
+        "hash": "4d50230f47a5c33e5416310cfb39a296ab04354c05606ab557845294a5d55cb8"
+      },
+      "unit": {
+        "path": "workflow/evidence/part-05/unit-58cb98de-d86e-41c4-b755-84fdd4a5aa92.json",
+        "hash": "f17137892f6df0fe62900121bc50dc137c24afede8a658be12035ec8fc775716"
+      },
+      "typecheck": {
+        "path": "workflow/evidence/part-05/typecheck-843869d7-168c-4138-9c98-445609a2b7af.json",
+        "hash": "98affa1e3a099bc8ec2d5fe7364b281802a9003953ecb2f4aaa3191a183eab47"
+      },
+      "lint": {
+        "path": "workflow/evidence/part-05/lint-400029fa-751c-48c1-a6f9-958b22649828.json",
+        "hash": "90acc43ddb0057190d54201d3c7ee8fa003646cf0e76a8cd20693a2c70f52a24"
+      },
+      "integration": {
+        "path": "workflow/evidence/part-05/integration-21c90e4b-fe8b-4ace-866e-e556cad1c6b3.json",
+        "hash": "22ce11ad601cdba43d780af2ae349cab08e3735d80676b9f8ac991ccb723a3d6"
+      },
+      "security": {
+        "path": "workflow/evidence/part-05/security-f9f3afd7-0245-4e79-af0b-f318c3b3d38c.json",
+        "hash": "3b5f587c9c9da61f9ba9ede1801e3eac0df6aa5efb3bbcfdf223b932201bd24d"
+      },
+      "payment-records": {
+        "path": "workflow/evidence/part-05/payment-records-1c0e13ad-d5e9-4e06-b34f-d8d4fd7d2957.json",
+        "hash": "e7ae658bab77a92509811edf0e465cd1cfa5458939237031c1180c2a392bcf67"
+      },
+      "http": {
+        "path": "workflow/evidence/part-05/http-834dbc8a-c7ed-476b-91a7-eddb363fead3.json",
+        "hash": "6e79d8e163a61aea3d8292d5c7e0c4113b4b7019b2fd193804609c3de220335c"
+      },
+      "rounds": {
+        "path": "workflow/evidence/part-05/rounds-0c926f49-1903-4c33-8553-0814ceed5f63.json",
+        "hash": "f8def95b08d95f83c7989225ebc062d231e4510e4b04539d148bfe499e171984"
+      },
+      "funds": {
+        "path": "workflow/evidence/part-05/funds-f60c828e-dafd-4f79-ac1a-778a4ca8cde0.json",
+        "hash": "16a94794b7c3236d5ca11df1f5d28464e6478f1f05746a3f168cf5b108acd6da"
+      },
+      "elections": {
+        "path": "workflow/evidence/part-05/elections-3f4d154e-f9bf-4b61-8a78-4ec046b345fa.json",
+        "hash": "bb94077ce87708984f1e919e273b24848e81e1faa2130117e13e31d582019aa1"
+      },
+      "reputation": {
+        "path": "workflow/evidence/part-05/reputation-fd2ee2ab-16ce-4dbb-a08b-cce193740506.json",
+        "hash": "8b249c5277a933970e1d9754197926d014b3b575b2e28282b1559596856ff2ea"
+      },
+      "release": {
+        "path": "workflow/evidence/part-05/release-d0fc18d8-c307-4895-952b-f47b38b15a98.json",
+        "hash": "076a44eab6d7c58daaddc93fbce86955250db519d2a50982c36df201d453e301"
+      }
+    },
     "acceptance": {},
-    "blockers": {},
+    "blockers": {
+      "container-database-security": {
+        "reason": "Public deployment release remains blocked: audited postgres:18-bookworm digest sha256:f1ea2a1a4fb7b68d4836be1fdcb8a6466a89b072158bf9d97663600538c294c5 has 75 HIGH/4 CRITICAL package observations (26 fixable) in Trivy0.76.2 on 7 November2026; inventory is not proof of app exploitability and minizip/zlib source-binary false positive is being separately classified. Preserve existing PostgreSQL18 volumes/distribution/collation compatibility. A same-major/same-distro patch and remaining-vendor-advisory assessment/rescan is required before public release. This does not block committing the user-requested audited standalone source; no hosted publication or clean-stack claim is made.",
+        "openedAt": "2026-11-07T15:56:55.352Z",
+        "resolvedAt": null
+      }
+    },
     "checkpoints": [
       {
         "at": "2026-11-06T12:53:50.463Z",
         "note": "Part 5 release integration active: standalone portable setup, isolated backup/restore (49-table real PostgreSQL snapshot), isolated 100-member/100000-BDT funded demo, templates/system analytics, native custody app and wallet ownership implemented; contract locked WASM build and 35 runtime tests passed by domain worker. Independent review identified idempotency/provenance/readiness/receipt-binding gaps, being repaired with targeted tests. Dependency install audit reports zero vulnerabilities. Real NEAR testnet wallet/funding and operations are not yet performed; user public-account question pending. No completion claimed."
+      },
+      {
+        "at": "2026-11-07T15:27:33.758Z",
+        "note": "User-approved standalone branch amendment recorded before acceptance: disable blockchain, preserve simulated history, add independently unverified append-only external payment register. Initial audit identified and repaired streamed body size, canonical auth quotas, redacted error logging, dormant route exposure, draft-source privacy and runtime DB owner coupling. Integration and current-source checks now begin; no completed release or hosted deployment claimed."
+      },
+      {
+        "at": "2026-11-07T16:19:15.881Z",
+        "note": "Release check failed twice at networkidle; isolated diagnostic confirmed rendered analytics heading/no runtime errors with pending CSV export prefetch streams. Replaced four Next CSV links with native download anchors and added no-prefetch/single-user-download assertions. Semantic report readiness now checks heading/source data; all accessibility and drill-down assertions retained. Final source rebuild/check receipts renewed after this fix; old failures preserved. Database-image release blocker remains."
       }
     ],
     "review": null,
@@ -824,7 +895,7 @@
     "5": {
       "number": 5,
       "title": "Verified NEAR testnet, integrated analytics and full-system audit",
-      "status": "in_progress"
+      "status": "needs_input"
     }
   },
   "requirements": {
@@ -943,5 +1014,5 @@
       "status": "pending"
     }
   },
-  "updatedAt": "2026-11-06T12:53:50.466Z"
+  "updatedAt": "2026-11-07T16:23:56.317Z"
 }

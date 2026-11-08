@@ -1,3 +1,7 @@
+## Standalone branch amendment (7 November 2026)
+
+The user approved a separate standalone governance and external-payment-tracking product on this branch. See workflow/DECISIONS.md. This supersedes the NEAR-specific Part 5 gates below only on this branch. Preserve all history and keep the active run; do not describe omitted testnet work as verified.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

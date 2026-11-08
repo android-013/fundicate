@@ -38,6 +38,9 @@ const CHECKS = {
   reputation: [["scripts/test-db.mjs", "reputation"]],
   release: [["scripts/test-db.mjs", "release"]],
   chain: [["scripts/test-db.mjs", "chain"]],
+  "payment-records": [["scripts/test-db.mjs", "payment-records"]],
+  security: [["scripts/test-db.mjs", "security"]],
+  "secret-scan": [["scripts/security-scan.mjs"]],
   recovery: [["scripts/recovery-exercise.mjs", "--isolated"]],
   "large-demo": [["scripts/demo-large.mjs", "--isolated"]],
   contract: [["contracts/near-treasury/check.mjs"]],
@@ -226,6 +229,7 @@ export function fingerprint(root) {
     "tests",
     "docs/algorithms",
     "public/rules",
+    ".github",
     "contracts",
   ])
     walk(join(root, dir));
@@ -248,6 +252,7 @@ export function fingerprint(root) {
     ".dockerignore",
     ".env.example",
     "docs/PRODUCTION.md",
+    "docs/STANDALONE.md",
     "docs/OPERATIONS.md",
     "docs/NEAR-CONTRACT.md",
     "docs/INTEGRATIONS.md",

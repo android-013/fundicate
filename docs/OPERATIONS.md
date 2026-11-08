@@ -1,3 +1,7 @@
+**Native packaging:** copied .env files are removed from .next/standalone by the build. Inject runtime configuration externally, for example `node --env-file=/private/path/fundicate.env .next/standalone/server.js`. Never distribute your source .env.
+
+**Standalone branch, 7 November 2026:** This branch is community governance plus staff-recorded external-payment tracking. Blockchain execution is disabled; older NEAR instructions below are historical and cannot enable it. See [the standalone guide](STANDALONE.md). Existing treasury balances remain simulated.
+
 # Operating Fundicate
 
 Fundicate runs as a Node.js service backed by PostgreSQL. `FUNDICATE_MODE=standalone` is the default and requires no blockchain account, RPC or signing key. Its existing treasury and funded rounds use clearly labelled local simulation. Choosing `near-testnet` adds a separate native-NEAR provider; it does not reinterpret fiat balances or rewrite old receipts. Mainnet is disabled.

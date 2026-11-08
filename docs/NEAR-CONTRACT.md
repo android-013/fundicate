@@ -1,3 +1,5 @@
+**Standalone branch, 7 November 2026:** This branch is community governance plus staff-recorded external-payment tracking. Blockchain execution is disabled; older NEAR instructions below are historical and cannot enable it. See [the standalone guide](STANDALONE.md). Existing treasury balances remain simulated.
+
 # Native NEAR testnet treasury contract v1
 
 `contracts/near-treasury` is a separate native-asset custody contract. It does not convert simulated BDT/USD/EUR into NEAR and never gives an old fiat round retroactive payment authority. The application explicitly opts a new native funding pool into the testnet provider and binds its governance decision and recipient settings before collecting native funds.

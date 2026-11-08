@@ -3,7 +3,7 @@ import { promisify } from "node:util";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "./db";
-import { ensure } from "./errors";
+import { AppError, ensure } from "./errors";
 import { loginSchema, registerSchema } from "./validation";
 const derive = promisify(scrypt);
 export const sessionCookie = "fundicate_session";
@@ -24,13 +24,14 @@ export async function verifyPassword(password: string, stored: string) {
 export async function rateLimit(key: string, limit: number, seconds = 900) {
   const keyHash = hashToken(key);
   const rows = await db.$queryRaw<
-    { count: number }[]
-  >`INSERT INTO "RateLimit" ("key","count","expiresAt") VALUES (${keyHash},1,NOW() + ${seconds} * INTERVAL '1 second') ON CONFLICT ("key") DO UPDATE SET "count" = CASE WHEN "RateLimit"."expiresAt" < NOW() THEN 1 ELSE "RateLimit"."count" + 1 END, "expiresAt" = CASE WHEN "RateLimit"."expiresAt" < NOW() THEN NOW() + ${seconds} * INTERVAL '1 second' ELSE "RateLimit"."expiresAt" END RETURNING "count"`;
-  ensure(
-    rows[0].count <= limit,
-    "Too many attempts. Please try again later.",
-    429,
-  );
+    { count: number; retryAfter: number }[]
+  >`INSERT INTO "RateLimit" ("key","count","expiresAt") VALUES (${keyHash},1,NOW() + ${seconds} * INTERVAL '1 second') ON CONFLICT ("key") DO UPDATE SET "count" = CASE WHEN "RateLimit"."expiresAt" < NOW() THEN 1 ELSE "RateLimit"."count" + 1 END, "expiresAt" = CASE WHEN "RateLimit"."expiresAt" < NOW() THEN NOW() + ${seconds} * INTERVAL '1 second' ELSE "RateLimit"."expiresAt" END RETURNING "count", GREATEST(1, CEIL(EXTRACT(EPOCH FROM ("expiresAt" - NOW()))))::integer AS "retryAfter"`;
+  if (rows[0].count > limit)
+    throw new AppError(
+      "Too many attempts. Please try again later.",
+      429,
+      rows[0].retryAfter,
+    );
 }
 export async function register(input: unknown) {
   const data = registerSchema.parse(input);
@@ -59,7 +60,12 @@ export async function createSession(userId: string) {
   const token = randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 7 * 86400000);
   await db.session.create({
-    data: { userId, tokenHash: hashToken(token), expiresAt, reauthenticatedAt: new Date() },
+    data: {
+      userId,
+      tokenHash: hashToken(token),
+      expiresAt,
+      reauthenticatedAt: new Date(),
+    },
   });
   return { token, expiresAt };
 }

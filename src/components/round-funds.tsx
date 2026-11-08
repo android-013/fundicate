@@ -58,7 +58,7 @@ export function RoundFunds({
       <p className="muted small-text">
         Local simulation · {s.currency} · funds are segregated from the
         community’s spendable treasury. These are recorded local amounts, with
-        no blockchain transaction or real wallet transfer.
+        no collection, custody or transfer of real money.
       </p>
       <p className="muted small-text">
         {v3
@@ -116,7 +116,7 @@ export function RoundFunds({
             operation="round-contribute"
             defaults={base}
             submit="Record local contribution"
-            confirm="Record this simulated contribution in the dedicated round pool? No real wallet transfer occurs."
+            confirm="Record this simulated contribution in the dedicated round pool? No real money moves."
           >
             <Field
               name="amount"

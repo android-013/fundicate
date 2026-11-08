@@ -13,7 +13,7 @@ export function CommunityNav({ slug }: { slug: string }) {
         { p: "/rounds", l: "Funding rounds" },
         { p: "/reputation", l: "Reputation" },
         { p: "/templates", l: "Templates" },
-        { p: "/chain", l: "NEAR testnet" },
+        { p: "/payments", l: "Payment records" },
         { p: "/governance", l: "Governance" },
         { p: "/activity", l: "Activity" },
       ].map((t) => {

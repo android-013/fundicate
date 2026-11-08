@@ -1,9 +1,14 @@
 # syntax=docker/dockerfile:1
-FROM node:22.22.2-bookworm-slim AS dependencies
+FROM node:22.23.4-alpine@sha256:0e1754758c2df4cfa3e68d59e2e1b7374bb7fd9ea6328eaaacf15cc934af8202 AS base
+# Prisma's generation/migration engine requires OpenSSL on musl Linux.
+RUN apk add --no-cache openssl
+
+FROM base AS dependencies
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY package.json package-lock.json ./
-RUN npm ci
+# The bundled npm CLI has its own vulnerable graph, outside package-lock.json.
+RUN npm install --global npm@12.2.2 && npm ci --legacy-peer-deps
 
 FROM dependencies AS builder
 COPY . .
@@ -14,11 +19,17 @@ RUN npm run build
 
 # Operator-only image: migrations, maintenance and diagnostics. Not exposed as a server.
 FROM builder AS tools
+RUN apk upgrade --no-cache zlib
 ENV NODE_ENV=production
 USER node
 CMD ["node", "scripts/doctor.mjs"]
 
-FROM node:22.22.2-bookworm-slim AS runtime
+FROM base AS runtime
+# The server never invokes package managers. Keep their CLI-only dependency
+# graphs out of the distributed web image while preserving /app/node_modules.
+RUN apk upgrade --no-cache zlib && \
+    rm -rf /usr/local/lib/node_modules /opt/yarn-* && \
+    rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=builder --chown=node:node /app/.next/standalone ./

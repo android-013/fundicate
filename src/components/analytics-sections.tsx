@@ -726,8 +726,8 @@ export function AnalyticsSections({
               <h3>Recorded, never invented.</h3>
               <p>
                 Every chart comes from application records. Empty periods remain
-                empty. Local simulation never becomes a claimed blockchain
-                transaction.
+                empty. Simulated treasury activity remains separate from
+                staff-recorded external payments.
               </p>
             </div>
           </div>

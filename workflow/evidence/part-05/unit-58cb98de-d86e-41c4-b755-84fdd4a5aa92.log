@@ -1,0 +1,10 @@
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/unit-tests.mjs"]
+
+ RUN  v4.1.12 D:/Projects/fundicate
+
+
+ Test Files  16 passed (16)
+      Tests  194 passed (194)
+   Start at  21:56:34
+   Duration  9.74s (transform 7.31s, setup 0ms, import 19.64s, tests 3.21s, environment 9ms)
+

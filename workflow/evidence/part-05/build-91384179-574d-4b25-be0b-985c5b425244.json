@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "build",
+  "token": "91384179-574d-4b25-be0b-985c5b425244",
+  "commands": [
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/prisma/build/index.js",
+      "generate"
+    ],
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/build.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-07T15:40:26.964Z",
+  "finishedAt": "2026-11-07T15:42:49.015Z",
+  "exitCode": 0,
+  "sourceFingerprint": "4f718cb216438bddf3350b37c9a4e10fe1c0d5850aaf162106cab3b573be6228",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/build-91384179-574d-4b25-be0b-985c5b425244.log",
+  "logHash": "b701baa4b20e5d605978e5525a8929032654fd0e30e2ffa9986fa191d9ba0c9d"
+}

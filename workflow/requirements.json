@@ -339,42 +339,40 @@
     },
     {
       "id": "R28",
-      "title": "Secure wallet ownership, explicit testnet assets and contract integration",
+      "title": "Standalone isolation from blockchain and safe account actions",
       "part": 5,
-      "source": "user-confirmed",
+      "source": "user-approved-standalone-amendment-2026-11-07",
       "mandatory": true,
       "initialStatus": "pending",
       "acceptance": [
-        "Link wallets with expiring domain/network-bound single-use signed challenges and replay protection.",
-        "Deploy/test a treasury contract with scoped authorization, operation nonces and immutable allocation references.",
-        "Keep native NEAR precision and asset identity distinct from USD/BDT/EUR; protect keys and disclose the governance/custody trust model.",
-        "Contract-level tests reject wrong signer/round/asset/recipient, over-allocation, duplicate nonce, redirected refunds and payout-before-veto bypasses."
+        "Run without wallets, RPC, signing keys or blockchain SDK in browser assets. Retire all wallet/chain routes and reject blockchain runtime modes; preserve historical data without reinterpreting it.",
+        "Preserve authenticated governance, role separation and recent reauthentication for sensitive authority and payment-record actions."
       ]
     },
     {
       "id": "R29",
-      "title": "Real NEAR testnet deposit, payout and refund finality proof",
+      "title": "Transparent externally handled payment records",
       "part": 5,
-      "source": "user-confirmed",
+      "source": "user-approved-standalone-amendment-2026-11-07",
       "mandatory": true,
       "initialStatus": "pending",
       "acceptance": [
-        "Obtain genuine wallet approvals/funding and execute a testnet deposit, payout and refund through the app/contract.",
-        "Independently query RPC at FINAL and verify successful receipt outcomes plus signer, receiver, actions, amount, asset, network and operation identity.",
-        "A compiled adapter, mock receipt, transaction hash alone or unperformed external action cannot satisfy completion."
+        "Staff may record exact external contribution, payout and refund attestations with bounded reference, note, optional HTTPS evidence and occurrence date; active members may inspect scoped history and paginated CSV.",
+        "Entries are independently unverified; no transfer occurs, no simulated funds become real balances and no voting power or payout right is granted.",
+        "Append-only records, unique community references and full-source corrections preserve originals; SQL constraints reject wrong scope/currency/recorder and invalid or duplicate reversals."
       ]
     },
     {
       "id": "R30",
-      "title": "Live outbox reconciliation, failure handling and restart recovery",
+      "title": "Standalone failure, replay and concurrency integrity",
       "part": 5,
-      "source": "engineering-and-user",
+      "source": "user-approved-standalone-amendment-2026-11-07",
       "mandatory": true,
       "initialStatus": "pending",
       "acceptance": [
-        "Lost responses, RPC failures, worker restart, duplicate callbacks and pending operations reconcile without duplicate external transfers.",
-        "A final failure safely releases/resolves reservations; an unknown status does not trigger an unsafe refund or retry.",
-        "Dispatch live execution separately from the global legacy simulation adapter; account for gas/storage through a separate operating reserve and reconcile custody against principal liabilities."
+        "Concurrent and repeated external-record requests have one effect and bind the full immutable payload and recording actor.",
+        "Invalid, unauthorized, cross-community and failed operations leave records/ledgers unchanged; existing simulated recovery and settlement gates remain intact.",
+        "Unknown historical chain operations are preserved as dormant history and are never retried or interpreted as external-payment records."
       ]
     },
     {
@@ -385,7 +383,7 @@
       "mandatory": true,
       "initialStatus": "pending",
       "acceptance": [
-        "Extend the existing simple overview/drill-down model to round funds, weighted elections, allocations, vetoes, refunds, ratings and chain observations.",
+        "Extend the existing simple overview/drill-down model to round funds, weighted elections, allocations, vetoes, refunds, ratings and separately labelled external-payment records.",
         "Preserve saved views/customization and add scoped source links/CSV; hidden ballots never leak through reports, search, aggregates or exports.",
         "Reconcile each monetary/currency/asset group without assumed FX or fabricated historic counts."
       ]
@@ -417,14 +415,14 @@
     },
     {
       "id": "R34",
-      "title": "Reproducible large fictional demo and separate real-chain demonstration",
+      "title": "Reproducible large fictional demo and separate external-payment demonstration",
       "part": 5,
       "source": "structured-demo-and-user",
       "mandatory": true,
       "initialStatus": "pending",
       "acceptance": [
         "Provide an opt-in isolated 100-member, 100,000-BDT, three-scheme demonstration showing sealed voting, allocation and refund paths.",
-        "Demonstrate real testnet assets separately without pretending BDT values are NEAR or resetting the user's demo database."
+        "Demonstrate external-payment attestations separately without moving money, pretending BDT values are NEAR or resetting the demo database."
       ]
     },
     {
@@ -435,7 +433,7 @@
       "mandatory": true,
       "initialStatus": "pending",
       "acceptance": [
-        "Every mandatory requirement has implementation and fresh check/review evidence, including actual NEAR finality artifacts.",
+        "Every mandatory requirement has implementation and fresh check/review evidence, including security and external-payment-record evidence under the approved standalone scope.",
         "Run migration, money/privacy/authorization, HTTP, browser, accessibility, production-build and independent-review gates against the final source snapshot.",
         "Do not convert deferred, unverified or externally blocked mandatory work into complete status."
       ]

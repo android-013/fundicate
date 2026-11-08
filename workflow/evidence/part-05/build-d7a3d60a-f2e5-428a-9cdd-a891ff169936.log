@@ -1,0 +1,129 @@
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","node_modules/prisma/build/index.js","generate"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.10.1) to .\node_modules\@prisma\client in 2.94s
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","node_modules/typescript/bin/tsc","--noEmit"]
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/build.mjs"]
+▲ Next.js 16.4.3 (webpack)
+- Environments: .env
+✓ Running next.config.ts took 3.9s
+- Experiments (use with caution):
+  · cpus: 1
+  · staticGenerationMaxConcurrency: 1
+  ⨯ webpackBuildWorker
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 41s
+  Collecting page data using 1 worker ...
+  Finalizing page optimization ...
+  Collecting build traces ...
+  Build ran with "compile" mode, to finalize the build run either "generate" or "generate-env" mode as well
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /analytics/[[...path]]
+├ ƒ /analytics/system
+├ ƒ /api/[operation]
+├ ƒ /api/analytics/export
+├ ƒ /api/analytics/system/export
+├ ƒ /api/health
+├ ƒ /api/payments/export
+├ ƒ /communities/[slug]
+├ ƒ /communities/[slug]/activity
+├ ƒ /communities/[slug]/chain
+├ ƒ /communities/[slug]/governance
+├ ƒ /communities/[slug]/members
+├ ƒ /communities/[slug]/payments
+├ ƒ /communities/[slug]/proposals
+├ ƒ /communities/[slug]/proposals/[id]
+├ ƒ /communities/[slug]/proposals/new
+├ ƒ /communities/[slug]/reputation
+├ ƒ /communities/[slug]/rounds
+├ ƒ /communities/[slug]/rounds/[roundId]
+├ ƒ /communities/[slug]/rounds/new
+├ ƒ /communities/[slug]/templates
+├ ƒ /communities/[slug]/treasury
+├ ƒ /communities/new
+├ ƒ /dashboard
+├ ƒ /explore
+├ ƒ /icon.svg
+├ ƒ /login
+├ ƒ /register
+├ ƒ /rules/fundicate-methods-v1
+├ ƒ /settings/profile
+├ ƒ /settings/security
+└ ƒ /settings/wallet
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
+▲ Next.js 16.4.3 (webpack)
+- Environments: .env
+✓ Running next.config.ts took 94ms
+- Experiments (use with caution):
+  · cpus: 1
+  · staticGenerationMaxConcurrency: 1
+  ⨯ webpackBuildWorker
+
+  Creating an optimized production build ...
+  Collecting page data using 1 worker ...
+  Inlining static env ...
+  Generating static pages using 1 worker (0/10) ...
+  Generating static pages using 1 worker (2/10) 
+  Generating static pages using 1 worker (4/10) 
+  Generating static pages using 1 worker (7/10) 
+✓ Generating static pages using 1 worker (10/10) in 482ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /analytics/[[...path]]
+├ ƒ /analytics/system
+├ ƒ /api/[operation]
+├ ƒ /api/analytics/export
+├ ƒ /api/analytics/system/export
+├ ƒ /api/health
+├ ƒ /api/payments/export
+├ ƒ /communities/[slug]
+├ ƒ /communities/[slug]/activity
+├ ƒ /communities/[slug]/chain
+├ ƒ /communities/[slug]/governance
+├ ƒ /communities/[slug]/members
+├ ƒ /communities/[slug]/payments
+├ ƒ /communities/[slug]/proposals
+├ ƒ /communities/[slug]/proposals/[id]
+├ ƒ /communities/[slug]/proposals/new
+├ ƒ /communities/[slug]/reputation
+├ ƒ /communities/[slug]/rounds
+├ ƒ /communities/[slug]/rounds/[roundId]
+├ ƒ /communities/[slug]/rounds/new
+├ ƒ /communities/[slug]/templates
+├ ƒ /communities/[slug]/treasury
+├ ƒ /communities/new
+├ ƒ /dashboard
+├ ƒ /explore
+├ ○ /icon.svg
+├ ○ /login
+├ ○ /register
+├ ƒ /rules/fundicate-methods-v1
+├ ƒ /settings/profile
+├ ƒ /settings/security
+└ ƒ /settings/wallet
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Removed 1 copied environment files from generated standalone output.

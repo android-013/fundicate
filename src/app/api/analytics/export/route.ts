@@ -76,7 +76,16 @@ export async function GET(request: NextRequest) {
               ? "Invalid report filters."
               : "The export could not be generated.",
       },
-      { status, headers: { "Cache-Control": "no-store" } },
+      {
+        status,
+        headers: {
+          "Cache-Control": "private, no-store",
+          Vary: "Cookie",
+          ...(error instanceof AppError && error.retryAfter
+            ? { "Retry-After": String(error.retryAfter) }
+            : {}),
+        },
+      },
     );
   }
 }

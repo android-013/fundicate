@@ -105,6 +105,8 @@ model User {
   walletLinks WalletLink[]
   chainVaults ChainVault[]
   chainOperations ChainOperation[]
+  externalPaymentsRecorded ExternalPaymentRecord[] @relation("PaymentRecorder")
+  externalPaymentsReceived ExternalPaymentRecord[] @relation("PaymentCounterparty")
 }
 model Session {
   id String @id @default(uuid()) @db.Uuid
@@ -144,6 +146,7 @@ model Community {
   reputationReviews ReputationReview[]
   roundTemplates RoundTemplate[]
   chainVaults ChainVault[]
+  externalPaymentRecords ExternalPaymentRecord[]
   @@index([createdAt])
 }
 model GovernancePolicy {
@@ -511,6 +514,7 @@ model FundingRound {
   templateRevisionId String? @db.Uuid
   templateRevision RoundTemplateRevision? @relation(fields:[templateRevisionId],references:[id],onDelete:Restrict)
   chainVaults ChainVault[]
+  externalPaymentRecords ExternalPaymentRecord[]
   @@index([communityId,createdAt])
 }
 
@@ -826,4 +830,30 @@ model RoundExecutionAttempt {
   error String?
   createdAt DateTime @default(now())
   @@unique([operationId,attempt])
+}
+
+// Staff attestations about external payments; never a custody or voting-power source.
+model ExternalPaymentRecord {
+  id String @id @default(uuid()) @db.Uuid
+  communityId String @db.Uuid
+  roundId String? @db.Uuid
+  recordedById String @db.Uuid
+  counterpartyId String? @db.Uuid
+  kind String
+  amount BigInt
+  currency String
+  reference String @db.VarChar(120)
+  note String @db.VarChar(2000)
+  evidenceUrl String? @db.VarChar(2048)
+  occurredAt DateTime
+  createdAt DateTime @default(now())
+  reversesId String? @unique @db.Uuid
+  community Community @relation(fields:[communityId],references:[id],onDelete:Restrict)
+  round FundingRound? @relation(fields:[roundId],references:[id],onDelete:Restrict)
+  recordedBy User @relation("PaymentRecorder",fields:[recordedById],references:[id],onDelete:Restrict)
+  counterparty User? @relation("PaymentCounterparty",fields:[counterpartyId],references:[id],onDelete:Restrict)
+  reverses ExternalPaymentRecord? @relation("PaymentReversal",fields:[reversesId],references:[id],onDelete:Restrict)
+  reversal ExternalPaymentRecord? @relation("PaymentReversal")
+  @@unique([communityId,reference])
+  @@index([communityId,createdAt])
 }

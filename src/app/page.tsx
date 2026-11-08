@@ -36,7 +36,7 @@ export default function Home() {
           <div className="network-hero-copy">
             <div className="hero-pill">
               <span className="live-dot" />
-              PEOPLE. CONSENSUS. POSSIBILITY.<span>NEAR ECOSYSTEM ↗</span>
+              PEOPLE. CONSENSUS. POSSIBILITY.<span>YOUR COMMUNITY ↗</span>
             </div>
             <h1>
               A network of people.
@@ -44,7 +44,7 @@ export default function Home() {
               <span>A world of possibility.</span>
             </h1>
             <p>
-              Connect with a shared purpose. Fund the ideas you believe in. Give
+              Connect with a shared purpose. Plan the ideas you believe in. Give
               every voice a part in what comes next.
             </p>
             <div className="hero-actions">
@@ -111,9 +111,9 @@ export default function Home() {
             <span>Transparent intelligence</span>
           </div>
           <span className="simulation-disclosure">
-            Local MVP
+            Shared decisions
             <br />
-            <strong>Simulated treasury</strong>
+            <strong>Transparent fund records</strong>
           </span>
         </div>
         <section className="network-how" id="how-it-works">
@@ -148,7 +148,7 @@ export default function Home() {
                 n: "03",
                 icon: Workflow,
                 title: "Make every movement visible.",
-                text: "Follow pooled resources from contributions to approved allocations and separately recorded simulated payouts.",
+                text: "Track external contributions, payouts and refunds with staff-recorded evidence. Keep practice treasury activity separate.",
               },
             ].map((item) => (
               <article key={item.n}>
@@ -253,8 +253,8 @@ export default function Home() {
             Start your collective <ArrowUpRight size={19} />
           </Link>
           <p>
-            Local hackathon MVP · all funds simulated · real NEAR integration is
-            future work
+            Community governance and external payment records. Fundicate does
+            not collect, hold or transfer money.
           </p>
         </section>
       </main>

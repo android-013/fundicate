@@ -472,7 +472,7 @@ export function ProposalForm({
           label="Recipient or project account label"
           name="recipient"
           placeholder="Campus garden project"
-          help="A local label for the simulated payment. No wallet transfer occurs."
+          help="A local label for the simulated payment. No real money moves."
         />
       )}
       {type === "REMOVAL" && (

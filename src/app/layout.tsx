@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     template: "%s · Fundicate",
   },
   description:
-    "A shared home for community funding, fair decisions, and transparent treasuries. Local hackathon demo with simulated funds.",
+    "Community governance, fair decisions and transparent external-payment records. Payment tracking stays separate from simulated funding tools.",
 };
 export default function RootLayout({
   children,

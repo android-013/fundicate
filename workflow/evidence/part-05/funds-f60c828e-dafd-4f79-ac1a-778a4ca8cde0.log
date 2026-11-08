@@ -1,0 +1,104 @@
+COMMAND ["D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","funds"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794067275291_34472", schema "public" at "127.0.0.1:54329"
+
+15 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 38ms
+PASS STAFF, MEMBERS and EVERYONE schemes enforce roles and funded categories on the server
+(node:19656) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS V1 remains decision-only and cannot gain payment rights
+PASS new funding rejects unsupported settings, asset overrides and invalid cutoff/expiry bounds
+PASS draft funding metadata is private and published rules/assets cannot be rewritten
+PASS contributions enforce active ownership, first-deposit minimum, cumulative cap and positive top-ups
+PASS concurrent duplicate deposits have one effect and late replay preserves the original receipt
+(node:16272) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS a complete FPTP funded round caps its winner and refunds exact unused principal
+PASS held round money is physically absent from legacy spendable TREASURY accounts
+PASS unpayable winning recipients return the complete original pool
+PASS expiry refunds a decided but still unprepared winning round
+PASS failed targets queue full refunds without giving the election payment authority
+PASS empty and rejected-scheme rounds refund every original contribution
+PASS selection ties and missing quorum refund the entire pool without arbitrary winners
+PASS zero-received failed targets close safely without zero-value operations
+PASS an original contributor recovers expired unresolved funds after leaving, with no redirection
+PASS a failed local execution durably records failure and retries the same immutable operation once
+PASS database integrity blocks source changes, invalid balances and rewrites of receipts, operations and attempts
+(node:23556) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS funding HTTP requires authentication, same origin, strict payloads, active membership and unique keys
+PASS strict creation requires the founder's own declaration, introduction and matching answers
+PASS strict founder bootstrap records actual pledge and answers without inventing a ballot or funds
+PASS legacy defaults preserve unknown founder declarations and avoid fabricated historical applications
+PASS unknown legacy declarations are prospective, minimum-bound, immutable and idempotent
+PASS strict admission denies both unilateral staff decisions and stores the actual approved pledge
+PASS database guards preserve profile and declarations and require honest strict activation
+PASS strict governance rejects REVIEW changes, emergency voter suspension and published ballot cancellation
+PASS strict removal remains available to ordinary members when other member submissions are disabled
+PASS a member facing an open removal cannot become the published administrator successor
+PASS published strict succession freezes nominee and incumbent authority while allowing member control
+PASS exact two-thirds member approval atomically removes the administrator and installs the published successor
+PASS legacy REVIEW, emergency suspension and direct authority transfer remain available
+PASS returning strict members retain their original declaration while the new application meets the current minimum
+PASS 8 funded-round WCAG A/AA scans; no violations.
+PASS funded round UI supports real contributions, scoped receipts, settlement details and responsive accessibility
+PASS 32 funded-round and governance integrity, HTTP, browser and recovery checks.

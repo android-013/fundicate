@@ -1,0 +1,23 @@
+name: Standalone security checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://test:placeholder@127.0.0.1:5432/fundicate
+      APP_ORIGIN: http://127.0.0.1:3000
+      FUNDICATE_MODE: standalone
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx prisma generate
+      - run: npm run audit:dependencies
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run lint

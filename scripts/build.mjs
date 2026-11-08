@@ -5,9 +5,11 @@ import {
   existsSync,
   lstatSync,
   copyFileSync,
+  cpSync,
 } from "node:fs";
 import { resolve, relative, dirname, basename, join } from "node:path";
 import { spawnSync } from "node:child_process";
+import { sanitizeStandaloneEnvironment } from "./build-artifacts.mjs";
 const buildTemp = resolve(".local/build-temp");
 mkdirSync(buildTemp, { recursive: true });
 const projectRoot = resolve(".");
@@ -89,3 +91,20 @@ else {
     process.exitCode = run("generate");
   }
 }
+// Next traces .env files into native standalone output. Runtime secrets must be
+// supplied externally, not packaged with the distributable (even a failed build).
+if (!process.exitCode) {
+  // Native deployments need these assets beside server.js; Docker uses this
+  // same complete package. Runtime configuration is injected separately.
+  cpSync(resolve("public"), join(buildOutput, "standalone/public"), {
+    recursive: true,
+  });
+  cpSync(
+    join(buildOutput, "static"),
+    join(buildOutput, "standalone/.next/static"),
+    { recursive: true },
+  );
+}
+console.log(
+  `Removed ${sanitizeStandaloneEnvironment()} copied environment files from generated standalone output.`,
+);

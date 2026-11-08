@@ -1,3 +1,7 @@
+# Standalone branch dependencies
+
+User-approved scope on 7 November 2026 removes wallets, testnet funding/signatures, RPC and contract deployment from this branch. No external payment provider is used. Public hosting requires explicit deployment authorization, TLS/reverse-proxy configuration, least-privilege PostgreSQL credentials and verified backups. No hosting is performed by this task. The historical dependency register follows for provenance and does not enable chain execution.
+
 # External dependencies and unblock actions
 
 Planning is ready. Parts 2–4 are designed to run locally with the installed stack and explicitly simulated funds. Part 5's user-confirmed testnet gate needs real external actions. Track each dependency when discovered and in active-run blockers; do not pre-mark an unattempted dependency as a failed implementation.

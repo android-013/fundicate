@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "build",
+  "token": "ded18b16-2a07-4804-9337-541d1beb257a",
+  "commands": [
+    [
+      "D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "node_modules/prisma/build/index.js",
+      "generate"
+    ],
+    [
+      "D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    [
+      "D:\\Projects\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/build.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-07T15:50:06.986Z",
+  "finishedAt": "2026-11-07T15:54:57.848Z",
+  "exitCode": 0,
+  "sourceFingerprint": "151be79ea17cf11909c78e8996066d5d1d1af6459712d981307d5d74afccf2fc",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/build-ded18b16-2a07-4804-9337-541d1beb257a.log",
+  "logHash": "a08521abbf32e7b0b6674ff40cf7b3f8bf1af0778ff26be8cd997b3cfef0b33d"
+}

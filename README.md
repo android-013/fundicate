@@ -1,6 +1,8 @@
+**Standalone branch, 7 November 2026:** This branch is community governance plus staff-recorded external-payment tracking. Blockchain execution is disabled; older NEAR instructions below are historical and cannot enable it. See [the standalone guide](docs/STANDALONE.md). Existing treasury balances remain simulated.
+
 # Fundicate
 
-**Fund together. Decide together.** A functional local social-money governance app for the NEAR ecosystem hackathon brief. All treasury activity is explicitly simulated; no real money or blockchain transactions occur.
+**Fund together. Decide together.** A standalone community-governance application with transparent external-payment records. All treasury activity is explicitly simulated; no real money or blockchain transactions occur.
 
 The user-directed [five-part delivery plan](docs/MASTER-PLAN.md) treats **all work before that plan as Part 1/5**. Each fresh **next** request runs one eligible part through the saved agent/verification loop, resuming an unfinished part first. Use `npm run progress -- status` for current state; see [the workflow contract](workflow/FORMAT.md). Final Part 5 completion requires the user's confirmed real NEAR testnet verification.
 
@@ -12,7 +14,7 @@ The community **Reputation** tab adds participation-qualified 1–5-star written
 
 ## Run locally on this Windows computer
 
-Requirements: Node.js 22.12+ with npm, and PostgreSQL binaries. PostgreSQL 18 is already installed on this computer. No hosted service, wallet, OAuth provider, or blockchain credential is needed.
+Requirements: Node.js 22.23.4+, 24.22.1+ or 26.12.1+ on those supported release lines with npm, and PostgreSQL binaries. PostgreSQL 18 is already installed on this computer. No hosted service, wallet, OAuth provider, or blockchain credential is needed.
 
 ```powershell
 cd 'C:\Users\Refat\Documents\git web\Startup\fundicate'

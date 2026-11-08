@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { ZodError, z } from "zod";
@@ -21,10 +22,20 @@ import {
 import { castRoundVetoVote, closeRoundVeto } from "@/lib/rounds-v3";
 import * as service from "@/lib/service";
 import * as reputation from "@/lib/reputation";
-import * as wallet from "@/lib/wallet";
-import * as chain from "@/lib/chain-service";
+import * as security from "@/lib/session-security";
+import * as payments from "@/lib/payment-records";
+import {
+  readJsonBody,
+  requestPolicy,
+  trustedClientIp,
+} from "@/lib/http-security";
 import * as templates from "@/lib/round-templates";
-import { profileSchema, uuid } from "@/lib/validation";
+import {
+  loginSchema,
+  registerSchema,
+  profileSchema,
+  uuid,
+} from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
 import {
   createFundingRound,
@@ -40,6 +51,12 @@ export async function POST(
   req: NextRequest,
   context: { params: Promise<{ operation: string }> },
 ) {
+  const requestId = randomUUID();
+  const privateHeaders = {
+    "Cache-Control": "private, no-store",
+    Vary: "Cookie",
+    "X-Request-Id": requestId,
+  };
   try {
     const origin = process.env.APP_ORIGIN ?? "http://127.0.0.1:3000";
     ensure(
@@ -47,41 +64,51 @@ export async function POST(
       "Request origin is not allowed.",
       403,
     );
-    ensure(
-      req.headers.get("content-type")?.startsWith("application/json"),
-      "Use a JSON request.",
-      415,
-    );
-    ensure(
-      Number(req.headers.get("content-length") ?? 0) <= 250000,
-      "Request too large.",
-      413,
-    );
-    const raw = await req.text();
-    ensure(raw.length <= 250000, "Request too large.", 413);
-    let body: unknown;
-    try {
-      body = JSON.parse(raw);
-    } catch {
-      throw new AppError("Invalid JSON.");
-    }
     const { operation } = await context.params;
+    ensure(
+      !operation.startsWith("wallet-") && !operation.startsWith("chain-"),
+      "Action not found.",
+      404,
+    );
+    const body = await readJsonBody(req);
     let result: unknown;
     if (operation === "login" || operation === "register") {
-      // No untrusted forwarding header: use a deployment-provided trusted client IP when adding a reverse proxy.
-      await rateLimit("auth:global", 1000, 900);
-      const email = z
-        .object({ email: z.string().max(200) })
-        .parse(body)
-        .email.toLowerCase();
-      await rateLimit(`auth:${email}`, operation === "login" ? 10 : 5, 900);
+      const ip = trustedClientIp(req.headers);
+      if (ip)
+        await rateLimit(
+          `auth:ip:${ip}`,
+          requestPolicy.authIp.limit,
+          requestPolicy.authIp.seconds,
+        );
+      await rateLimit(
+        "auth:global",
+        requestPolicy.authGlobal.limit,
+        requestPolicy.authGlobal.seconds,
+      );
+      const credentials = (
+        operation === "register" ? registerSchema : loginSchema
+      ).parse(body);
+      const accountPolicy =
+        operation === "login"
+          ? requestPolicy.loginAccount
+          : requestPolicy.registerAccount;
+      await rateLimit(
+        `auth:${credentials.email}`,
+        accountPolicy.limit,
+        accountPolicy.seconds,
+      );
       const user =
-        operation === "register" ? await register(body) : await login(body);
+        operation === "register"
+          ? await register(credentials)
+          : await login(credentials);
       const session = await createSession(user.id);
-      const res = NextResponse.json({
-        redirect:
-          operation === "register" ? "/explore?welcome=1" : "/dashboard",
-      });
+      const res = NextResponse.json(
+        {
+          redirect:
+            operation === "register" ? "/explore?welcome=1" : "/dashboard",
+        },
+        { headers: privateHeaders },
+      );
       ensure(
         process.env.NODE_ENV !== "production" ||
           origin.startsWith("https://") ||
@@ -101,14 +128,36 @@ export async function POST(
     const user = await currentUser();
     ensure(user, "Please sign in to continue.", 401);
     const token = req.cookies.get(sessionCookie)?.value ?? "";
-    await rateLimit(`mutation:${user.id}`, 180, 60);
-    if (operation === "reauthenticate") await rateLimit(`reauth:${user.id}`, 5, 900);
-    if (["wallet-challenge", "wallet-verify", "wallet-revoke", "chain-create", "chain-prepare", "chain-authorize"].includes(operation) ||
-        (operation === "member" && typeof body === "object" && body !== null && "action" in body && ["moderator","member","transfer"].includes(String(body.action)))) {
-      await wallet.requireRecentAuthentication(user.id, token);
+    await rateLimit(
+      `mutation:${user.id}`,
+      requestPolicy.mutation.limit,
+      requestPolicy.mutation.seconds,
+    );
+    if (operation === "reauthenticate")
+      await rateLimit(
+        `reauth:${user.id}`,
+        requestPolicy.sensitive.limit,
+        requestPolicy.sensitive.seconds,
+      );
+    if (
+      [
+        "payment-record",
+        "payment-reverse",
+        "revoke-sessions",
+        "revoke-session",
+      ].includes(operation) ||
+      (operation === "member" &&
+        typeof body === "object" &&
+        body !== null &&
+        "action" in body &&
+        ["moderator", "member", "transfer"].includes(String(body.action)))
+    ) {
+      await security.requireRecentAuthentication(user.id, token);
     }
     if (
       [
+        "payment-record",
+        "payment-reverse",
         "vote",
         "contribute",
         "proposal-action",
@@ -131,54 +180,52 @@ export async function POST(
         "round-veto-close",
       ].includes(operation)
     )
-      await rateLimit(`${operation}:${user.id}`, 30, 60);
+      await rateLimit(
+        `${operation}:${user.id}`,
+        requestPolicy.action.limit,
+        requestPolicy.action.seconds,
+      );
     switch (operation) {
       case "reauthenticate":
-        await wallet.reauthenticate(user.id, token, body);
-        result = { message: "Password confirmed for sensitive actions for five minutes." };
+        await security.reauthenticate(user.id, token, body);
+        result = {
+          message: "Password confirmed for sensitive actions for five minutes.",
+        };
         break;
-      case "wallet-challenge":
-        result = await wallet.createWalletChallenge(user.id, token, body);
+      case "payment-record":
+        result = {
+          ...(await payments.recordExternalPayment(user.id, body)),
+          message:
+            "External payment record saved. No money moved; this is a staff attestation.",
+        };
         break;
-      case "wallet-verify":
-        await wallet.verifyWalletChallenge(user.id, token, body);
-        result = { message: "Testnet wallet ownership verified." };
-        break;
-      case "wallet-revoke":
-        await wallet.revokeWalletLink(user.id, token, body);
-        result = { message: "Wallet link revoked. Historical transfers remain recorded." };
-        break;
-      case "chain-create": {
-        const vault = await chain.createChainVault(user.id, body);
-        result = { vaultId: vault.id, message: "Native NEAR pool rules saved. Register it with your controller wallet next." };
-        break;
-      }
-      case "chain-prepare":
-        result = await chain.prepareChainAction(user.id, body);
-        break;
-      case "chain-authorize":
-        await chain.authorizeChainWallet(user.id, body);
-        result = {message:"Wallet handoff recorded. Preserve and reconcile its receipt."};
-        break;
-      case "chain-submitted":
-        await chain.recordChainSubmission(user.id, body);
-        result = {message:"Transaction identity recorded; awaiting independent verification."};
-        break;
-      case "chain-reconcile":
-        result = await chain.reconcileChainOperation(user.id, body);
+      case "payment-reverse":
+        result = {
+          ...(await payments.reverseExternalPayment(user.id, body)),
+          message:
+            "Correction recorded. Original payment history is preserved.",
+        };
         break;
       case "template-save":
         await templates.saveRoundTemplate(user.id, body);
-        result = {message:"Template revision saved. Published rounds retain their rules."};
+        result = {
+          message:
+            "Template revision saved. Published rounds retain their rules.",
+        };
         break;
       case "template-archive":
         await templates.archiveRoundTemplate(user.id, body);
-        result = {message:"Template archived; revision history preserved."};
+        result = { message: "Template archived; revision history preserved." };
         break;
       case "template-instantiate": {
         const round = await templates.instantiateRoundTemplate(user.id, body);
-        const community = await db.community.findUniqueOrThrow({where:{id:round.communityId},select:{slug:true}});
-        result = {redirect:`/communities/${community.slug}/rounds/${round.id}`};
+        const community = await db.community.findUniqueOrThrow({
+          where: { id: round.communityId },
+          select: { slug: true },
+        });
+        result = {
+          redirect: `/communities/${community.slug}/rounds/${round.id}`,
+        };
         break;
       }
       case "round-method-vote":
@@ -304,7 +351,10 @@ export async function POST(
             where: { tokenHash: hashToken(token), userId: user.id },
             data: { revokedAt: new Date() },
           });
-        const res = NextResponse.json({ redirect: "/" });
+        const res = NextResponse.json(
+          { redirect: "/" },
+          { headers: privateHeaders },
+        );
         res.cookies.delete(sessionCookie);
         return res;
       }
@@ -392,21 +442,28 @@ export async function POST(
       default:
         throw new AppError("Action not found.", 404);
     }
-    return NextResponse.json(result);
+    return NextResponse.json(result, { headers: privateHeaders });
   } catch (error) {
     if (error instanceof ZodError)
       return NextResponse.json(
         {
-          error: error.issues
-            .map((v) => `${v.path.join(".")}: ${v.message}`)
-            .join(" "),
+          error:
+            "Invalid request fields. Check the required values and try again.",
         },
-        { status: 400 },
+        { status: 400, headers: privateHeaders },
       );
     if (error instanceof AppError)
       return NextResponse.json(
         { error: error.message },
-        { status: error.status },
+        {
+          status: error.status,
+          headers: {
+            ...privateHeaders,
+            ...(error.retryAfter
+              ? { "Retry-After": String(error.retryAfter) }
+              : {}),
+          },
+        },
       );
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -414,15 +471,21 @@ export async function POST(
     )
       return NextResponse.json(
         { error: "This email, username, slug or record already exists." },
-        { status: 409 },
+        { status: 409, headers: privateHeaders },
       );
     console.error(
-      "Fundicate action failed",
-      error instanceof Error ? error.message : "Unknown error",
+      JSON.stringify({
+        event: "action_failed",
+        requestId,
+        category:
+          error instanceof Prisma.PrismaClientKnownRequestError
+            ? error.code
+            : "unexpected",
+      }),
     );
     return NextResponse.json(
       { error: "The action could not be completed. Please try again." },
-      { status: 500 },
+      { status: 500, headers: privateHeaders },
     );
   }
 }
