@@ -105,6 +105,10 @@ export function AnalyticsNav({
           {item.name}
         </Link>
       ))}
+      <Link href="/analytics/system">
+        <Database size={15} />
+        System insights
+      </Link>
     </nav>
   );
 }

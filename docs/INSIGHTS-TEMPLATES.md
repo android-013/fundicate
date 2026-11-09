@@ -14,13 +14,13 @@ Each network, asset ID, currency and precision has a separate group. There is no
 
 Creation-date filters select a **round cohort**, rather than claiming to show financial event flow within that period. Every local money and election total covers the complete cohort. A cohort above 500 rounds returns an explicit narrowing request; it never silently displays incomplete totals. Individual sources have deterministic 25-record pagination.
 
-Reputation and connected-chain custody are separately labeled **current snapshots of the selected communities**, independent of the round creation-date filters. Reputation uses each review's latest score revision only when currently visible. Review bodies, author identities, private reports and hidden scores are not fetched for this report.
+Reputation and external-payment records are separately labeled current snapshots of the selected communities, independent of round creation-date filters. Reputation uses each review's latest score revision only when currently visible. Review bodies, author identities, private reports and hidden scores are not fetched for this report. Draft and cancelled round data is available only to that community's active staff.
 
-Connected custody is read from the durable chain observations and operation records, grouped separately from local simulation. Historical operating top-ups and independently observed remaining operating reserve are distinct fields. An unobserved current reserve is unavailable, not zero. Source history shows the latest 20 final observations per selected pool, with an explicit 500-pool report limit. No hash alone is treated as proof of success.
+External-payment totals are derived from append-only staff attestations and their full-source reversals, grouped by currency. They are independently unverified and separate from simulated principal. Source links lead to the scoped payment register. Historical chain custody is dormant and is not included in this branch's reports.
 
 The complete ballot context remains sealed until the round is decided and any enabled veto deadline passes. No ongoing participation count, choice, ranking or raw ballot is passed to a report component or CSV. Closed contexts expose only whitelisted published participation/eligible/quorum power and the published allocation; source pages supply the deeper authorized context. Missing historical denominators remain unavailable.
 
-`GET /api/analytics/system/export` accepts `community`, optional `from`/`to` calendar dates, `page`, and `dataset` (`rounds`, `funds`, `reputation`, `chain`). Repeated/unknown filters and unauthorized communities are rejected. `rounds` exports exactly the current 25-row page. Other datasets export the displayed complete grouped snapshot, or the explicitly bounded final chain source history. CSV cells use the existing spreadsheet formula-injection protection. Exports require authentication, are rate limited, use private no-store caching and vary by session cookie.
+`GET /api/analytics/system/export` accepts `community`, optional `from`/`to` calendar dates, `page`, and `dataset` (`rounds`, `funds`, `reputation`, `payments`). Repeated/unknown filters and unauthorized communities are rejected. `rounds` exports exactly the current 25-row page. Other datasets export the displayed grouped snapshot. CSV cells use the existing spreadsheet formula-injection protection. Exports require authentication, are rate limited, use private no-store caching and vary by session cookie.
 
 ## Reusable templates
 
@@ -36,11 +36,11 @@ Each draft records its exact immutable `templateRevisionId` in the same transact
 
 Same-origin authenticated mutation operations:
 
-| Operation | Input | Result |
-| --- | --- | --- |
-| `template-save` | `communityId`, optional `templateId`, `name`, `description`, and exactly one of `sourceRoundId` or a validated flat `round` creation input | Template and newly appended revision |
-| `template-instantiate` | `communityId`, `templateId`, `revision`, fresh ISO `submissionsCloseAt`, optional `title`/`description` | New draft with exact revision provenance |
-| `template-archive` | `communityId`, `templateId` | Archived template; repeated request preserves the original archival event |
+| Operation              | Input                                                                                                                                      | Result                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `template-save`        | `communityId`, optional `templateId`, `name`, `description`, and exactly one of `sourceRoundId` or a validated flat `round` creation input | Template and newly appended revision                                      |
+| `template-instantiate` | `communityId`, `templateId`, `revision`, fresh ISO `submissionsCloseAt`, optional `title`/`description`                                    | New draft with exact revision provenance                                  |
+| `template-archive`     | `communityId`, `templateId`                                                                                                                | Archived template; repeated request preserves the original archival event |
 
 The source template format is version 1. Unrecognized future formats or invalid/corrupt funding settings fail closed rather than silently upgrading a saved policy.
 

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "rounds",
+  "token": "f9f57761-4696-47b6-97db-7e926ae6e0da",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/test-db.mjs",
+      "rounds"
+    ]
+  ],
+  "startedAt": "2026-11-08T16:28:02.921Z",
+  "finishedAt": "2026-11-08T16:29:22.483Z",
+  "exitCode": 0,
+  "sourceFingerprint": "440ee3f669035c14f69ed931de8fdd38351152d45d83e139a037b76c0608f51d",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/rounds-f9f57761-4696-47b6-97db-7e926ae6e0da.log",
+  "logHash": "46d622c2742240983b952ed9e15216fed1a4203ac1eeaeddd845ab6b82738968"
+}

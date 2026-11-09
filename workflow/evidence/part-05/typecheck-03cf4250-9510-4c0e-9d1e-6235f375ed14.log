@@ -1,0 +1,1 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","node_modules/typescript/bin/tsc","--noEmit"]

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "unit",
+  "token": "da889bca-500a-4beb-bbc8-23132e921caf",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/unit-tests.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-08T16:52:01.538Z",
+  "finishedAt": "2026-11-08T16:52:07.925Z",
+  "exitCode": 0,
+  "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/unit-da889bca-500a-4beb-bbc8-23132e921caf.log",
+  "logHash": "5127e9f3c086fbabf840a0fb2582222b40a2b279601f6f81f01bb2362b6d403a"
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "workflow-tests",
+  "token": "107103de-b6d5-440f-a5a4-fca67dc9273f",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "--test",
+      "tests/progress-workflow.test.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-08T16:22:48.956Z",
+  "finishedAt": "2026-11-08T16:23:23.578Z",
+  "exitCode": 0,
+  "sourceFingerprint": "440ee3f669035c14f69ed931de8fdd38351152d45d83e139a037b76c0608f51d",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/workflow-tests-107103de-b6d5-440f-a5a4-fca67dc9273f.log",
+  "logHash": "9aacb6beb4d300fd20ad07406847390ce8debeda6efffc1d230b06b70c515138"
+}

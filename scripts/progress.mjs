@@ -218,7 +218,11 @@ export function fingerprint(root) {
       const p = join(path, e.name);
       if (e.isSymbolicLink())
         throw new Error("Source symlinks require explicit review");
-      if (e.isDirectory() && !["target","node_modules",".git"].includes(e.name)) walk(p);
+      if (
+        e.isDirectory() &&
+        !["target", "node_modules", ".git"].includes(e.name)
+      )
+        walk(p);
       else if (e.isFile()) files.push(p);
     }
   }
@@ -248,6 +252,7 @@ export function fingerprint(root) {
     "workflow/method-matrix.json",
     "workflow/DECISIONS.md",
     "Dockerfile",
+    "Dockerfile.database",
     "compose.yaml",
     ".dockerignore",
     ".env.example",

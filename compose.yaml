@@ -1,7 +1,10 @@
 name: fundicate
 services:
   db:
-    image: postgres:18-bookworm
+    image: fundicate-database:local
+    build:
+      context: .
+      dockerfile: Dockerfile.database
     environment:
       POSTGRES_USER: fundicate
       POSTGRES_DB: fundicate

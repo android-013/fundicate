@@ -6,6 +6,7 @@
 **/target
 .next
 node_modules
+**/*.tsbuildinfo
 test-results
 playwright-report
 workflow/evidence

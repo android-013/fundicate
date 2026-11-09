@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "typecheck",
+  "token": "9b639a38-a5b8-4420-864a-a672e168d5d5",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ]
+  ],
+  "startedAt": "2026-11-09T07:42:25.812Z",
+  "finishedAt": "2026-11-09T07:43:12.199Z",
+  "exitCode": 0,
+  "sourceFingerprint": "643d7ea645e9a14b14d67526d35417a0148a3a41ece1402550e1885b98044db5",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/typecheck-9b639a38-a5b8-4420-864a-a672e168d5d5.log",
+  "logHash": "32ac49a2f3003ff880cbf141f741fa5b61887f5a62939016cfc93f449604f84d"
+}

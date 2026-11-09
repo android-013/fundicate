@@ -1,0 +1,99 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","release"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794156100665_2460", schema "public" at "127.0.0.1:54329"
+
+15 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 25ms
+(node:23248) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS 1. staff save complete versioned source rules without ballots or financial history
+PASS 2. ordinary members and foreign source rounds cannot edit a community template
+PASS 3. concurrent staff edits append ordered immutable revisions
+PASS 4. direct SQL cannot rewrite or delete an immutable template revision
+PASS 5. instantiating an earlier revision makes a fresh unfunded draft bound atomically to that revision
+PASS 6. stale shifted collection cutoffs fail before any draft is committed
+PASS 7. template API preserves same-origin, sign-in and community staff boundaries
+PASS 8. template library supports active member inspection but denies foreign memberships
+(node:6300) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS 9. draft and cancelled sources stay staff-only in report cohorts, totals and CSV, with roles checked per community
+PASS 10. current asset totals reconcile exact received, held, reserved, paid and source refunds
+PASS 11. system report and CSV expose no open-context participation, voter IDs or raw ballots
+PASS 12. scope filters reject unauthorized communities and show complete cohorts only
+PASS 13. external-payment snapshots aggregate exact unverified records, preserve reversals and currency scope without changing simulated money
+PASS 14. visible reputation aggregate uses latest real scores and removes hidden reviews without leaking text
+PASS 15. scoped CSV endpoints enforce membership, repeated-filter rejection and private caching
+PASS 16. pending veto participation and published selection details stay absent from system analysis and CSV
+PASS release-accessibility 6 zero-violation scans
+PASS 17. browser template creation, instantiation and system drill-down work at desktop,390 and320 with zero accessibility violations
+PASS 18. archive is idempotent, preserves old snapshots and prevents new instantiation
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","b93025f7-6003-4d5c-ac1e-449686c4a7c4","--dry-run","--once"],"exitCode":0,"observations":[{"at":"2026-11-08T16:43:19.063Z","status":"dry-run","communityId":"09be2649-2b99-4959-b213-1fb2a652a705","entityId":"1db20883-794b-431b-8a24-374fe65043ef","action":"screen"},{"status":"ok","mode":"dry-run","processed":1,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+PASS 19. real maintenance dry-run reports the due stage and leaves all round state unchanged
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","f0de4118-4958-4d21-9f0a-b837284d1f47","--apply","--once"],"exitCode":0,"observations":[{"status":"ok","mode":"apply","processed":0,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","d8b72221-84ee-4d4d-a3de-a3d8c763a132","--apply","--once"],"exitCode":0,"observations":[{"status":"ok","mode":"apply","processed":0,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+PASS 20. real maintenance cannot act under a nonstaff member or foreign administrator
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","b93025f7-6003-4d5c-ac1e-449686c4a7c4","--apply","--once"],"exitCode":0,"observations":[{"at":"2026-11-08T16:43:27.911Z","status":"completed","communityId":"09be2649-2b99-4959-b213-1fb2a652a705","entityId":"1db20883-794b-431b-8a24-374fe65043ef","action":"screen"},{"status":"ok","mode":"apply","processed":1,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","b93025f7-6003-4d5c-ac1e-449686c4a7c4","--apply","--once"],"exitCode":0,"observations":[{"status":"ok","mode":"apply","processed":0,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+PASS 21. real maintenance applies a due published stage once and repeat execution adds no duplicate history
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","b93025f7-6003-4d5c-ac1e-449686c4a7c4","--dry-run","--once"],"exitCode":0,"observations":[{"status":"ok","mode":"dry-run","processed":0,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+{"maintenanceCommand":["node","scripts/maintenance.mjs","--actor","b93025f7-6003-4d5c-ac1e-449686c4a7c4","--apply","--once"],"exitCode":0,"observations":[{"status":"ok","mode":"apply","processed":0,"more":false,"failures":0,"next":"Run again for remaining due stages. No clock injection or live submission was performed."}]}
+PASS 22. real maintenance preserves the full 24-hour veto despite a decided winner and every voter keeping the result
+Release insights/templates: 22 checks passed.

@@ -1,0 +1,75 @@
+# syntax=docker/dockerfile:1
+# Keep PostgreSQL 18 and Debian Bookworm/glibc compatible with existing clusters.
+# This is the exact upstream image inventoried in the 7 November 2026 audit.
+# The resulting image must be rebuilt, scanned and restore-tested before release.
+ARG POSTGRES_BASE=postgres:18-bookworm@sha256:f1ea2a1a4fb7b68d4836be1fdcb8a6466a89b072158bf9d97663600538c294c5
+FROM node:22.23.4-alpine@sha256:0e1754758c2df4cfa3e68d59e2e1b7374bb7fd9ea6328eaaacf15cc934af8202 AS gosu
+ARG TARGETARCH
+ARG TARGETVARIANT
+# Pin official gosu 1.20 assets: its user-parser security update is not supplied
+# by apt because the upstream PostgreSQL image installs gosu outside dpkg.
+# This download-only stage is absent from the final PostgreSQL image.
+RUN node --input-type=module <<'JS'
+import { createHash } from 'node:crypto';
+import { writeFileSync } from 'node:fs';
+const assets = {
+  amd64: [674642683, 'b1892636c281590f34bc63c1118f058cd9de66c4ea463772e3909672d8b302ac'],
+  arm64: [674642755, 'c216cb762520edb5ab0acb21cb9bc4bcc5f1544d365e8952a21514f04ea233ee'],
+  armel: [674642794, 'ca4f323a39e07fdd8acc3c2328aff0d7443926e29f0c9e8c377e98a1aae5f6a0'],
+  armhf: [674642858, '02f58cb01be8cbd981d4850c59ee3249b1039af3b2d43c44e950f90bf18ae0ac'],
+  '386': [674642901, 'b56e93908909dcf237007fa4fd8897f2e5234e37105a4de978919261d1078d64'],
+  loong64: [674642925, 'dbc6b7961d7324667147890a80525deac09d7ddf98b136c7709d89e4a414aff4'],
+  ppc64le: [674642996, '3f6eb5dc781486e68d2c0e9cad69fa3439960490b6952829fac9a407b0b46043'],
+  riscv64: [674643030, '3deb272b39c36ecfb27d3e374a97fa881f905a6b8f0569fa73f2794bad652998'],
+  s390x: [674643051, '5a86697a2322a04d20e1e5cad5e785b43286e65bb5d74611be38acbc65bad8f4'],
+};
+const arch = process.env.TARGETARCH === 'arm'
+  ? ({ v5: 'armel', v7: 'armhf' })[process.env.TARGETVARIANT]
+  : process.env.TARGETARCH;
+if (!assets[arch]) throw new Error('Unsupported gosu release architecture');
+const [id, expected] = assets[arch];
+const releaseArch = ({ '386': 'i386', ppc64le: 'ppc64el' })[arch] ?? arch;
+let binary;
+let lastError;
+for (const url of [
+  `https://github.com/tianon/gosu/releases/download/1.20/gosu-${releaseArch}`,
+  `https://api.github.com/repos/tianon/gosu/releases/assets/${id}`,
+]) {
+  try {
+    const response = await fetch(url, {
+      headers: { Accept: 'application/octet-stream', 'User-Agent': 'Fundicate-container-build' },
+      signal: AbortSignal.timeout(120000),
+    });
+    if (!response.ok) throw new Error(`gosu download failed: HTTP ${response.status}`);
+    binary = Buffer.from(await response.arrayBuffer());
+    lastError = undefined;
+    break;
+  } catch (error) { lastError = error; }
+}
+if (lastError) throw lastError;
+if (createHash('sha256').update(binary).digest('hex') !== expected) throw new Error('gosu checksum mismatch');
+writeFileSync('/gosu', binary, { mode: 0o755 });
+JS
+
+FROM ${POSTGRES_BASE}
+
+USER root
+COPY --from=gosu /gosu /usr/local/bin/gosu
+ENV GOSU_VERSION=1.20
+# Refresh supported package repositories, including PostgreSQL's existing PGDG
+# source. Apply same-distribution security/minor updates; never switch libc,
+# PostgreSQL major, PGDATA, the entrypoint or the existing volume location.
+RUN set -eux; \
+    . /etc/os-release; \
+    test "$VERSION_CODENAME" = bookworm; \
+    test "$PG_MAJOR" = 18; \
+    apt-get update; \
+    apt-get upgrade --yes --no-install-recommends; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*; \
+    gosu --version | grep '^1.20 '; \
+    gosu nobody true; \
+    postgres --version | grep -E '^postgres \(PostgreSQL\) 18\.'
+
+# Inherit the official initialization/privilege-drop entrypoint, health tools,
+# stop signal, and /var/lib/postgresql volume. Existing data is never recreated.

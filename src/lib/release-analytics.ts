@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "./db";
 import { ensure } from "./errors";
 import { csvDocument } from "./analytics-core";
+import { EXTERNAL_PAYMENT_DISCLOSURE } from "./payment-records-core";
 
 const calendarDay = z
   .string()
@@ -23,7 +24,9 @@ export const systemFiltersSchema = z
     from: calendarDay.optional(),
     to: calendarDay.optional(),
     page: z.coerce.number().int().min(1).max(100000).default(1),
-    dataset: z.enum(["rounds", "funds", "reputation"]).default("rounds"),
+    dataset: z
+      .enum(["rounds", "funds", "reputation", "payments"])
+      .default("rounds"),
   })
   .strict()
   .refine((v) => !v.from || !v.to || v.from <= v.to, {
@@ -181,7 +184,10 @@ export async function getReleaseAnalytics(
         where: { userId, status: "ACTIVE" },
         select: {
           communityId: true,
-          community: { select: { id: true, name: true, slug: true } },
+          role: true,
+          community: {
+            select: { id: true, name: true, slug: true, adminId: true },
+          },
         },
         orderBy: { joinedAt: "asc" },
       });
@@ -199,6 +205,14 @@ export async function getReleaseAnalytics(
         )
         .map((m) => m.community);
       const communityIds = communities.map((c) => c.id);
+      const staffCommunityIds = memberships
+        .filter(
+          (membership) =>
+            communityIds.includes(membership.communityId) &&
+            (membership.community.adminId === userId ||
+              membership.role === "MODERATOR"),
+        )
+        .map((membership) => membership.communityId);
       const createdAt = {
         ...(filters.from
           ? { gte: new Date(filters.from + "T00:00:00.000Z") }
@@ -212,7 +226,16 @@ export async function getReleaseAnalytics(
           : {}),
       };
       const rounds = await tx.fundingRound.findMany({
-        where: { communityId: { in: communityIds }, createdAt },
+        where: {
+          communityId: { in: communityIds },
+          createdAt,
+          // Apply the same draft boundary as getFundingRoundView before
+          // counting cohorts, aggregating money or exporting source records.
+          OR: [
+            { communityId: { in: staffCommunityIds } },
+            { status: { notIn: ["DRAFT", "CANCELLED"] } },
+          ],
+        },
         include: {
           community: { select: { slug: true, name: true } },
           settlement: {
@@ -346,6 +369,31 @@ export async function getReleaseAnalytics(
       GROUP BY r."communityId",r."targetType",r.dimension ORDER BY r."communityId",r."targetType",r.dimension
     `
         : [];
+      // Aggregate the full current member-visible register in SQL. Corrections
+      // remove their original from the active cohort but never delete history.
+      // References, notes, counterparties and evidence URLs are not selected.
+      const externalPayments = communityIds.length
+        ? await tx.$queryRaw<
+            {
+              communityId: string;
+              currency: string;
+              kind: string;
+              amount: string;
+              count: string;
+            }[]
+          >`
+          SELECT original."communityId",original.currency,original.kind,
+            SUM(original.amount)::text AS amount,COUNT(*)::text AS count
+          FROM "ExternalPaymentRecord" original
+          WHERE original."communityId" IN (${Prisma.join(communityIds.map((id) => Prisma.sql`${id}::uuid`))})
+            AND original.kind <> 'REVERSAL'
+            AND NOT EXISTS (
+              SELECT 1 FROM "ExternalPaymentRecord" reversal
+              WHERE reversal."reversesId"=original.id
+            )
+          GROUP BY original."communityId",original.currency,original.kind
+          ORDER BY original."communityId",original.currency,original.kind`
+        : [];
       const chain = {
         groups: [] as {
           network: string;
@@ -382,7 +430,11 @@ export async function getReleaseAnalytics(
       return {
         filters,
         generatedAt: now.toISOString(),
-        communities: memberships.map((m) => m.community),
+        communities: memberships.map(({ community }) => ({
+          id: community.id,
+          name: community.name,
+          slug: community.slug,
+        })),
         scope: {
           roundCount: rounds.length,
           fundedCount: funded.length,
@@ -391,7 +443,7 @@ export async function getReleaseAnalytics(
           pageCount,
           selectedCommunities: communities.length,
           definition:
-            "Money and election totals cover rounds created within the selected dates. Reputation are current snapshots of the selected communities, independent of those dates.",
+            "Money and election totals cover rounds you may inspect within the selected creation dates. Drafts and cancelled drafts are visible only to active community staff. Reputation and external-payment aggregates are current snapshots of the selected communities, independent of those dates. External-payment totals include original records without a reversal and do not alter simulated funds.",
         },
         assets,
         methods: [...methodCounts].map(([method, count]) => ({
@@ -411,6 +463,24 @@ export async function getReleaseAnalytics(
           count: Number(group.count),
           average: Number(group.total) / Number(group.count),
         })),
+        payments: externalPayments.map((group) => {
+          const community = communities.find(
+            (c) => c.id === group.communityId,
+          )!;
+          return {
+            communityId: group.communityId,
+            community: community.name,
+            slug: community.slug,
+            currency: group.currency,
+            decimals: 2,
+            kind: group.kind,
+            amount: group.amount,
+            recordCount: group.count,
+            independentlyVerified: false,
+            disclosure: EXTERNAL_PAYMENT_DISCLOSURE,
+            href: `/communities/${community.slug}/payments`,
+          };
+        }),
         chain,
       };
     },
@@ -422,6 +492,31 @@ export type ReleaseAnalyticsReport = Awaited<
 >;
 
 export function releaseAnalyticsCsv(report: ReleaseAnalyticsReport) {
+  if (report.filters.dataset === "payments")
+    return csvDocument(
+      [
+        "Community",
+        "Currency",
+        "Decimals",
+        "Record kind",
+        "Unreversed original count",
+        "Recorded amount units",
+        "Independently verified",
+        "Disclosure",
+        "Source",
+      ],
+      report.payments.map((row) => [
+        row.community,
+        row.currency,
+        row.decimals,
+        row.kind,
+        row.recordCount,
+        row.amount,
+        "false",
+        row.disclosure,
+        row.href,
+      ]),
+    );
   if (report.filters.dataset === "funds")
     return csvDocument(
       [

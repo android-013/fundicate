@@ -1,0 +1,95 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","--test","tests/progress-workflow.test.mjs"]
+TAP version 13
+# Subtest: init accepts only historical Part 1 and leaves Part 2 waiting
+ok 1 - init accepts only historical Part 1 and leaves Part 2 waiting
+  ---
+  duration_ms: 369.9202
+  type: 'test'
+  ...
+# Subtest: explicit next part, revision and run ID prevent skips or replacement
+ok 2 - explicit next part, revision and run ID prevent skips or replacement
+  ---
+  duration_ms: 1528.8186
+  type: 'test'
+  ...
+# Subtest: completion and criterion acceptance cannot invent missing check results
+ok 3 - completion and criterion acceptance cannot invent missing check results
+  ---
+  duration_ms: 1076.1571
+  type: 'test'
+  ...
+# Subtest: checks execute predefined Node argument arrays and retain actual failing exits
+ok 4 - checks execute predefined Node argument arrays and retain actual failing exits
+  ---
+  duration_ms: 1469
+  type: 'test'
+  ...
+# Subtest: source edits invalidate previously executed checks and review
+ok 5 - source edits invalidate previously executed checks and review
+  ---
+  duration_ms: 3997.1394
+  type: 'test'
+  ...
+# Subtest: published method rules are part of the verified source snapshot
+ok 6 - published method rules are part of the verified source snapshot
+  ---
+  duration_ms: 1276.1871
+  type: 'test'
+  ...
+# Subtest: no completion without criterion evidence, handoff and independent review
+ok 7 - no completion without criterion evidence, handoff and independent review
+  ---
+  duration_ms: 6284.4502
+  type: 'test'
+  ...
+# Subtest: review binds the handoff and actual receipt set, not just a passed flag
+ok 8 - review binds the handoff and actual receipt set, not just a passed flag
+  ---
+  duration_ms: 1206.6561
+  type: 'test'
+  ...
+# Subtest: unresolved input blocks completion and resolves within the same active part
+ok 9 - unresolved input blocks completion and resolves within the same active part
+  ---
+  duration_ms: 2152.1399
+  type: 'test'
+  ...
+# Subtest: short exclusive lock refuses competing mutation without changing state
+ok 10 - short exclusive lock refuses competing mutation without changing state
+  ---
+  duration_ms: 755.654
+  type: 'test'
+  ...
+# Subtest: journal detects tampering and can explicitly repair a stale projection
+ok 11 - journal detects tampering and can explicitly repair a stale projection
+  ---
+  duration_ms: 799.7892
+  type: 'test'
+  ...
+# Subtest: evidence paths cannot escape the project
+ok 12 - evidence paths cannot escape the project
+  ---
+  duration_ms: 3469.7469
+  type: 'test'
+  ...
+# Subtest: each explicit completion advances once and Part 5 never creates Part 6
+ok 13 - each explicit completion advances once and Part 5 never creates Part 6
+  ---
+  duration_ms: 10076.5044
+  type: 'test'
+  ...
+# Subtest: concurrent checks serialize while actual execution runs outside the write lock
+ok 14 - concurrent checks serialize while actual execution runs outside the write lock
+  ---
+  duration_ms: 2785.0733
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 39851.5276

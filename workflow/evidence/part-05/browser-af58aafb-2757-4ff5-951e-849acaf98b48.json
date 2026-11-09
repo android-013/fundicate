@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "browser",
+  "token": "af58aafb-2757-4ff5-951e-849acaf98b48",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/browser-tests.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-08T17:10:18.394Z",
+  "finishedAt": "2026-11-08T17:11:48.218Z",
+  "exitCode": 0,
+  "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/browser-af58aafb-2757-4ff5-951e-849acaf98b48.log",
+  "logHash": "f66e89f04e3ef90b42791ba58bbacf926f343ea93cba6e0840a84f1ead0d7ff3"
+}

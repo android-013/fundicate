@@ -4,7 +4,12 @@ import { mkdirSync } from "node:fs";
 import { chromium } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { db } from "../src/lib/db";
-import { createSession, hashPassword, sessionCookie } from "../src/lib/auth";
+import {
+  createSession,
+  hashPassword,
+  hashToken,
+  sessionCookie,
+} from "../src/lib/auth";
 import { createCommunity } from "../src/lib/service";
 
 type Check = (name: string, work: () => Promise<void>) => Promise<void>;
@@ -54,6 +59,11 @@ export async function runPaymentRecordsBrowserChecks(check: Check) {
   const runtimeErrors: string[] = [];
   page.on("pageerror", (error) => runtimeErrors.push(error.message));
   const exportRequests: string[] = [];
+  const exportQuotaKey = hashToken(`payments-export:${admin.id}`);
+  const exportQuotaBeforeRender = await db.rateLimit.findUnique({
+    where: { key: exportQuotaKey },
+  });
+  let exportQuotaAfterDownload = exportQuotaBeforeRender;
   page.on("request", (request) => {
     if (new URL(request.url()).pathname === "/api/payments/export")
       exportRequests.push(request.method());
@@ -192,6 +202,14 @@ export async function runPaymentRecordsBrowserChecks(check: Check) {
           [],
           "Rendering and refreshing records must not consume export quotas",
         );
+        const beforeDownload = await db.rateLimit.findUnique({
+          where: { key: exportQuotaKey },
+        });
+        assert.deepEqual(
+          beforeDownload,
+          exportQuotaBeforeRender,
+          "Rendering and refreshing must leave the actual export quota unchanged",
+        );
         const exported = page.waitForEvent("download");
         await page
           .getByRole("link", { name: "Export this page", exact: true })
@@ -211,7 +229,34 @@ export async function runPaymentRecordsBrowserChecks(check: Check) {
         assert.ok(csv.includes(reference));
         assert.ok(csv.includes("12345"));
         assert.ok(csv.includes("STAFF_RECORDED_UNVERIFIED"));
-        assert.deepEqual(exportRequests, ["GET"]);
+        // Native download navigations can be absent from Playwright's Page
+        // request events. Verify the real server-side effect instead: this
+        // deliberate download must consume exactly one export quota unit.
+        exportQuotaAfterDownload = await db.rateLimit.findUnique({
+          where: { key: exportQuotaKey },
+        });
+        assert.ok(exportQuotaAfterDownload);
+        if (
+          beforeDownload &&
+          beforeDownload.expiresAt.getTime() ===
+            exportQuotaAfterDownload.expiresAt.getTime()
+        ) {
+          assert.equal(
+            exportQuotaAfterDownload.count,
+            beforeDownload.count + 1,
+          );
+        } else {
+          assert.equal(exportQuotaAfterDownload.count, 1);
+          if (beforeDownload) {
+            const [{ now }] = await db.$queryRaw<
+              { now: Date }[]
+            >`SELECT CURRENT_TIMESTAMP AS now`;
+            assert.ok(
+              beforeDownload.expiresAt <= now,
+              "A live quota window cannot be replaced",
+            );
+          }
+        }
         assert.ok(
           page.url().endsWith(path),
           "Downloading must keep the payment workspace open",
@@ -249,6 +294,11 @@ export async function runPaymentRecordsBrowserChecks(check: Check) {
             path: `.local/standalone-ui/payments-${width}.png`,
             fullPage: true,
           });
+          assert.deepEqual(
+            await db.rateLimit.findUnique({ where: { key: exportQuotaKey } }),
+            exportQuotaAfterDownload,
+            "Rendering, resizing and accessibility scans must not consume export quota",
+          );
         }
       },
     );

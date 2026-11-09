@@ -226,6 +226,59 @@ export function ReleaseInsights({
         )}
       </section>
       <section className="panel">
+        <span className="eyebrow">EXTERNALLY HANDLED PAYMENTS</span>
+        <h2>Staff records, with a clear boundary</h2>
+        <p className="muted">
+          These current totals are independently unverified staff attestations.
+          Fundicate does not transfer money or grant voting power from them.
+          Each community and currency stays separate. Reversed originals are
+          excluded from these totals; their full correction history remains at
+          the source. Round creation-date filters do not change this snapshot.
+        </p>
+        <a className="text-link" href={datasetExportHref("payments")} download>
+          Export external-payment aggregates
+        </a>
+        {!report.payments.length ? (
+          <p>No unreversed external-payment records in these communities.</p>
+        ) : (
+          <div
+            className="table-scroll"
+            tabIndex={0}
+            role="region"
+            aria-label="Independently unverified external-payment aggregates"
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>Community</th>
+                  <th>Currency</th>
+                  <th>Record kind</th>
+                  <th>Unreversed originals</th>
+                  <th>Recorded amount</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {report.payments.map((row) => (
+                  <tr key={`${row.communityId}:${row.currency}:${row.kind}`}>
+                    <td>{row.community}</td>
+                    <td>{row.currency}</td>
+                    <td>{titleCase(row.kind)}</td>
+                    <td>{row.recordCount}</td>
+                    <td>{formatAssetUnits(row.amount, row.decimals)}</td>
+                    <td>
+                      <Link className="text-link" href={row.href}>
+                        Inspect payment records
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+      <section className="panel">
         <div className="row between">
           <div>
             <span className="eyebrow">SOURCE DRILL-DOWN</span>

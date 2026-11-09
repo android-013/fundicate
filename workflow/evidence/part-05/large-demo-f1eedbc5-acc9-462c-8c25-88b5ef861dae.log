@@ -1,0 +1,65 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/demo-large.mjs","--isolated"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_demo_large_1794157594566_2364", schema "public" at "127.0.0.1:54329"
+
+15 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+{"stage":"sealed-selection","fictionalMembers":100,"schemes":3,"receivedMinor":"10000000","currency":"BDT","simulated":true,"publicBallots":null,"publicResult":null,"privacyAssertions":"passed"}
+(node:9660) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+{"stage":"fictional-external-payment-register","independentlyVerified":false,"realMoneyMoved":false,"records":5,"currency":"BDT","totals":[{"kind":"CONTRIBUTION","amount":"10000000"},{"kind":"PAYOUT","amount":"6000000"},{"kind":"REFUND","amount":"4000000"}],"simulatedFundsUnchanged":true,"source":"/communities/hundred-member-bdt/payments"}
+{"stage":"settled","fictional":true,"simulated":true,"members":100,"schemes":3,"currency":"BDT","decimals":2,"receivedMinor":"10000000","paidMinor":"6000000","refundedMinor":"4000000","refundedPerMemberMinor":"40000","heldMinor":"0","reservedMinor":"0","community":"/communities/hundred-member-bdt","round":"/communities/hundred-member-bdt/rounds/3e5b6106-6ba1-405a-aa72-2cd5db24ebea","demoLogin":"fictional001@fundicate.invalid","demoPassword":"FictionalDemo!2026","note":"These credentials exist only in the newly created isolated fictional database. No chain transfer or exchange rate is claimed."}
+{"status":"ok","database":"fundicate_demo_large_1794157594566_2364","originalDatabasePreserved":true,"connection":"Use the same host/port/user as your local DATABASE_URL and change only its database name. Keep credentials in your ignored environment file.","start":"Use a separate APP_ORIGIN/port when previewing this database. Never overwrite an existing .env."}

@@ -32,6 +32,12 @@ import {
   releaseAnalyticsCsv,
 } from "../src/lib/release-analytics";
 import { castRoundVetoVote } from "../src/lib/rounds-v3";
+import { hashToken } from "../src/lib/auth";
+import {
+  recordExternalPayment,
+  reverseExternalPayment,
+  listExternalPayments,
+} from "../src/lib/payment-records";
 
 const origin = process.env.APP_ORIGIN!;
 const day = 86400000;
@@ -122,6 +128,11 @@ async function main() {
       userId: person.user.id,
       role: person === moderator ? ("MODERATOR" as const) : ("MEMBER" as const),
     })),
+  });
+  // This person moderates BDT but is only an ordinary member in USD. Staff
+  // visibility must never carry across those community boundaries.
+  await db.communityMembership.create({
+    data: { communityId: usd.id, userId: moderator.user.id, role: "MEMBER" },
   });
   const old = new Date(Date.now() - 6 * day);
   const at = (days: number) => new Date(old.getTime() + days * day);
@@ -423,6 +434,90 @@ async function main() {
     },
   );
   await check(
+    "draft and cancelled sources stay staff-only in report cohorts, totals and CSV, with roles checked per community",
+    async () => {
+      const draft = await db.fundingRound.findFirstOrThrow({
+        where: {
+          communityId: bdt.id,
+          title: "A fresh repeatable grant decision",
+          status: "DRAFT",
+        },
+      });
+      const cancelled = await instantiateRoundTemplate(admin.user.id, {
+        communityId: bdt.id,
+        templateId: saved.template.id,
+        revision: 1,
+        submissionsCloseAt: new Date(Date.now() + 7 * day).toISOString(),
+        title: "A private cancelled grant draft",
+      });
+      await fundingRoundAction(admin.user.id, {
+        ...scope(cancelled.id),
+        action: "cancel",
+      });
+      const memberReport = await getReleaseAnalytics(member.user.id, {
+        community: bdt.slug,
+      });
+      assert.deepEqual(
+        memberReport.rounds.map((round) => round.id).sort(),
+        [source.id, open.id].sort(),
+      );
+      assert.equal(memberReport.scope.roundCount, 2);
+      assert.equal(memberReport.scope.fundedCount, 1);
+      assert.equal(memberReport.assets[0].rounds, 1);
+      assert.equal(
+        memberReport.methods.reduce((sum, row) => sum + row.count, 0),
+        2,
+      );
+      for (const hidden of [draft, cancelled]) {
+        assert.equal(JSON.stringify(memberReport).includes(hidden.id), false);
+        assert.equal(
+          JSON.stringify(memberReport).includes(hidden.title),
+          false,
+        );
+        assert.equal(
+          releaseAnalyticsCsv(memberReport).includes(hidden.id),
+          false,
+        );
+      }
+      for (const person of [admin, moderator]) {
+        const staffReport = await getReleaseAnalytics(person.user.id, {
+          community: bdt.slug,
+        });
+        assert.equal(staffReport.scope.roundCount, 4);
+        assert.equal(staffReport.scope.fundedCount, 3);
+        assert.equal(staffReport.assets[0].rounds, 3);
+        for (const hidden of [draft, cancelled]) {
+          assert.ok(staffReport.rounds.some((round) => round.id === hidden.id));
+          assert.ok(releaseAnalyticsCsv(staffReport).includes(hidden.id));
+        }
+      }
+      const mixedRoles = await getReleaseAnalytics(moderator.user.id);
+      assert.equal(mixedRoles.scope.roundCount, 4);
+      assert.equal(
+        mixedRoles.assets.some((asset) => asset.currency === "USD"),
+        false,
+      );
+      assert.equal(
+        JSON.stringify(mixedRoles).includes("Separate USD funding pool"),
+        false,
+      );
+      for (const person of [member, admin, moderator]) {
+        const response = await fetch(
+          origin + `/api/analytics/system/export?community=${bdt.slug}`,
+          { headers: { Cookie: person.cookie } },
+        );
+        assert.equal(response.status, 200);
+        const csv = await response.text();
+        for (const hidden of [draft, cancelled])
+          assert.equal(csv.includes(hidden.id), person !== member);
+        assert.equal(
+          response.headers.get("X-Total-Record-Count"),
+          person === member ? "2" : "4",
+        );
+      }
+    },
+  );
+  await check(
     "current asset totals reconcile exact received, held, reserved, paid and source refunds",
     async () => {
       const report = await getReleaseAnalytics(admin.user.id);
@@ -477,6 +572,163 @@ async function main() {
       assert.equal(report.scope.roundCount, 1);
       assert.equal(report.assets.length, 1);
       assert.equal(report.assets[0].currency, "USD");
+    },
+  );
+  await check(
+    "external-payment snapshots aggregate exact unverified records, preserve reversals and currency scope without changing simulated money",
+    async () => {
+      const before = await getReleaseAnalytics(admin.user.id);
+      const beforeCounts = {
+        roundLedger: await db.roundLedgerTransaction.count(),
+        legacyLedger: await db.ledgerTransaction.count(),
+        paidPower: await db.roundVotingPower.findMany({
+          orderBy: [{ roundId: "asc" }, { userId: "asc" }],
+          select: { roundId: true, userId: true, paidPower: true },
+        }),
+      };
+      const input = {
+        communityId: bdt.id,
+        roundId: source.id,
+        kind: "CONTRIBUTION",
+        amount: "100.03",
+        currency: "BDT",
+        reference: "private-analysis-bank-reference",
+        note: "Private payment narrative that the aggregate must not select.",
+        evidenceUrl: "https://example.com/private-analysis-receipt",
+        occurredAt: new Date(Date.now() - 120000).toISOString(),
+      };
+      const original = await recordExternalPayment(admin.user.id, input);
+      await recordExternalPayment(admin.user.id, {
+        ...input,
+        reference: "second-private-bank-reference",
+        amount: "0.02",
+      });
+      await recordExternalPayment(admin.user.id, {
+        ...input,
+        kind: "PAYOUT",
+        reference: "private-payout-reference",
+        amount: "30.01",
+      });
+      await recordExternalPayment(admin.user.id, {
+        ...input,
+        kind: "REFUND",
+        reference: "private-refund-reference",
+        amount: "10.02",
+      });
+      await recordExternalPayment(admin.user.id, {
+        ...input,
+        communityId: usd.id,
+        roundId: undefined,
+        currency: "USD",
+        reference: "private-usd-reference",
+        amount: "7.01",
+      });
+      await recordExternalPayment(outside.user.id, {
+        ...input,
+        communityId: foreign.id,
+        roundId: undefined,
+        currency: "EUR",
+        reference: "foreign-private-reference",
+        amount: "900.00",
+      });
+      const initial = await getReleaseAnalytics(admin.user.id);
+      const contribution = initial.payments.find(
+        (row) => row.communityId === bdt.id && row.kind === "CONTRIBUTION",
+      )!;
+      assert.equal(contribution.amount, "10005");
+      assert.equal(contribution.recordCount, "2");
+      await reverseExternalPayment(admin.user.id, {
+        communityId: bdt.id,
+        recordId: original.id,
+        reference: "private-correction-reference",
+        note: "Correct the original staff attestation without deleting history.",
+        occurredAt: new Date(Date.now() - 60000).toISOString(),
+      });
+      const after = await getReleaseAnalytics(admin.user.id);
+      assert.deepEqual(after.assets, before.assets);
+      assert.equal(
+        await db.roundLedgerTransaction.count(),
+        beforeCounts.roundLedger,
+      );
+      assert.equal(
+        await db.ledgerTransaction.count(),
+        beforeCounts.legacyLedger,
+      );
+      assert.deepEqual(
+        await db.roundVotingPower.findMany({
+          orderBy: [{ roundId: "asc" }, { userId: "asc" }],
+          select: { roundId: true, userId: true, paidPower: true },
+        }),
+        beforeCounts.paidPower,
+      );
+      const scoped = await getReleaseAnalytics(member.user.id, {
+        community: bdt.slug,
+        dataset: "payments",
+        from: "2000-01-01",
+        to: "2000-01-02",
+      });
+      assert.equal(scoped.scope.roundCount, 0);
+      assert.equal(scoped.payments.length, 3);
+      assert.deepEqual(
+        scoped.payments.map((row) => [row.kind, row.amount, row.recordCount]),
+        [
+          ["CONTRIBUTION", "2", "1"],
+          ["PAYOUT", "3001", "1"],
+          ["REFUND", "1002", "1"],
+        ],
+      );
+      const sourceRegister = await listExternalPayments(member.user.id, bdt.id);
+      assert.equal(sourceRegister.total, 5);
+      assert.deepEqual(
+        scoped.payments.map((row) => ({ kind: row.kind, amount: row.amount })),
+        sourceRegister.totals,
+      );
+      assert.ok(
+        after.payments.some(
+          (row) => row.currency === "USD" && row.amount === "701",
+        ),
+      );
+      assert.equal(
+        after.payments.some((row) => row.currency === "EUR"),
+        false,
+      );
+      assert.equal(
+        scoped.payments.some((row) => row.currency !== "BDT"),
+        false,
+      );
+      const exported = releaseAnalyticsCsv(scoped);
+      assert.ok(exported.includes("independently unverified"));
+      assert.ok(exported.includes(`/communities/${bdt.slug}/payments`));
+      assert.ok(exported.includes('"false"'));
+      const aggregate = JSON.stringify(scoped.payments) + exported;
+      for (const forbidden of [
+        input.reference,
+        input.note,
+        input.evidenceUrl,
+        original.id,
+        member.user.id,
+        "REVERSAL",
+      ])
+        assert.equal(aggregate.includes(forbidden), false);
+      const response = await fetch(
+        origin +
+          `/api/analytics/system/export?community=${bdt.slug}&dataset=payments`,
+        { headers: { Cookie: member.cookie } },
+      );
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get("X-Total-Record-Count"), "3");
+      assert.deepEqual(
+        Buffer.from(await response.arrayBuffer()),
+        Buffer.from(
+          releaseAnalyticsCsv(
+            await getReleaseAnalytics(member.user.id, {
+              community: bdt.slug,
+              dataset: "payments",
+            }),
+          ),
+          "utf8",
+        ),
+      );
     },
   );
   await check(
@@ -545,7 +797,7 @@ async function main() {
         ).status,
         400,
       );
-      for (const dataset of ["rounds", "funds", "reputation"]) {
+      for (const dataset of ["rounds", "funds", "reputation", "payments"]) {
         const response = await fetch(
           origin +
             `/api/analytics/system/export?community=${bdt.slug}&dataset=${dataset}`,
@@ -674,6 +926,10 @@ async function main() {
         ]);
         const page = await context.newPage();
         const exportRequests: string[] = [];
+        const exportQuotaKey = hashToken(`system-export:${admin.user.id}`);
+        const exportQuotaBeforeRender = await db.rateLimit.findUnique({
+          where: { key: exportQuotaKey },
+        });
         page.on("request", (request) => {
           if (
             new URL(request.url()).pathname === "/api/analytics/system/export"
@@ -682,6 +938,19 @@ async function main() {
         });
         page.on("pageerror", (e) => errors.push(e.message));
         const templatesRoute = `/communities/${bdt.slug}/templates`;
+        await page.goto(origin + "/analytics", {
+          waitUntil: "domcontentloaded",
+        });
+        await page
+          .getByRole("link", { name: "System insights", exact: true })
+          .click();
+        await page
+          .getByRole("heading", {
+            name: "The whole picture. Every source.",
+            exact: true,
+          })
+          .waitFor();
+        assert.equal(new URL(page.url()).pathname, "/analytics/system");
         await page.goto(origin + templatesRoute, { waitUntil: "networkidle" });
         await page
           .getByText("Save a new template from an existing round", {
@@ -762,6 +1031,9 @@ async function main() {
                 exact: true,
               })
               .waitFor();
+            // Source links intentionally sit inside collapsed round details.
+            // Open the matching summary before checking that its link works.
+            await page.getByText(source.title, { exact: true }).click();
             await page
               .locator(`a[href="/communities/${bdt.slug}/rounds/${source.id}"]`)
               .first()
@@ -807,16 +1079,51 @@ async function main() {
           [],
           "Rendering and resizing must not consume export quotas.",
         );
+        const beforeDownload = await db.rateLimit.findUnique({
+          where: { key: exportQuotaKey },
+        });
+        assert.deepEqual(
+          beforeDownload,
+          exportQuotaBeforeRender,
+          "Rendering and resizing must leave the actual export quota unchanged.",
+        );
         const downloadPromise = page.waitForEvent("download");
         await page
           .getByRole("link", { name: "Export this page", exact: true })
           .click();
         const download = await downloadPromise;
         assert.equal(await download.failure(), null);
+        assert.equal(
+          download.suggestedFilename(),
+          "fundicate-system-rounds-page-1.csv",
+        );
         const exportFile = "test-results/system-explicit-download.csv";
         await download.saveAs(exportFile);
         assert.ok(readFileSync(exportFile, "utf8").includes(source.id));
-        assert.deepEqual(exportRequests, ["GET"]);
+        // Some native browser download requests do not emit Page request
+        // events. The persisted endpoint quota proves the actual request count.
+        const afterDownload = await db.rateLimit.findUnique({
+          where: { key: exportQuotaKey },
+        });
+        assert.ok(afterDownload);
+        if (
+          beforeDownload &&
+          beforeDownload.expiresAt.getTime() ===
+            afterDownload.expiresAt.getTime()
+        ) {
+          assert.equal(afterDownload.count, beforeDownload.count + 1);
+        } else {
+          assert.equal(afterDownload.count, 1);
+          if (beforeDownload) {
+            const [{ now }] = await db.$queryRaw<
+              { now: Date }[]
+            >`SELECT CURRENT_TIMESTAMP AS now`;
+            assert.ok(
+              beforeDownload.expiresAt <= now,
+              "A live quota window cannot be replaced",
+            );
+          }
+        }
         assert.equal(new URL(page.url()).pathname, "/analytics/system");
         await Promise.all([
           page.waitForURL(
@@ -846,6 +1153,11 @@ async function main() {
               exact: true,
             })
             .isVisible(),
+        );
+        assert.deepEqual(
+          await db.rateLimit.findUnique({ where: { key: exportQuotaKey } }),
+          afterDownload,
+          "Changing scope and inspecting allocation must not trigger another export.",
         );
         assert.deepEqual(errors, []);
         writeFileSync(

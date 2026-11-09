@@ -1,0 +1,43 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/unit-tests.mjs"]
+
+ RUN  v4.1.12 C:/Users/Refat/Documents/git web/Startup/fundicate
+
+ ❯ tests/http-security.test.ts (4 tests | 1 failed) 9480ms
+     × caps chunked bytes before collecting a complete body 9097ms
+ ❯ tests/analytics.test.ts (12 tests | 1 failed) 9672ms
+     × reconciles every trend bucket to the opening balance without invented activity 8200ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/analytics.test.ts > analytics boundaries and exact financial summaries > reconciles every trend bucket to the opening balance without invented activity
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/analytics.test.ts:67:3
+     65|     expect(changePercent(5000n, 10000n)).toBe(-50);
+     66|   });
+     67|   it("reconciles every trend bucket to the opening balance without inv…
+       |   ^
+     68|     const points = buildTrend({
+     69|       start: new Date("2026-10-01Z"),
+
+
+ Test Files  2 failed | 14 passed (16)
+      Tests  2 failed | 193 passed (195)
+   Start at  22:46:10
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/http-security.test.ts > HTTP security boundaries > caps chunked bytes before collecting a complete body
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/http-security.test.ts:12:3
+     10|   });
+     11| describe("HTTP security boundaries", () => {
+     12|   it("caps chunked bytes before collecting a complete body", async () …
+       |   ^
+     13|     let cancelled = false;
+     14|     const stream = new ReadableStream({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+   Duration  30.73s (transform 38.89s, setup 0ms, import 63.47s, tests 23.68s, environment 18ms)
+

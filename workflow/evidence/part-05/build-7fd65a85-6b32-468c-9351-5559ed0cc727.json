@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "build",
+  "token": "7fd65a85-6b32-468c-9351-5559ed0cc727",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "node_modules/prisma/build/index.js",
+      "generate"
+    ],
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/build.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-08T09:05:23.376Z",
+  "finishedAt": "2026-11-08T09:10:53.034Z",
+  "exitCode": 1,
+  "sourceFingerprint": "cb65dc535afa48a8b8ad7a83860f325e415f2a85781be213ee774fa20f853fb3",
+  "sourceUnchanged": false,
+  "logPath": "workflow/evidence/part-05/build-7fd65a85-6b32-468c-9351-5559ed0cc727.log",
+  "logHash": "b5e7fdfe13569d610f85d160104c6cf0450d3537f6f93bb51db9ea70f3fd289e"
+}

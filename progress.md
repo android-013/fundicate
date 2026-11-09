@@ -1,7 +1,9 @@
+**Standalone branch scope:** 5/5 applies only to the user-amended standalone branch. The generated Part 5 title was captured before the amendment; NEAR testnet remains unperformed and unverified. The current scope is [the canonical standalone plan](docs/MASTER-PLAN.md). The historical state title is preserved rather than rewritten.
+
 <!-- delivery-status:start -->
 Current delivery: 4/5 parts complete. This is milestone count, not PDF feature coverage.
 
-State: needs_input. Next eligible part: 5. Revision: 198.
+State: needs_input. Next eligible part: 5. Revision: 354.
 
 | Part | Scope | Status |
 | --- | --- | --- |

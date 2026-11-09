@@ -1,0 +1,88 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","rounds"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794156965537_7708", schema "public" at "127.0.0.1:54329"
+
+15 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 8ms
+PASS staff-only creation, same-origin protection and validated immutable configuration
+PASS new-round page requires sign-in and submission deadlines cannot be bypassed
+PASS public scheme submission supports non-members without granting voting membership
+PASS published rules, scheme content and staff cancellation are locked
+PASS submission policies, caps and cross-community identifiers are enforced
+PASS screening freezes the electorate and rejects non-staff stage changes
+PASS screening privacy includes anonymous views, other members and public audit details
+PASS duplicate, ineligible, late-member and cross-round screening votes fail
+PASS screening ballots and voter snapshots are immutable in PostgreSQL
+PASS suspended voters cannot vote and restored frozen members can continue
+PASS screening and selection are separate elections; ties fail strict screening majority
+PASS selection preserves secrecy, one ballot per voter and frozen eligibility
+PASS tied selection publishes ballots and leaves the treasury unchanged
+PASS unique FPTP winner is final without creating a payment or legacy proposal
+PASS deadline boundaries reject late ballots and no-quorum selection picks no winner
+PASS empty rounds and rejected schemes conclude without a winner
+(node:18444) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS browser creates and opens a round, then submits a scheme
+PASS browser records a sealed screening ballot and shows only the voter’s own choice
+PASS browser records a selection while keeping other selection ballots hidden
+PASS round list, published results and existing proposal navigation render on desktop and phones
+PASS 14 funding-round WCAG A/AA scans; no violations.
+PASS 20 funding-round integrity, authorization, privacy, HTTP and browser checks.

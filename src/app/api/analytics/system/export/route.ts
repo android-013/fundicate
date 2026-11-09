@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
               ? report.assets.length
               : report.filters.dataset === "reputation"
                 ? report.reputation.length
-                : report.chain.groups.length + report.chain.observations.length,
+                : report.payments.length,
         ),
         "X-Total-Record-Count": String(
           report.filters.dataset === "rounds"
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
               ? report.assets.length
               : report.filters.dataset === "reputation"
                 ? report.reputation.length
-                : report.chain.groups.length + report.chain.observations.length,
+                : report.payments.length,
         ),
       },
     });

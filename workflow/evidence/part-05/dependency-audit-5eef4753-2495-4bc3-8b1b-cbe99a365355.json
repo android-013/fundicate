@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "dependency-audit",
+  "token": "5eef4753-2495-4bc3-8b1b-cbe99a365355",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/dependency-audit.mjs"
+    ]
+  ],
+  "startedAt": "2026-11-09T07:53:18.322Z",
+  "finishedAt": "2026-11-09T07:54:03.851Z",
+  "exitCode": 0,
+  "sourceFingerprint": "643d7ea645e9a14b14d67526d35417a0148a3a41ece1402550e1885b98044db5",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/dependency-audit-5eef4753-2495-4bc3-8b1b-cbe99a365355.log",
+  "logHash": "da8b66c02abafe61f4bd2d541f70cb01531f51bae56b613a0b5e1807bb1dfe81"
+}

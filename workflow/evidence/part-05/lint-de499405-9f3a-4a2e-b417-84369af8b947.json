@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "lint",
+  "token": "de499405-9f3a-4a2e-b417-84369af8b947",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "node_modules/eslint/bin/eslint.js",
+      "."
+    ]
+  ],
+  "startedAt": "2026-11-08T09:21:07.373Z",
+  "finishedAt": "2026-11-08T09:24:07.722Z",
+  "exitCode": 0,
+  "sourceFingerprint": "85690c7c719d07a75ba50b79f593e2df1748a89a22c892603f98faf2903ca0c9",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/lint-de499405-9f3a-4a2e-b417-84369af8b947.log",
+  "logHash": "e24ef0e1086aafba8a7fc67c1aa4098a3c61d02e42eb530e04e3b981272b074d"
+}

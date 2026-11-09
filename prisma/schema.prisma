@@ -846,7 +846,7 @@ model ExternalPaymentRecord {
   note String @db.VarChar(2000)
   evidenceUrl String? @db.VarChar(2048)
   occurredAt DateTime
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(dbgenerated("timezone('UTC'::text, clock_timestamp())"))
   reversesId String? @unique @db.Uuid
   community Community @relation(fields:[communityId],references:[id],onDelete:Restrict)
   round FundingRound? @relation(fields:[roundId],references:[id],onDelete:Restrict)

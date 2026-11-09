@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import pg from "pg";
 import { db } from "../src/lib/db";
 import { createCommunity } from "../src/lib/service";
 import { createFundingRound, fundingRoundAction } from "../src/lib/rounds";
@@ -127,6 +128,155 @@ async function main() {
     }),
   };
   let originalId = "";
+
+  const checkInsertionClocks = async () => {
+    await check(
+      "insert clocks remain valid after transaction delays and across session timezones without admitting future dates",
+      async () => {
+        const history = await db.externalPaymentRecord.findMany({
+          orderBy: { id: "asc" },
+        });
+        assert.ok(
+          history.length > 0,
+          "Posted records must exist before the rollback probes.",
+        );
+        const auditCount = await db.auditEvent.count();
+        const client = new pg.Client({
+          connectionString: process.env.DATABASE_URL,
+        });
+        await client.connect();
+        try {
+          for (const zone of ["UTC", "Asia/Dhaka", "America/New_York"]) {
+            await client.query("BEGIN");
+            try {
+              await client.query("SELECT set_config('TimeZone', $1, true)", [
+                zone,
+              ]);
+              await client.query("SELECT pg_sleep(0.05)");
+              const clockBefore = await client.query<{ milliseconds: string }>(
+                `SELECT (EXTRACT(EPOCH FROM timezone('UTC',clock_timestamp())) * 1000)::bigint::text AS milliseconds`,
+              );
+              const reference = `clock-default-${randomUUID()}`;
+              const result = await client.query<{
+                count: number;
+                afterTransaction: boolean;
+                notFuture: boolean;
+                earliestMs: string;
+                latestMs: string;
+                observedMs: string;
+              }>(
+                `WITH inserted AS (
+                INSERT INTO "ExternalPaymentRecord"
+                  (id,"communityId","recordedById",kind,amount,currency,reference,note,"occurredAt")
+                SELECT gen_random_uuid(),$1::uuid,$2::uuid,'CONTRIBUTION',1,'BDT',
+                  $3::text || '-' || n::text,'Rolled-back insertion clock probe.',
+                  timezone('UTC',clock_timestamp()) - interval '1 minute'
+                FROM generate_series(1,32) n
+                RETURNING "createdAt"
+              ) SELECT count(*)::int AS count,
+                bool_and("createdAt" > timezone('UTC',transaction_timestamp())) AS "afterTransaction",
+                bool_and("createdAt" <= timezone('UTC',clock_timestamp())::timestamp(3)) AS "notFuture",
+                (EXTRACT(EPOCH FROM min("createdAt")) * 1000)::bigint::text AS "earliestMs",
+                (EXTRACT(EPOCH FROM max("createdAt")) * 1000)::bigint::text AS "latestMs",
+                (EXTRACT(EPOCH FROM timezone('UTC',clock_timestamp())) * 1000)::bigint::text AS "observedMs"
+                FROM inserted`,
+                [community.id, admin.id, reference],
+              );
+              assert.equal(result.rows[0].count, 32);
+              assert.equal(result.rows[0].afterTransaction, true);
+              assert.equal(result.rows[0].notFuture, true);
+              assert.ok(
+                BigInt(result.rows[0].earliestMs) >=
+                  BigInt(clockBefore.rows[0].milliseconds),
+              );
+              assert.ok(
+                BigInt(result.rows[0].latestMs) <=
+                  BigInt(result.rows[0].observedMs),
+              );
+              // This is the old Prisma-client timing pattern: insert metadata is
+              // generated after the transaction began and the lock was acquired.
+              const explicit = await client.query(
+                `INSERT INTO "ExternalPaymentRecord"
+                (id,"communityId","recordedById",kind,amount,currency,reference,note,"occurredAt","createdAt")
+              VALUES (gen_random_uuid(),$1::uuid,$2::uuid,'CONTRIBUTION',1,'BDT',$3,
+                'Rolled-back explicit insertion clock probe.',
+                timezone('UTC',clock_timestamp()) - interval '1 minute',
+                timezone('UTC',clock_timestamp())::timestamp(3))`,
+                [community.id, admin.id, `clock-explicit-${randomUUID()}`],
+              );
+              assert.equal(explicit.rowCount, 1);
+              const reversal = await client.query(
+                `INSERT INTO "ExternalPaymentRecord"
+                (id,"communityId","recordedById",kind,amount,currency,reference,note,"occurredAt","reversesId")
+              SELECT gen_random_uuid(),"communityId",$1::uuid,'REVERSAL',amount,currency,$2,
+                'Rolled-back reversal insertion clock probe.',
+                timezone('UTC',clock_timestamp()),id
+              FROM "ExternalPaymentRecord" WHERE reference=$3`,
+                [admin.id, `clock-reversal-${randomUUID()}`, reference + "-1"],
+              );
+              assert.equal(reversal.rowCount, 1);
+            } finally {
+              await client.query("ROLLBACK");
+            }
+            for (const futureColumn of ["occurredAt", "createdAt"] as const) {
+              await client.query("BEGIN");
+              try {
+                await client.query("SELECT set_config('TimeZone', $1, true)", [
+                  zone,
+                ]);
+                const occurrence =
+                  futureColumn === "occurredAt"
+                    ? "timezone('UTC',clock_timestamp()) + interval '1 day'"
+                    : "timezone('UTC',clock_timestamp()) - interval '1 minute'";
+                const creation =
+                  futureColumn === "createdAt"
+                    ? "timezone('UTC',clock_timestamp()) + interval '1 day'"
+                    : "timezone('UTC',clock_timestamp())";
+                await assert.rejects(
+                  client.query(
+                    `INSERT INTO "ExternalPaymentRecord"
+                    (id,"communityId","recordedById",kind,amount,currency,reference,note,"occurredAt","createdAt")
+                  VALUES (gen_random_uuid(),$1::uuid,$2::uuid,'CONTRIBUTION',1,'BDT',$3,
+                    'Rejected future insertion clock probe.',${occurrence},${creation})`,
+                    [community.id, admin.id, `clock-future-${randomUUID()}`],
+                  ),
+                  (error: unknown) =>
+                    error instanceof Error &&
+                    "code" in error &&
+                    error.code === "P0001" &&
+                    error.message === "External payment time is in the future",
+                );
+              } finally {
+                await client.query("ROLLBACK");
+              }
+            }
+          }
+        } finally {
+          await client.end();
+        }
+        assert.deepEqual(
+          await db.externalPaymentRecord.findMany({ orderBy: { id: "asc" } }),
+          history,
+        );
+        assert.equal(await db.auditEvent.count(), auditCount);
+        assert.equal(await db.ledgerTransaction.count(), before.ledger);
+        assert.equal(
+          await db.roundLedgerTransaction.count(),
+          before.roundLedger,
+        );
+        assert.equal(await db.roundContribution.count(), before.contributions);
+        assert.equal(await db.roundVotingPower.count(), before.voting);
+        assert.deepEqual(
+          await db.treasuryAccount.findMany({
+            where: { communityId: community.id },
+            orderBy: { id: "asc" },
+            select: { id: true, balance: true },
+          }),
+          before.accounts,
+        );
+      },
+    );
+  };
 
   await check(
     "only active community staff can record external payments",
@@ -412,6 +562,7 @@ async function main() {
       );
     },
   );
+  await checkInsertionClocks();
   await check(
     "tracking cannot create money, rewrite voting weights or settle historical decisions",
     async () => {

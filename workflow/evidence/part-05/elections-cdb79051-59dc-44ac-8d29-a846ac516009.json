@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "elections",
+  "token": "cdb79051-59dc-44ac-8d29-a846ac516009",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/test-db.mjs",
+      "elections"
+    ]
+  ],
+  "startedAt": "2026-11-08T16:30:44.634Z",
+  "finishedAt": "2026-11-08T16:34:09.585Z",
+  "exitCode": 0,
+  "sourceFingerprint": "440ee3f669035c14f69ed931de8fdd38351152d45d83e139a037b76c0608f51d",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/elections-cdb79051-59dc-44ac-8d29-a846ac516009.log",
+  "logHash": "fbdcb096509272e04d92b9b408ef4e1ff1d9c7309d389d923446ebc2c28a1386"
+}

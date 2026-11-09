@@ -1,0 +1,2 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/dependency-audit.mjs"]
+{"checkedAt":"2026-11-09T07:54:03.801Z","registry":"https://registry.npmjs.org","vulnerabilities":{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0},"dependencies":{"prod":43,"dev":582,"optional":135,"peer":0,"peerOptional":0,"total":662}}

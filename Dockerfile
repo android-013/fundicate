@@ -18,9 +18,21 @@ ENV APP_ORIGIN=http://127.0.0.1:3000
 RUN npm run build
 
 # Operator-only image: migrations, maintenance and diagnostics. Not exposed as a server.
-FROM builder AS tools
-RUN apk upgrade --no-cache zlib
-ENV NODE_ENV=production
+FROM base AS tools
+# Keep build caches, inactive contracts and global package-manager graphs out of
+# the distributed operator image. The repository retains all historical source.
+RUN apk upgrade --no-cache zlib && \
+    rm -rf /usr/local/lib/node_modules /opt/yarn-* && \
+    rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
+WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/src ./src
+COPY --from=builder --chown=node:node /app/scripts ./scripts
+COPY --from=builder --chown=node:node /app/prisma ./prisma
+COPY --from=builder --chown=node:node /app/public/rules ./public/rules
+COPY --from=builder --chown=node:node /app/docs/algorithms ./docs/algorithms
+COPY --from=builder --chown=node:node /app/package.json /app/package-lock.json /app/tsconfig.json /app/prisma.config.ts ./
 USER node
 CMD ["node", "scripts/doctor.mjs"]
 

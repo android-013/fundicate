@@ -1,0 +1,42 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","node_modules/prisma/build/index.js","generate"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (v7.10.1) to .\node_modules\@prisma\client in 4.23s
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","node_modules/typescript/bin/tsc","--noEmit"]
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/build.mjs"]
+▲ Next.js 16.4.3 (webpack)
+- Environments: .env
+✓ Running next.config.ts took 2.7s
+- Experiments (use with caution):
+  · cpus: 1
+  · staticGenerationMaxConcurrency: 1
+  ⨯ webpackBuildWorker
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 110s
+  Collecting page data using 1 worker ...
+  Finalizing page optimization ...
+  Collecting build traces ...
+Error: EPERM: operation not permitted, readlink 'C:\Users\Refat\Documents\git web\Startup\fundicate\node_modules'
+    at ignore-listed frames {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'readlink',
+  path: 'C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\node_modules'
+}
+
+> Build error occurred
+Error: EPERM: operation not permitted, readlink 'C:\Users\Refat\Documents\git web\Startup\fundicate\node_modules'
+    at ignore-listed frames {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'readlink',
+  path: 'C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\node_modules'
+}
+Removed 0 copied environment files from generated standalone output.

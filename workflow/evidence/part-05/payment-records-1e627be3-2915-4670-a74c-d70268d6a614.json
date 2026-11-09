@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "payment-records",
+  "token": "1e627be3-2915-4670-a74c-d70268d6a614",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/test-db.mjs",
+      "payment-records"
+    ]
+  ],
+  "startedAt": "2026-11-08T16:43:40.802Z",
+  "finishedAt": "2026-11-08T16:44:57.654Z",
+  "exitCode": 0,
+  "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/payment-records-1e627be3-2915-4670-a74c-d70268d6a614.log",
+  "logHash": "1a324d665f6f98ca7c7bc8896a70172e0c83e01efc858617abe27ae5f3d3d45d"
+}
