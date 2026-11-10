@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "release",
+  "token": "f715e789-775f-477a-8516-0e5ec77aeeff",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/test-db.mjs",
+      "release"
+    ]
+  ],
+  "startedAt": "2026-11-10T06:14:39.725Z",
+  "finishedAt": "2026-11-10T06:15:39.133Z",
+  "exitCode": 0,
+  "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/release-f715e789-775f-477a-8516-0e5ec77aeeff.log",
+  "logHash": "60ccd27eccd56ca28310a3e9913077929b9cb57b9343a2412243404696691b77"
+}

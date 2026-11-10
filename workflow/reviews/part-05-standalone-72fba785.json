@@ -1,0 +1,278 @@
+{
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "reviewer": "/root/final_release_reviewer",
+  "independent": true,
+  "verdict": "pass",
+  "reviewDate": "2026-11-10",
+  "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+  "receiptSetHash": "d8485c140c5eea28d75d6d3d8cda6faa239badc9b83491f48fa84ecafe4e77a1",
+  "handoffHash": "c027643c87e265644cef297660e6f7e86c801342d686c933c638db14379fe1e7",
+  "requirementsReviewed": [
+    "R28",
+    "R29",
+    "R30",
+    "R31",
+    "R32",
+    "R33",
+    "R34",
+    "R35",
+    "R36"
+  ],
+  "preservation": {
+    "legacyFeatures": true,
+    "historyPreserved": true,
+    "heldFundsIsolated": true,
+    "privacyPreserved": true
+  },
+  "scope": "Final independent implementation, requirement, evidence, preservation and handoff review for the explicitly amended standalone Part 5. Approval covers the inspected parameterized HTTP application and tested native/ Linux-amd64 local artifacts with trusted private database peers and operators. It does not certify a hosted environment, general SQL/GSS tenants, native utilities or real-money processing.",
+  "independence": "The reviewer did not implement or modify product source, migrations, tests, the handoff or workflow state, and did not execute product suites or services. The reviewer independently inspected source, original notes, current receipts/logs, raw container evidence and the assessor's dispositions. This JSON is the reviewer's only project write; read-only verification helpers and resumable notes were saved in the chat workspace.",
+  "evidenceIntegrity": {
+    "verifiedAtRevision": 410,
+    "sourceFilesIndependentlyHashed": 207,
+    "sourceFingerprintIndependentlyRecomputed": true,
+    "receiptSetHashIndependentlyRecomputed": true,
+    "handoffHashIndependentlyRecomputed": true,
+    "actualRequiredChecks": 20,
+    "allReceiptAndLogHashesVerified": true,
+    "allRunPartCheckIdentitiesVerified": true,
+    "allRequiredChecksExitZero": true,
+    "allRequiredChecksSourceUnchanged": true,
+    "allRequiredChecksMatchFinalSource": true,
+    "allAssignedCriteriaCurrentAndEvidenceValid": 24,
+    "activeCheck": null,
+    "unresolvedBlockers": 0,
+    "requiredFundedMatrixCells": 36,
+    "allMatrixCellIdsFoundInCurrentElectionLog": true,
+    "failedAndSupersededEvidencePreservedAndExcludedFromFinalPasses": true,
+    "verifier": "C:/Users/Refat/Documents/Codex/2026-11-02/c-users-refat-documents-git-web/work/part5-independent-evidence.mjs"
+  },
+  "originalRequirementMapping": {
+    "source": "C:/Users/Refat/Downloads/Money_Heist_Formatted.md",
+    "distinction": "Original project notes occupy lines 7-36; line 38 begins ChatGPT's structured response. Optional suggestions are not silently treated as original requirements.",
+    "mandatoryOriginalCoverage": "Authentication, one-admin/multiple-moderator communities, founder/member declarations, majority admission and two-thirds governed removal, staff/everyone submissions, 24-hour scheme screening, six election methods with equal/contribution weighting, three allocation policies, optional 24-hour 90-percent veto, secrecy/published rules, held-fund allocation/refund mechanics and written 1-5-star member/proposal/agenda ratings map to R01/R02/R06-R11/R13/R15-R18/R20-R26. GECCO is the user-confirmed Glicko-2.",
+    "optionalAndEnhancementBoundary": "The original does not require 24-hour membership admission, capped weighting, community-level ratings, reliability/transparency/execution subratings, KYC, MFA or email verification. R19 remains explicitly optional backlog. R12/R14/R27/R32-R35 are separately committed engineering/product enhancements rather than misattributed original text.",
+    "amendment": "The recorded 7 November standalone amendment replaces R28-R30 real-chain execution gates. Real custody/transfers and NEAR operations remain unperformed/unverified and disabled. Existing financial mechanics are simulations; external payment records are independently unverified attestations, not proof of real payment. Approval does not claim delivery of the original real-money promise or the original NEAR target."
+  },
+  "verificationObserved": {
+    "workflowTests": 14,
+    "unitTests": 195,
+    "unitFiles": 16,
+    "postgresqlChecks": 27,
+    "httpChecks": 61,
+    "securityGroups": 11,
+    "unsafeReusedRoleCases": 19,
+    "paymentRecordChecks": 20,
+    "legacyRoundChecks": 20,
+    "fundedGovernanceChecks": 32,
+    "electionChecks": 69,
+    "reputationChecks": 14,
+    "releaseAnalyticsTemplateChecks": 22,
+    "generalBrowserChecks": 75,
+    "generalAccessibilityZeroViolationScans": 30,
+    "methods": "Current election log contains all 36 funded method/weight/allocation cells and all six real browser ballot flows, plus 24 V4 and 4 V3 zero-violation scans.",
+    "recovery": "Actual native pg_dump/pg_restore compared 50 tables and five monetary invariants against one held exported snapshot; post-snapshot source mutation stayed separate.",
+    "demo": "Current large-demo log proves 100 fictional members, 100000 BDT, three schemes, sealed selection, 60000 BDT simulated payout, 40000 BDT source refunds and five separate external attestations with unchanged simulated funds.",
+    "scans": "Current dependency audit reports zero registry findings. Secret/distribution scan reports no configured secrets or retired wallet SDK in browser artifacts. These do not replace the separately disclosed database OS inventory.",
+    "note": "Counts are observations from actual current registered receipts/logs, not tests executed by this reviewer or invented aggregate assertions. Typecheck, lint and complete production build also passed."
+  },
+  "requirementEvidence": {
+    "R28": {
+      "checks": [
+        "security",
+        "http",
+        "secret-scan"
+      ],
+      "conclusion": "Standalone-only runtime rejects chain modes and retires wallet/chain endpoints. Scoped authority, recent reauthentication, durable quotas, revocation and generic/private error boundaries are implemented and verified."
+    },
+    "R29": {
+      "checks": [
+        "payment-records",
+        "release",
+        "unit"
+      ],
+      "conclusion": "Exact currency-bound staff attestations, member-scoped paginated history/CSV, full immutable actor/payload replay and source reversals preserve originals without money movement, simulated credit or voting rights."
+    },
+    "R30": {
+      "checks": [
+        "payment-records",
+        "funds",
+        "elections",
+        "integration"
+      ],
+      "conclusion": "Concurrency, unique references/reversals, invalid-scope rollback and SQL guards preserve one effect and existing ledgers. Additive UTC insertion-clock repair rejects genuine future values while allowing delayed transactions/defaults across timezones."
+    },
+    "R31": {
+      "checks": [
+        "release",
+        "payment-records",
+        "unit"
+      ],
+      "conclusion": "Integrated reports retain simple overview/deep source links/CSV and exact asset groups. Per-community draft authorization is applied before cohort limits/aggregates; pending context and ballots are sealed; external private details are not selected for system aggregates."
+    },
+    "R32": {
+      "checks": [
+        "release",
+        "unit"
+      ],
+      "conclusion": "Append-only template revisions create new rule-bound drafts. Explicit bounded maintenance rechecks authority and actual lifecycle/settlement/veto gates, preserves published rules and does not install an implicit scheduler."
+    },
+    "R33": {
+      "checks": [
+        "security",
+        "recovery",
+        "secret-scan",
+        "build"
+      ],
+      "conclusion": "Runtime validation/readiness, owner/runtime separation, fail-closed reused-role preflight, sanitized packaging, actual recovery and truthful deployment prerequisites are verified. Native PostgreSQL tools and superuser-operator provisioning limits are disclosed."
+    },
+    "R34": {
+      "checks": [
+        "large-demo",
+        "payment-records",
+        "elections"
+      ],
+      "conclusion": "The opt-in isolated fictional 100-member/100000-BDT/three-scheme demo proves sealed decisions and exact payout/refunds. Separate attestations/reversal move no money and do not reset the configured database."
+    },
+    "R35": {
+      "checks": [
+        "workflow-tests",
+        "unit",
+        "typecheck",
+        "lint",
+        "integration",
+        "build",
+        "http",
+        "browser",
+        "rounds",
+        "accessibility",
+        "funds",
+        "elections",
+        "reputation",
+        "release",
+        "recovery",
+        "large-demo",
+        "dependency-audit",
+        "security",
+        "payment-records",
+        "secret-scan"
+      ],
+      "conclusion": "The reviewer personally completed final R35.1/R35.2/R35.3 review before their CLI acceptance. All 20 final-source passes, original/amended requirement mapping, native/container observations and complete handoff are genuine and current; no mandatory amended-scope gap or open material blocker remains. All 24 criteria were independently reverified after the three R35 acceptances."
+    },
+    "R36": {
+      "checks": [
+        "rounds",
+        "funds",
+        "elections",
+        "reputation",
+        "http",
+        "browser",
+        "accessibility",
+        "security",
+        "integration"
+      ],
+      "conclusion": "Existing networking, profiles, dashboards, saved views, exports, legacy proposals/treasury and V1-V4 behavior remain covered by fresh regressions. Migrations are additive, old published rights are not reinterpreted, held funds remain separate, and new ballots/context preserve secrecy."
+    }
+  },
+  "nativePackageEvidence": {
+    "file": ".local/native-package-final-1794291663425.json",
+    "sha256": "ac0b6be7171d2c4e2f8ffc80c38f631c6a274babb4e24cd94a9eb259eb46ba59",
+    "logPath": ".local/native-package-final-1794291663425.log",
+    "logHash": "37a7571aa36aee607e4b75cf73eb4a0cb2e1716878f66a976040386c6af81483",
+    "buildReceipt": "workflow/evidence/part-05/build-7ff87fba-0774-4e4d-901c-db6b53a1267d.json",
+    "buildReceiptHash": "b2aeb30a77d843fd0e7da91093146ed26244fab80d06d4b4f971ca672dd079af",
+    "artifact": "C:/Users/Refat/Documents/Codex/2026-11-02/c-users-refat-documents-git-web/work/standalone-package-1794291631217",
+    "serverSha256": "fbc98be884c640706513e1c9911fcc72b0d163f65cec01167b1ed47bb69644a7",
+    "independentlyVerified": "Exact command/timestamps/exit0/raw log hash and current final-build receipt binding; current and copied server hashes match. Copied public/static assets exist, source .env is absent, own dependency resolution and health/three public/login/three authenticated routes passed. This is labelled manual observation, not a workflow receipt."
+  },
+  "containerReview": {
+    "evidenceIndex": ".local/container-audit-20261108/public-evidence-index-20261110T060808Z.json",
+    "filesIndependentlyHashVerified": 78,
+    "smoke": ".local/container-audit-20261108/b81b181f94-smoke-result.json",
+    "smokeSha256": "1402f830e9318e7543eaea4014d1df878760d1cbff33ef4a63dddc3e16c3040b",
+    "assessment": "docs/security/database-assessment.json",
+    "assessmentSha256": "a809fd51f3ec3aa69ecfd85fa981c54102096dee0d04c13fd17d2641a2bed101",
+    "assessor": "/root/final_container_assessor",
+    "runtimeImage": "sha256:addb03f223f9888c377ba0320304ec3aae1fae952bbf654edbfdcb526cd84d6d",
+    "toolsImage": "sha256:833fdbc2fa21c7fb64a7dff99ceb7a613cd7feeb039331722e93d2aad055fcbf",
+    "databaseImage": "sha256:ea816ac5ef27d3e72a3b80352387b363e7348600ffd5302aca9f2a1d198b0818",
+    "actualEvidence": "Independently verified all four canonical recipe hashes, final source and resolved image IDs. Migration/doctor16, owner-secret separation, 14 denied elevated flags/memberships, appUID1000/DBUID999 zero capabilities, internal database/no host port/nonprivileged, HTTP payment replay/reversal/ledger separation, maintenance, 20 desktop/mobile browser checks and six zero-violation axe scans passed. Actual snapshot restore matched 50 tables/five invariants with source mutation preserved. A separate new-volume original-PG18-to-patched fixture preserved its committed row and recorded glibc collation2.36. Existing user volumes were not attached/reset.",
+    "rawDatabaseFindings": {
+      "critical": 4,
+      "high": 75,
+      "medium": 203,
+      "low": 174,
+      "unknown": 17,
+      "total": 473
+    },
+    "assessmentRecordComparison": "Independently compared all473 assessed records to raw target/type/advisory/package/installed-version/severity/fixed-version fields: zero differences. Context smoke hash and exact assessment hash match.",
+    "dispositions": "344 lower-severity OS records remain inventoried without individual safe verdict; 49 vendor-affected High/Critical OS and16 new Kerberos Unknown records have specific supported-input/peer residual assessments. Other records have exact-symbol/platform/component explanations. Govulncheck raw log reports0affected symbols,3imported-package and55module matches for the exact shipped gosu; this is not blanket Go absence.",
+    "decision": "The actual compatible patch, unsuppressed fresh scans, functional/restore proof and substantive per-path assessment resolve the container verification/disposition blocker for the documented standalone HTTP boundary. Raw severities and vendor-affected status remain intact; this is not a patch, clean-image claim or general-purpose database/public-host certification."
+  },
+  "residualBoundaries": [
+    "PostgreSQL XML parsing is linked and callable by runtime SQL credentials; no affected internal XML callgraph exclusion is claimed. No inspected product endpoint accepts XML, general SQL, SQLite, LDAP, native archive or executable input. New features, SQL injection, credential compromise or untrusted SQL tenants require reassessment.",
+    "Kerberos/GSS libraries remain linked; GSS transport negotiation can precede SQL authentication. SCRAM HBA does not prove GSS transport disabled, and pre-authentication direct database-protocol peers must remain trusted/private. Upstream119079 explicitly includes application servers, not only KDCs.",
+    "Local/container-loopback trust is observed and is a trusted host/container boundary. Untrusted local users, direct DB exposure, privileged host mounts/devices, arbitrary operator archives or native utilities are outside approval.",
+    "TLS/reverse-proxy header overwrite and blocked direct access, private/verified database transport, secrets, monitoring, job ownership and backups require actual target-environment verification. No public hosting, external penetration test or certification occurred.",
+    "Email verification, self-service recovery and MFA remain unimplemented disclosed onboarding limitations. Automated role provisioning was tested with a superuser operator; delegated/managed-provider setup requires separate review. Only Linux/amd64 container execution is verified.",
+    "Real NEAR/testnet/mainnet, real custody/transfers and automatic real-payment voting weights are disabled/unverified. R19 capped weights remains optional backlog. Local resumable files and database persistence do not replace off-device backups."
+  ],
+  "primaryReferencesPersonallyRechecked": [
+    "https://security-tracker.debian.org/tracker/CVE-2026-6653",
+    "https://security-tracker.debian.org/tracker/CVE-2023-45853",
+    "https://security-tracker.debian.org/tracker/CVE-2025-7458",
+    "https://www.postgresql.org/docs/18/functions-xml.html",
+    "https://github.com/krb5/krb5/commit/782e5ac4fb1496a79de0b87e1fc485f897e97d6d",
+    "https://github.com/krb5/krb5/commit/8aab893c6eb17125e1518f9926bc3593cf19303c"
+  ],
+  "findings": [
+    {
+      "id": "P5-CLOCK",
+      "severity": "medium",
+      "requirements": [
+        "R29",
+        "R30",
+        "R33"
+      ],
+      "file": "prisma/migrations/20261109010000_payment_record_clock/migration.sql",
+      "status": "resolved",
+      "description": "The earlier transaction-start timestamp guard falsely rejected legitimate payment creation and failed the original real Compose smoke.",
+      "resolution": "Additive migration16 and schema database default use the same UTC wall clock/millisecond precision after the community lock. Existing scope/reversal/append-only checks remain unchanged. Current20 payment checks and repaired actual Compose flow pass; failed earlier evidence is retained."
+    },
+    {
+      "id": "P5-REUSED-ROLE",
+      "severity": "high",
+      "requirements": [
+        "R28",
+        "R33"
+      ],
+      "file": "scripts/provision-runtime-role.mjs",
+      "status": "resolved",
+      "description": "Changing role flags alone did not prove a reused identity lacked inherited privileges, ownership or prior unsafe ACLs.",
+      "resolution": "Mutation-free preflight rejects elevated flags, both membership directions, global ownership, cross-database dependencies and unsafe/grantable ACLs before migration, after migration and before commit. Current19unsafe cases, cross-database refusal, safe reuse, denied commands and actual14flag/membership fixture checks pass."
+    },
+    {
+      "id": "P5-PROGRESS-TITLE",
+      "severity": "low",
+      "requirements": [
+        "R35"
+      ],
+      "file": "progress.md",
+      "status": "accepted",
+      "description": "The generated historical Part5 state title still mentions the prior NEAR milestone.",
+      "reason": "Canonical plan/requirements and prominent progress/handoff amendment explain standalone-only scope and explicitly disclose unperformed/unverified NEAR. Immutable historical state was not manually rewritten, and no chain completion claim is made."
+    },
+    {
+      "id": "P5-PG-FUTURE-DEPRECATION",
+      "severity": "low",
+      "requirements": [
+        "R33"
+      ],
+      "file": ".local/native-package-final-1794291663425.log",
+      "status": "accepted",
+      "description": "Actual native/demo logs retain a pg warning that concurrent client.query queuing will be removed in pg9.",
+      "reason": "The current pinned pg release supports queued queries and all current integrity, concurrency, recovery and packaging checks pass. No pg9 compatibility is claimed; dependency changes require fresh verification. This warning is preserved, not suppressed or relabelled a failed current check."
+    }
+  ],
+  "completionCondition": "The coordinator may register this genuine report and run canonical validation/completion for amended standalone Part5 only while the bound source, complete receipt set and handoff remain unchanged. No Part6, hosted publication, push or additional feature/provider work is authorized."
+}

@@ -1,0 +1,123 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/browser-tests.mjs","accessibility"]
+[
+  {
+    "path": "/",
+    "violations": []
+  },
+  {
+    "path": "/login",
+    "violations": []
+  },
+  {
+    "path": "/register",
+    "violations": []
+  },
+  {
+    "path": "/dashboard",
+    "violations": []
+  },
+  {
+    "path": "/explore",
+    "violations": []
+  },
+  {
+    "path": "/communities/new",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/treasury",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/members",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/proposals",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/proposals/new",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/governance",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/activity",
+    "violations": []
+  },
+  {
+    "path": "/settings/profile",
+    "violations": []
+  },
+  {
+    "path": "/settings/security",
+    "violations": []
+  },
+  {
+    "path": "/analytics",
+    "violations": []
+  },
+  {
+    "path": "/analytics/treasury",
+    "violations": []
+  },
+  {
+    "path": "/analytics/governance",
+    "violations": []
+  },
+  {
+    "path": "/analytics/network",
+    "violations": []
+  },
+  {
+    "path": "/analytics/personal",
+    "violations": []
+  },
+  {
+    "path": "/analytics/records",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/proposals/c68d581b-c8d6-42ce-bb6b-553b82e88836",
+    "violations": []
+  },
+  {
+    "path": "/ (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/dashboard (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/explore (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/communities/campus-collective/treasury (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics/treasury (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics/network (mobile)",
+    "violations": []
+  },
+  {
+    "path": "/analytics/records (mobile)",
+    "violations": []
+  }
+]

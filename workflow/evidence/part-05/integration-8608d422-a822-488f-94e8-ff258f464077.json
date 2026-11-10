@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "integration",
+  "token": "8608d422-a822-488f-94e8-ff258f464077",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/test-db.mjs",
+      "integration"
+    ]
+  ],
+  "startedAt": "2026-11-10T06:00:17.582Z",
+  "finishedAt": "2026-11-10T06:00:46.800Z",
+  "exitCode": 0,
+  "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/integration-8608d422-a822-488f-94e8-ff258f464077.log",
+  "logHash": "c0661cde06149703f3c3cf363c822cff5b0afd676ceb1d567e39b0caee29182c"
+}

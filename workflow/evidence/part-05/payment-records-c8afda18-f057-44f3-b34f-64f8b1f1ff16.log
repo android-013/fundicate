@@ -1,0 +1,88 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","payment-records"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794291341704_22240", schema "public" at "127.0.0.1:54329"
+
+16 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+Applying migration `20261109010000_payment_record_clock`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+  └─ 20261109010000_payment_record_clock/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 39ms
+PASS 1. only active community staff can record external payments
+PASS 2. replayed references require every original detail and recorder identity
+PASS 3. concurrent replays create exactly one attributable record and one audit
+PASS 4. currency, future dates, foreign rounds and foreign counterparties are rejected
+PASS 5. SQL-like free text is inert data while SQL-like IDs fail validation
+PASS 6. payment details are restricted to active members and never enter public audit details
+PASS 7. a correction appends one full reversal and preserves original records
+PASS 8. SQL guards prohibit rewriting, deleting or cross-scope payment history
+PASS 9. insert clocks remain valid after transaction delays and across session timezones without admitting future dates
+PASS 10. tracking cannot create money, rewrite voting weights or settle historical decisions
+PASS 11. paginated records are bounded and every page/filter boundary is validated
+PASS 12. payment APIs enforce session, origin, strict inputs and recent-authentication boundaries
+PASS 13. multi-page payment history returns complete nonoverlapping pages and full-cohort totals
+PASS 14. payment CSV rejects unauthorized and ambiguous filters and exports only the exact private page with spreadsheet-safe attestations
+PASS 15. browser records an external payment as a staff attestation without executing a transfer
+PASS 16. CSV downloads require a deliberate click and deliver the recorded page without speculative export requests
+PASS 17. payment records remain usable and accessible at desktop, 390px and 320px
+PASS 18. browser corrections append a reversal and retain the original record
+PASS 19. members can inspect history but receive no recording or correction controls
+PASS 20. foreign and anonymous visitors cannot inspect external payment records
+External payment-record integrity: 20 checks passed.

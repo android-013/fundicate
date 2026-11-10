@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "recovery",
+  "token": "766a51ef-a2fa-4173-a335-f1e80fe3122d",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/recovery-exercise.mjs",
+      "--isolated"
+    ]
+  ],
+  "startedAt": "2026-11-10T06:00:48.494Z",
+  "finishedAt": "2026-11-10T06:01:06.717Z",
+  "exitCode": 0,
+  "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/recovery-766a51ef-a2fa-4173-a335-f1e80fe3122d.log",
+  "logHash": "c23f4fd1f33ae25df252484a7a8fc43848ea251da5cb1857ad0ecb7be04fcaf4"
+}

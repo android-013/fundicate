@@ -1,405 +1,17 @@
 {
   "schemaVersion": 1,
-  "revision": 354,
+  "revision": 412,
   "totalParts": 5,
   "completedParts": [
     1,
     2,
     3,
-    4
+    4,
+    5
   ],
-  "nextPart": 5,
-  "status": "needs_input",
-  "activeRun": {
-    "id": "72fba785-3bf0-4f38-a257-558a5455442f",
-    "part": 5,
-    "startedAt": "2026-11-06T12:22:31.056Z",
-    "checks": {
-      "build": {
-        "path": "workflow/evidence/part-05/build-f5041b86-6a20-4340-812e-4d7404a22648.json",
-        "hash": "59a588b487076bd89aacec4abe2fb4bd4e45c262798936ce4728d6452916d3b3"
-      },
-      "workflow-tests": {
-        "path": "workflow/evidence/part-05/workflow-tests-c74aef14-1ff6-48c9-8de1-4ee8ec8c1bc3.json",
-        "hash": "e318d84193e9135e98d2409e78cdcf59358166674fa4266601939ca0ee694ce1"
-      },
-      "unit": {
-        "path": "workflow/evidence/part-05/unit-60a62da4-e8d1-4a0f-9cbf-489b152a7316.json",
-        "hash": "91cdc847392ecad64a0c6780535253a08200d5c419c09c6a1208822e7b884ee8"
-      },
-      "typecheck": {
-        "path": "workflow/evidence/part-05/typecheck-9b639a38-a5b8-4420-864a-a672e168d5d5.json",
-        "hash": "841eb0f1ad35fe48e4e3d1d40399ed2ea52d5778cba6ad44bdb99627871d7f76"
-      },
-      "lint": {
-        "path": "workflow/evidence/part-05/lint-a7e2fbe3-6ab9-4c6e-82cc-fbe27b02ae4e.json",
-        "hash": "e7b4f631fac13d5502b2c099e11b08c64c3f956f41adeb3394e6fcad5dbcf2e7"
-      },
-      "integration": {
-        "path": "workflow/evidence/part-05/integration-6304cb46-0fbc-4223-8a39-fa81cc28d78f.json",
-        "hash": "61bdc82dcecce829f9be9d04a4fbbc9b9cbaa7571701cf2318ae3d223065056c"
-      },
-      "security": {
-        "path": "workflow/evidence/part-05/security-5b4d0f46-9581-412f-a689-7d2aa4807f1a.json",
-        "hash": "3db600ab376feeb3aae82ea35ad25c3312e4ae2b00c3a801d85d099cd696aa35"
-      },
-      "payment-records": {
-        "path": "workflow/evidence/part-05/payment-records-1e627be3-2915-4670-a74c-d70268d6a614.json",
-        "hash": "fde45f2072442cb02b087aa1a64aaa6d8d58bc32151eeb01059693b78cbfed7c"
-      },
-      "http": {
-        "path": "workflow/evidence/part-05/http-746f5def-73ca-4bcb-9844-c4bf686cfb8a.json",
-        "hash": "274804d4449b2eab1cdead198cc0ff58187d662ff715dfb53ad00ee1a1b7101e"
-      },
-      "rounds": {
-        "path": "workflow/evidence/part-05/rounds-631d2a0f-80dc-444b-8b75-5c6488088f15.json",
-        "hash": "3dbd6f73110b69413da149ef0aac299bdb8b45aa5184b5d94c857c0fd395d223"
-      },
-      "funds": {
-        "path": "workflow/evidence/part-05/funds-290b6ab7-b6d5-498a-ba5f-12f534624508.json",
-        "hash": "0289766f2230e63da063fe3050acb329e9868e8355b8c4536fcfa33b2d2acae0"
-      },
-      "elections": {
-        "path": "workflow/evidence/part-05/elections-5b891333-f1ec-47ae-ac00-656c11056a68.json",
-        "hash": "2320f717aca2ff71661e49ec33a11c11f35ce79a8a224faf3a26a58bac6b3d71"
-      },
-      "reputation": {
-        "path": "workflow/evidence/part-05/reputation-22c492cb-1668-457f-8113-5a8c5b421945.json",
-        "hash": "a14b6817ca3396f34b084643b79e2e30196bdbd240ea180f8b2f680d69395b11"
-      },
-      "release": {
-        "path": "workflow/evidence/part-05/release-5cf34858-0bcd-4fe3-b57e-cb69261453d9.json",
-        "hash": "4a2ed6f41058ef9a1d2eb166ed717128630d0beb8b45191d32a48df9116501dd"
-      },
-      "recovery": {
-        "path": "workflow/evidence/part-05/recovery-3dcf7f69-b33d-451a-8dcc-0d5cb715e22c.json",
-        "hash": "3b2617dc50638b8bf88ffbb1cb63c3f11bc3da8adf25df1fdb75aa86a7afc3b1"
-      },
-      "large-demo": {
-        "path": "workflow/evidence/part-05/large-demo-5dbe9fb9-6dbf-4b53-8848-e7f492f67bbb.json",
-        "hash": "a1519daef506aa670c876120da8ed365738955376843fd2bf1a1f0424ef08053"
-      },
-      "dependency-audit": {
-        "path": "workflow/evidence/part-05/dependency-audit-5eef4753-2495-4bc3-8b1b-cbe99a365355.json",
-        "hash": "4ff8bf454e08c71419f75d9eaa7d3cc7fe6b45fd4ae1136fe0a785268c743c32"
-      },
-      "secret-scan": {
-        "path": "workflow/evidence/part-05/secret-scan-e26cb89a-cdb2-4934-8e26-260f52468a7a.json",
-        "hash": "d1dc55b2f83582590eb2a6999984566a0ab6a0ed6db369b56fa2cb5f07b78cfc"
-      },
-      "browser": {
-        "path": "workflow/evidence/part-05/browser-af58aafb-2757-4ff5-951e-849acaf98b48.json",
-        "hash": "a5e6637a77c555b26f6c59e7d951dddf78da02f96935891c3a6ee580b6a5e9c5"
-      },
-      "accessibility": {
-        "path": "workflow/evidence/part-05/accessibility-9b0f1fef-cbf0-4a4d-812f-f8df2af44673.json",
-        "hash": "41f9cd570b32d654526e14262334b96f21d07bb1664353d5cf0fe1d238505e00"
-      }
-    },
-    "acceptance": {
-      "R28": {
-        "1": {
-          "at": "2026-11-08T17:17:54.243Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "security",
-            "http",
-            "secret-scan"
-          ],
-          "note": "Standalone configuration rejects chain modes; retired routes fail closed, browser artifacts contain no retired wallet SDK, recent-password and scoped authority/session checks pass."
-        },
-        "2": {
-          "at": "2026-11-08T17:17:54.243Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "security",
-            "http",
-            "secret-scan"
-          ],
-          "note": "Standalone configuration rejects chain modes; retired routes fail closed, browser artifacts contain no retired wallet SDK, recent-password and scoped authority/session checks pass."
-        }
-      },
-      "R29": {
-        "1": {
-          "at": "2026-11-08T17:17:55.841Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "payment-records",
-            "release",
-            "unit"
-          ],
-          "note": "Actual isolated service/HTTP/SQL/browser cases prove exact staff attestations, member-scoped history/CSV, disclosure, immutable payload/actor replay, source reversals, original retention and separation from simulated ledgers and power."
-        },
-        "2": {
-          "at": "2026-11-08T17:17:55.841Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "payment-records",
-            "release",
-            "unit"
-          ],
-          "note": "Actual isolated service/HTTP/SQL/browser cases prove exact staff attestations, member-scoped history/CSV, disclosure, immutable payload/actor replay, source reversals, original retention and separation from simulated ledgers and power."
-        },
-        "3": {
-          "at": "2026-11-08T17:17:55.841Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "payment-records",
-            "release",
-            "unit"
-          ],
-          "note": "Actual isolated service/HTTP/SQL/browser cases prove exact staff attestations, member-scoped history/CSV, disclosure, immutable payload/actor replay, source reversals, original retention and separation from simulated ledgers and power."
-        }
-      },
-      "R30": {
-        "1": {
-          "at": "2026-11-08T17:17:57.026Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "payment-records",
-            "funds",
-            "elections",
-            "integration"
-          ],
-          "note": "Concurrent matching records/reversals have one effect; mismatched actors/payloads and failed scoped mutations roll back. Existing simulated UNKNOWN/recovery/veto settlement and immutable ledger invariants pass; dormant chain routes remain unavailable."
-        },
-        "2": {
-          "at": "2026-11-08T17:17:57.026Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "payment-records",
-            "funds",
-            "elections",
-            "integration"
-          ],
-          "note": "Concurrent matching records/reversals have one effect; mismatched actors/payloads and failed scoped mutations roll back. Existing simulated UNKNOWN/recovery/veto settlement and immutable ledger invariants pass; dormant chain routes remain unavailable."
-        },
-        "3": {
-          "at": "2026-11-08T17:17:57.026Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "payment-records",
-            "funds",
-            "elections",
-            "integration"
-          ],
-          "note": "Concurrent matching records/reversals have one effect; mismatched actors/payloads and failed scoped mutations roll back. Existing simulated UNKNOWN/recovery/veto settlement and immutable ledger invariants pass; dormant chain routes remain unavailable."
-        }
-      },
-      "R31": {
-        "1": {
-          "at": "2026-11-08T17:17:58.050Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "release",
-            "payment-records",
-            "unit"
-          ],
-          "note": "Current-source report/CSV tests prove exact asset groups, actual external-payment aggregates excluding reversed originals, member/staff draft privacy across mixed-role communities, pending-veto redaction, visible-only reputation and real source/download interactions."
-        },
-        "2": {
-          "at": "2026-11-08T17:17:58.050Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "release",
-            "payment-records",
-            "unit"
-          ],
-          "note": "Current-source report/CSV tests prove exact asset groups, actual external-payment aggregates excluding reversed originals, member/staff draft privacy across mixed-role communities, pending-veto redaction, visible-only reputation and real source/download interactions."
-        },
-        "3": {
-          "at": "2026-11-08T17:17:58.050Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "release",
-            "payment-records",
-            "unit"
-          ],
-          "note": "Current-source report/CSV tests prove exact asset groups, actual external-payment aggregates excluding reversed originals, member/staff draft privacy across mixed-role communities, pending-veto redaction, visible-only reputation and real source/download interactions."
-        }
-      },
-      "R32": {
-        "1": {
-          "at": "2026-11-08T17:17:59.415Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "release",
-            "unit"
-          ],
-          "note": "Versioned immutable template revisions create fresh atomically bound drafts; concurrent edits, SQL history guards, archive replay and invalid schedules pass. Actual maintenance checks preserve staff authorization, due stages, full veto windows and repeat-safe recovery."
-        },
-        "2": {
-          "at": "2026-11-08T17:17:59.415Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "release",
-            "unit"
-          ],
-          "note": "Versioned immutable template revisions create fresh atomically bound drafts; concurrent edits, SQL history guards, archive replay and invalid schedules pass. Actual maintenance checks preserve staff authorization, due stages, full veto windows and repeat-safe recovery."
-        }
-      },
-      "R33": {
-        "1": {
-          "at": "2026-11-08T17:18:00.743Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "security",
-            "recovery",
-            "secret-scan",
-            "build"
-          ],
-          "note": "Runtime validation/readiness and recent-password protections pass; actual pg_dump/pg_restore isolated exercise preserves a complete snapshot and monetary invariants. Distribution is built, environment-sanitized and secret-scanned. Target TLS/proxy, backups, monitoring and optional account-onboarding limitations are documented honestly; no hosted publication or real-money processing is claimed. The separate container blocker must still be independently resolved before final release."
-        },
-        "2": {
-          "at": "2026-11-08T17:18:00.743Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "security",
-            "recovery",
-            "secret-scan",
-            "build"
-          ],
-          "note": "Runtime validation/readiness and recent-password protections pass; actual pg_dump/pg_restore isolated exercise preserves a complete snapshot and monetary invariants. Distribution is built, environment-sanitized and secret-scanned. Target TLS/proxy, backups, monitoring and optional account-onboarding limitations are documented honestly; no hosted publication or real-money processing is claimed. The separate container blocker must still be independently resolved before final release."
-        },
-        "3": {
-          "at": "2026-11-08T17:18:00.743Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "security",
-            "recovery",
-            "secret-scan",
-            "build"
-          ],
-          "note": "Runtime validation/readiness and recent-password protections pass; actual pg_dump/pg_restore isolated exercise preserves a complete snapshot and monetary invariants. Distribution is built, environment-sanitized and secret-scanned. Target TLS/proxy, backups, monitoring and optional account-onboarding limitations are documented honestly; no hosted publication or real-money processing is claimed. The separate container blocker must still be independently resolved before final release."
-        }
-      },
-      "R34": {
-        "1": {
-          "at": "2026-11-08T17:18:02.080Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "large-demo",
-            "payment-records",
-            "elections"
-          ],
-          "note": "Executed isolated fictional 100-member/100000-BDT/three-scheme service workflow with sealed selection, 60000-BDT payout, 40000-BDT source refunds and replay. Separate fictional external attestations and reversal preserve five records and leave simulated balances unchanged; original database is preserved."
-        },
-        "2": {
-          "at": "2026-11-08T17:18:02.080Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "large-demo",
-            "payment-records",
-            "elections"
-          ],
-          "note": "Executed isolated fictional 100-member/100000-BDT/three-scheme service workflow with sealed selection, 60000-BDT payout, 40000-BDT source refunds and replay. Separate fictional external attestations and reversal preserve five records and leave simulated balances unchanged; original database is preserved."
-        }
-      },
-      "R36": {
-        "1": {
-          "at": "2026-11-08T17:18:06.211Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "rounds",
-            "funds",
-            "elections",
-            "reputation",
-            "http",
-            "browser",
-            "accessibility",
-            "security",
-            "integration"
-          ],
-          "note": "Fresh legacy and advanced regressions preserve navigation/networking, dashboard/saved views/CSV, governance, all36 funded method combinations, reputation and posted histories. Additive migrations, old version semantics and sealed new-round privacy remain enforced; no reset or fabricated transfer is performed."
-        },
-        "2": {
-          "at": "2026-11-08T17:18:06.211Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "rounds",
-            "funds",
-            "elections",
-            "reputation",
-            "http",
-            "browser",
-            "accessibility",
-            "security",
-            "integration"
-          ],
-          "note": "Fresh legacy and advanced regressions preserve navigation/networking, dashboard/saved views/CSV, governance, all36 funded method combinations, reputation and posted histories. Additive migrations, old version semantics and sealed new-round privacy remain enforced; no reset or fabricated transfer is performed."
-        },
-        "3": {
-          "at": "2026-11-08T17:18:06.211Z",
-          "sourceFingerprint": "6ac75853a9370472c6660544d6cd4a3717de91bea235dd1ce79224ef445e930f",
-          "checks": [
-            "rounds",
-            "funds",
-            "elections",
-            "reputation",
-            "http",
-            "browser",
-            "accessibility",
-            "security",
-            "integration"
-          ],
-          "note": "Fresh legacy and advanced regressions preserve navigation/networking, dashboard/saved views/CSV, governance, all36 funded method combinations, reputation and posted histories. Additive migrations, old version semantics and sealed new-round privacy remain enforced; no reset or fabricated transfer is performed."
-        }
-      }
-    },
-    "blockers": {
-      "container-database-security": {
-        "reason": "Public deployment release remains blocked: audited postgres:18-bookworm digest sha256:f1ea2a1a4fb7b68d4836be1fdcb8a6466a89b072158bf9d97663600538c294c5 has 75 HIGH/4 CRITICAL package observations (26 fixable) in Trivy0.76.2 on 7 November2026; inventory is not proof of app exploitability and minizip/zlib source-binary false positive is being separately classified. Preserve existing PostgreSQL18 volumes/distribution/collation compatibility. A same-major/same-distro patch and remaining-vendor-advisory assessment/rescan is required before public release. This does not block committing the user-requested audited standalone source; no hosted publication or clean-stack claim is made.",
-        "openedAt": "2026-11-07T15:56:55.352Z",
-        "resolvedAt": null
-      },
-      "independent-review-capacity": {
-        "reason": "Both existing worker agents returned an actual usage-limit error on 9November2026. The independent reviewer verified all20 previous6ac75853 receipts, but no final report was issued and the subsequent database gosu update changes the source to ce021dea. A genuine final independent source/evidence/handoff review must resume when reviewer capacity is available. Coordinator continues all independent build/scan/restore/regression work; no self-review or completion substitution is permitted.",
-        "openedAt": "2026-11-09T02:00:52.233Z",
-        "resolvedAt": "2026-11-09T02:41:15.768Z",
-        "resolution": "Both existing workers resumed successfully: actual independent reviewer is reading/hashing raw public scans/signature/binary evidence and container assessor is triaging OS advisories. Capacity alone is restored; final review and container gate remain pending and no approval is implied."
-      }
-    },
-    "checkpoints": [
-      {
-        "at": "2026-11-06T12:53:50.463Z",
-        "note": "Part 5 release integration active: standalone portable setup, isolated backup/restore (49-table real PostgreSQL snapshot), isolated 100-member/100000-BDT funded demo, templates/system analytics, native custody app and wallet ownership implemented; contract locked WASM build and 35 runtime tests passed by domain worker. Independent review identified idempotency/provenance/readiness/receipt-binding gaps, being repaired with targeted tests. Dependency install audit reports zero vulnerabilities. Real NEAR testnet wallet/funding and operations are not yet performed; user public-account question pending. No completion claimed."
-      },
-      {
-        "at": "2026-11-07T15:27:33.758Z",
-        "note": "User-approved standalone branch amendment recorded before acceptance: disable blockchain, preserve simulated history, add independently unverified append-only external payment register. Initial audit identified and repaired streamed body size, canonical auth quotas, redacted error logging, dormant route exposure, draft-source privacy and runtime DB owner coupling. Integration and current-source checks now begin; no completed release or hosted deployment claimed."
-      },
-      {
-        "at": "2026-11-07T16:19:15.881Z",
-        "note": "Release check failed twice at networkidle; isolated diagnostic confirmed rendered analytics heading/no runtime errors with pending CSV export prefetch streams. Replaced four Next CSV links with native download anchors and added no-prefetch/single-user-download assertions. Semantic report readiness now checks heading/source data; all accessibility and drill-down assertions retained. Final source rebuild/check receipts renewed after this fix; old failures preserved. Database-image release blocker remains."
-      },
-      {
-        "at": "2026-11-08T09:32:01.336Z",
-        "note": "Standalone application and documentation fixes integrated: community-scoped draft privacy, current exact external-payment analytics/CSV, compatible database patch recipe and expanded isolated demo. Current-source production build,195unit tests, typecheck/lint,27PostgreSQL checks and8security groups passed. Payment-records suite passed13service/SQL/HTTP groups and actualbrowserrecord/downloadcontent, then exposed a Windows download-observer mismatch; test instrumentation is being corrected to verify actual quota effects with no assertion waiver. Failed/superseded receipts retained. Docker database image build/scan/restore remains a named external release blocker."
-      },
-      {
-        "at": "2026-11-08T16:45:48.968Z",
-        "note": "User approved installing Docker Engine in existing Ubuntu WSL for local production container build/scan/restore verification on 8 November. Container agent is implementing that authorized prerequisite; no hosted publication or real-money action authorized. Final analytics navigation connection and browser regression added; application source re-frozen and full required checks renewed. R35/final completion still await all current-source checks and actual independent production review. No Part6."
-      },
-      {
-        "at": "2026-11-08T17:15:25.543Z",
-        "note": "All20 mandatory application checks passed against frozen source6ac75853; independent reviewer verified every current receipt/log hash and all36 funded matrix cells. Real native copied-package smoke passed with own dependencies and no source fallback. Disposable browser QA server/database cleaned up. Docker29.9.3 and Trivy0.76.2 installed in user-approved Ubuntu WSL; container build/scan/restore/upgrade-fixture verification now begins. Part5 remains active pending that actual gate and final independent binding; real NEAR unperformed under approved standalone branch scope."
-      },
-      {
-        "at": "2026-11-09T01:52:28.887Z",
-        "note": "Actual WSL database build/all-severity scan completed:75HIGH/4CRITICAL unchanged by apt update (zero upgrades available). Found unmanaged gosu1.19; official1.20 security update independently checksum+publisher-signature verified and tested dropping to nobody. Isolated candidate image build passed. Integrated exact pinned downloader/update into Dockerfile.database; all earlier6ac75853 app receipts/acceptances are retained but now stale and must renew for final snapshot. Runtime image baseline built successfully. Same Part5run; no release approval claimed."
-      },
-      {
-        "at": "2026-11-09T02:48:56.920Z",
-        "note": "Final operator-image assessment found2Medium globalnpm dependencies and1Critical wee_alloc advisory in dormant contract Cargo.lock. Purpose-limited candidate passed actualPrisma/tsx CLI checks and Trivy0allseverities. Integrated rebased tools image with onlyrequired Node ops paths; all historical contracts remain in repository. Excluded generated TypeScript cache from Dockercontext. New finalsource freeze requires all20 receipts/acceptances renewed; previous6ac/ce passes retained as superseded evidence. No final approval or containerblock resolution claimed."
-      },
-      {
-        "at": "2026-11-09T07:10:46.431Z",
-        "note": "Actual1aa Compose run migrated15 and proved runtime roles/process caps/private network/HBA/XML boundaries/doctor, then failed payment-record500. Raw DB error confirmed false future-createdAt check against transaction-start CURRENT_TIMESTAMP. Additive migration16/schemaUTC DB-default/readiness/regression repair now integrated by domainagent; isolated diagnostic running. Independent review also found reused-role ownership/membership/prior-privilege preflight gap; bounded fail-closed provisioning+security regression being implemented before next final freeze. Failedrun53b916f288 remains explicitlyfailed; no final review/complete claimed. All prior snapshots/receipts preserved."
-      }
-    ],
-    "review": null,
-    "activeCheck": null
-  },
+  "nextPart": null,
+  "status": "complete",
+  "activeRun": null,
   "parts": {
     "1": {
       "number": 1,
@@ -1198,7 +810,514 @@
     "5": {
       "number": 5,
       "title": "Verified NEAR testnet, integrated analytics and full-system audit",
-      "status": "needs_input"
+      "status": "complete",
+      "completedAt": "2026-11-10T06:29:07.775Z",
+      "run": {
+        "id": "72fba785-3bf0-4f38-a257-558a5455442f",
+        "part": 5,
+        "startedAt": "2026-11-06T12:22:31.056Z",
+        "checks": {
+          "build": {
+            "path": "workflow/evidence/part-05/build-7ff87fba-0774-4e4d-901c-db6b53a1267d.json",
+            "hash": "b2aeb30a77d843fd0e7da91093146ed26244fab80d06d4b4f971ca672dd079af"
+          },
+          "workflow-tests": {
+            "path": "workflow/evidence/part-05/workflow-tests-200faf2c-5aaa-4919-868f-67894771d709.json",
+            "hash": "5a5c74068fa2e78aad881794c4da863ec116cc976d8fb3efd2780530b70ef1c8"
+          },
+          "unit": {
+            "path": "workflow/evidence/part-05/unit-c7bde017-71e7-466c-9b10-22d8e88df273.json",
+            "hash": "8c2d591ddf55a254f8f0e5fd7d6c9b1b7fd847d98434da4bb73d64eaf3a59c21"
+          },
+          "typecheck": {
+            "path": "workflow/evidence/part-05/typecheck-213a4e8c-8d13-4d95-96da-56ffc2fdd9c2.json",
+            "hash": "12e901d08195fe567af2072d198ff8eb014868f69e8d0f06f7f82010ea571465"
+          },
+          "lint": {
+            "path": "workflow/evidence/part-05/lint-da85a4da-70b0-4af1-91a8-dc8056716f56.json",
+            "hash": "b0cab102f1de6e24a08800d8961abc93b44d169f0d6d2c6b0253bb40dba4f3fb"
+          },
+          "integration": {
+            "path": "workflow/evidence/part-05/integration-8608d422-a822-488f-94e8-ff258f464077.json",
+            "hash": "b221621b344d8e3d851080efbb69cdb8fe623446855d3c9069a460fb1a5039f9"
+          },
+          "security": {
+            "path": "workflow/evidence/part-05/security-e11de79c-f9d2-4cb8-a801-7b7777ed2b33.json",
+            "hash": "4e4c7c4064eb24316dd4343cb71ce5d38fd6b95c80b748cc4e38d6f3536c530f"
+          },
+          "payment-records": {
+            "path": "workflow/evidence/part-05/payment-records-c8afda18-f057-44f3-b34f-64f8b1f1ff16.json",
+            "hash": "abff477a76d44d97dd717ac962a67905ca60bc20d86dc21dc3f4622c2b3d1bad"
+          },
+          "http": {
+            "path": "workflow/evidence/part-05/http-04137d8e-e819-468b-81c8-11148a1c513f.json",
+            "hash": "43101c238c943e430a1f09731a4dd040016cfadc2664405f066aede500dc9566"
+          },
+          "rounds": {
+            "path": "workflow/evidence/part-05/rounds-8747da75-f98a-45e3-9930-8520aea2ef99.json",
+            "hash": "c32b6fde735fe099d411ad22ca112171f56d21f83a43b4d9a604b53e61a0117c"
+          },
+          "funds": {
+            "path": "workflow/evidence/part-05/funds-af1a0d8e-ba64-4c3a-a6a3-e0a5137efdb9.json",
+            "hash": "90cf2f27666ac7a11117869a5007e90ec831dac27e9f05381adb8cf972052a72"
+          },
+          "elections": {
+            "path": "workflow/evidence/part-05/elections-c31b9009-961e-4971-ac95-cd6f42c2fe32.json",
+            "hash": "c4c3e780de1eee447adb47cde52abf0d40fc4b1cf5d3074341be802f30d36fa8"
+          },
+          "reputation": {
+            "path": "workflow/evidence/part-05/reputation-a162e137-77ae-4267-b61f-30384d07fb0d.json",
+            "hash": "63cdce650925a439315f89c5036d38e20ea9ab364ace93f8581a0fabd3694a99"
+          },
+          "release": {
+            "path": "workflow/evidence/part-05/release-f715e789-775f-477a-8516-0e5ec77aeeff.json",
+            "hash": "4c4b999c43ff8862dcd7e63003b6ce47732c938f4a605f12fc87f49aa9dca868"
+          },
+          "recovery": {
+            "path": "workflow/evidence/part-05/recovery-766a51ef-a2fa-4173-a335-f1e80fe3122d.json",
+            "hash": "c6062dd34459fd67bf5d71c4089e542a0cec0a563925fe02d0e71125834b840e"
+          },
+          "large-demo": {
+            "path": "workflow/evidence/part-05/large-demo-d64b0658-9e3a-4bba-a967-73a497889a6b.json",
+            "hash": "b751472a5d11521d8ef26eef7d73ff6e10993c996334530efce53e56ad7d22b4"
+          },
+          "dependency-audit": {
+            "path": "workflow/evidence/part-05/dependency-audit-f6609e21-94e2-4981-ada0-eafbac4f73be.json",
+            "hash": "00310b4e2dabd58e1a06a1d9aff52619d39b488e222a844cab47cd587b71f712"
+          },
+          "secret-scan": {
+            "path": "workflow/evidence/part-05/secret-scan-a37c1246-6101-4bfa-bbe9-ecad85df54ad.json",
+            "hash": "2e376a1153dc2a7ad51db580ec0b231a5dfa6d4e31d055ea91715ed7e0acdb4d"
+          },
+          "browser": {
+            "path": "workflow/evidence/part-05/browser-121984e7-3310-4697-82ad-9696ea307847.json",
+            "hash": "466106cad3a578f3203e2179d21f78c3562786f397cf46cad37850188b62231d"
+          },
+          "accessibility": {
+            "path": "workflow/evidence/part-05/accessibility-add20b19-db2d-47fd-9c59-0e70faca8e15.json",
+            "hash": "7d44b966bb8364980ee441c1b3a4ae2343cdf40e3bde1f580076f3105a933c4f"
+          }
+        },
+        "acceptance": {
+          "R28": {
+            "1": {
+              "at": "2026-11-10T06:21:24.299Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "security",
+                "http",
+                "secret-scan"
+              ],
+              "note": "Standalone configuration rejects chain modes; retired routes fail closed, browser artifacts contain no retired wallet SDK, recent-password and scoped authority/session checks pass."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:24.299Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "security",
+                "http",
+                "secret-scan"
+              ],
+              "note": "Standalone configuration rejects chain modes; retired routes fail closed, browser artifacts contain no retired wallet SDK, recent-password and scoped authority/session checks pass."
+            }
+          },
+          "R29": {
+            "1": {
+              "at": "2026-11-10T06:21:25.642Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "payment-records",
+                "release",
+                "unit"
+              ],
+              "note": "Actual isolated service/HTTP/SQL/browser cases prove exact staff attestations, member-scoped history/CSV, disclosure, immutable payload/actor replay, source reversals, original retention and separation from simulated ledgers and power."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:25.642Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "payment-records",
+                "release",
+                "unit"
+              ],
+              "note": "Actual isolated service/HTTP/SQL/browser cases prove exact staff attestations, member-scoped history/CSV, disclosure, immutable payload/actor replay, source reversals, original retention and separation from simulated ledgers and power."
+            },
+            "3": {
+              "at": "2026-11-10T06:21:25.642Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "payment-records",
+                "release",
+                "unit"
+              ],
+              "note": "Actual isolated service/HTTP/SQL/browser cases prove exact staff attestations, member-scoped history/CSV, disclosure, immutable payload/actor replay, source reversals, original retention and separation from simulated ledgers and power."
+            }
+          },
+          "R30": {
+            "1": {
+              "at": "2026-11-10T06:21:26.954Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "payment-records",
+                "funds",
+                "elections",
+                "integration"
+              ],
+              "note": "Concurrent matching records/reversals have one effect; mismatched actors/payloads and failed scoped mutations roll back. Existing simulated UNKNOWN/recovery/veto settlement and immutable ledger invariants pass; dormant chain routes remain unavailable."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:26.954Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "payment-records",
+                "funds",
+                "elections",
+                "integration"
+              ],
+              "note": "Concurrent matching records/reversals have one effect; mismatched actors/payloads and failed scoped mutations roll back. Existing simulated UNKNOWN/recovery/veto settlement and immutable ledger invariants pass; dormant chain routes remain unavailable."
+            },
+            "3": {
+              "at": "2026-11-10T06:21:26.954Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "payment-records",
+                "funds",
+                "elections",
+                "integration"
+              ],
+              "note": "Concurrent matching records/reversals have one effect; mismatched actors/payloads and failed scoped mutations roll back. Existing simulated UNKNOWN/recovery/veto settlement and immutable ledger invariants pass; dormant chain routes remain unavailable."
+            }
+          },
+          "R31": {
+            "1": {
+              "at": "2026-11-10T06:21:28.334Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "release",
+                "payment-records",
+                "unit"
+              ],
+              "note": "Current-source report/CSV tests prove exact asset groups, actual external-payment aggregates excluding reversed originals, member/staff draft privacy across mixed-role communities, pending-veto redaction, visible-only reputation and real source/download interactions."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:28.334Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "release",
+                "payment-records",
+                "unit"
+              ],
+              "note": "Current-source report/CSV tests prove exact asset groups, actual external-payment aggregates excluding reversed originals, member/staff draft privacy across mixed-role communities, pending-veto redaction, visible-only reputation and real source/download interactions."
+            },
+            "3": {
+              "at": "2026-11-10T06:21:28.334Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "release",
+                "payment-records",
+                "unit"
+              ],
+              "note": "Current-source report/CSV tests prove exact asset groups, actual external-payment aggregates excluding reversed originals, member/staff draft privacy across mixed-role communities, pending-veto redaction, visible-only reputation and real source/download interactions."
+            }
+          },
+          "R32": {
+            "1": {
+              "at": "2026-11-10T06:21:29.765Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "release",
+                "unit"
+              ],
+              "note": "Versioned immutable template revisions create fresh atomically bound drafts; concurrent edits, SQL history guards, archive replay and invalid schedules pass. Actual maintenance checks preserve staff authorization, due stages, full veto windows and repeat-safe recovery."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:29.765Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "release",
+                "unit"
+              ],
+              "note": "Versioned immutable template revisions create fresh atomically bound drafts; concurrent edits, SQL history guards, archive replay and invalid schedules pass. Actual maintenance checks preserve staff authorization, due stages, full veto windows and repeat-safe recovery."
+            }
+          },
+          "R33": {
+            "1": {
+              "at": "2026-11-10T06:21:31.123Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "security",
+                "recovery",
+                "secret-scan",
+                "build"
+              ],
+              "note": "Runtime validation/readiness, recent-password and strict fresh/reused runtime-role protections pass; actual native and source/image-bound Compose snapshot restore preserve50tables/fivefinancial invariants. Final distribution is built, environment-sanitized and secret-scanned. Independent container/release assessors approved the supported standaloneHTTP/trustedprivateDBpeer boundary after exact fresh473record assessment, actual roles/browser/restore/same-major compatibility proof; raw advisories, SQLXML/preauthGSS/nativeoperator and hosted TLS/proxy/monitoring/onboarding limits remain explicit. No cleanDB, hosted publication or real-money processing is claimed."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:31.124Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "security",
+                "recovery",
+                "secret-scan",
+                "build"
+              ],
+              "note": "Runtime validation/readiness, recent-password and strict fresh/reused runtime-role protections pass; actual native and source/image-bound Compose snapshot restore preserve50tables/fivefinancial invariants. Final distribution is built, environment-sanitized and secret-scanned. Independent container/release assessors approved the supported standaloneHTTP/trustedprivateDBpeer boundary after exact fresh473record assessment, actual roles/browser/restore/same-major compatibility proof; raw advisories, SQLXML/preauthGSS/nativeoperator and hosted TLS/proxy/monitoring/onboarding limits remain explicit. No cleanDB, hosted publication or real-money processing is claimed."
+            },
+            "3": {
+              "at": "2026-11-10T06:21:31.124Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "security",
+                "recovery",
+                "secret-scan",
+                "build"
+              ],
+              "note": "Runtime validation/readiness, recent-password and strict fresh/reused runtime-role protections pass; actual native and source/image-bound Compose snapshot restore preserve50tables/fivefinancial invariants. Final distribution is built, environment-sanitized and secret-scanned. Independent container/release assessors approved the supported standaloneHTTP/trustedprivateDBpeer boundary after exact fresh473record assessment, actual roles/browser/restore/same-major compatibility proof; raw advisories, SQLXML/preauthGSS/nativeoperator and hosted TLS/proxy/monitoring/onboarding limits remain explicit. No cleanDB, hosted publication or real-money processing is claimed."
+            }
+          },
+          "R34": {
+            "1": {
+              "at": "2026-11-10T06:21:32.464Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "large-demo",
+                "payment-records",
+                "elections"
+              ],
+              "note": "Executed isolated fictional 100-member/100000-BDT/three-scheme service workflow with sealed selection, 60000-BDT payout, 40000-BDT source refunds and replay. Separate fictional external attestations and reversal preserve five records and leave simulated balances unchanged; original database is preserved."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:32.464Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "large-demo",
+                "payment-records",
+                "elections"
+              ],
+              "note": "Executed isolated fictional 100-member/100000-BDT/three-scheme service workflow with sealed selection, 60000-BDT payout, 40000-BDT source refunds and replay. Separate fictional external attestations and reversal preserve five records and leave simulated balances unchanged; original database is preserved."
+            }
+          },
+          "R36": {
+            "1": {
+              "at": "2026-11-10T06:21:33.813Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "rounds",
+                "funds",
+                "elections",
+                "reputation",
+                "http",
+                "browser",
+                "accessibility",
+                "security",
+                "integration"
+              ],
+              "note": "Fresh legacy and advanced regressions preserve navigation/networking, dashboard/saved views/CSV, governance, all36 funded method combinations, reputation and posted histories. Additive migrations, old version semantics and sealed new-round privacy remain enforced; no reset or fabricated transfer is performed."
+            },
+            "2": {
+              "at": "2026-11-10T06:21:33.813Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "rounds",
+                "funds",
+                "elections",
+                "reputation",
+                "http",
+                "browser",
+                "accessibility",
+                "security",
+                "integration"
+              ],
+              "note": "Fresh legacy and advanced regressions preserve navigation/networking, dashboard/saved views/CSV, governance, all36 funded method combinations, reputation and posted histories. Additive migrations, old version semantics and sealed new-round privacy remain enforced; no reset or fabricated transfer is performed."
+            },
+            "3": {
+              "at": "2026-11-10T06:21:33.813Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "rounds",
+                "funds",
+                "elections",
+                "reputation",
+                "http",
+                "browser",
+                "accessibility",
+                "security",
+                "integration"
+              ],
+              "note": "Fresh legacy and advanced regressions preserve navigation/networking, dashboard/saved views/CSV, governance, all36 funded method combinations, reputation and posted histories. Additive migrations, old version semantics and sealed new-round privacy remain enforced; no reset or fabricated transfer is performed."
+            }
+          },
+          "R35": {
+            "1": {
+              "at": "2026-11-10T06:24:45.290Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "workflow-tests",
+                "unit",
+                "typecheck",
+                "lint",
+                "integration",
+                "build",
+                "http",
+                "browser",
+                "rounds",
+                "accessibility",
+                "funds",
+                "elections",
+                "reputation",
+                "release",
+                "recovery",
+                "large-demo",
+                "dependency-audit",
+                "security",
+                "payment-records",
+                "secret-scan"
+              ],
+              "note": "Actual independent reviewer /root/final_release_reviewer completed genuine final R35.1/R35.2/R35.3 PASS before this acceptance: original/optional/amendedscope mapping, implementation/priorpart provenance and fresh207filea39source; all20actualreceipt/log identities/hashes/exit0/unchangedcurrent; all36electionmatrixcells; actualnativepackage command/rawlog/build/server/copiedassets and .envabsence;78containerfiles/473rawassessmentrecords/fullCompose-browser-restore-compatibility; preservation and noactivecheck/openblocker. Independently verified receiptSetd8485c140c5eea28d75d6d3d8cda6faa239badc9b83491f48fa84ecafe4e77a1 and handoffc027643c87e265644cef297660e6f7e86c801342d686c933c638db14379fe1e7. RawDBadvisories and trustedprivateDBpeer/SQLXML/preauthGSS/operator limits retained; optionalR19 and unperformedNEAR remain explicit. Final hash-bound independentJSON registration still required; no self-review or waivedwork."
+            },
+            "2": {
+              "at": "2026-11-10T06:24:45.290Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "workflow-tests",
+                "unit",
+                "typecheck",
+                "lint",
+                "integration",
+                "build",
+                "http",
+                "browser",
+                "rounds",
+                "accessibility",
+                "funds",
+                "elections",
+                "reputation",
+                "release",
+                "recovery",
+                "large-demo",
+                "dependency-audit",
+                "security",
+                "payment-records",
+                "secret-scan"
+              ],
+              "note": "Actual independent reviewer /root/final_release_reviewer completed genuine final R35.1/R35.2/R35.3 PASS before this acceptance: original/optional/amendedscope mapping, implementation/priorpart provenance and fresh207filea39source; all20actualreceipt/log identities/hashes/exit0/unchangedcurrent; all36electionmatrixcells; actualnativepackage command/rawlog/build/server/copiedassets and .envabsence;78containerfiles/473rawassessmentrecords/fullCompose-browser-restore-compatibility; preservation and noactivecheck/openblocker. Independently verified receiptSetd8485c140c5eea28d75d6d3d8cda6faa239badc9b83491f48fa84ecafe4e77a1 and handoffc027643c87e265644cef297660e6f7e86c801342d686c933c638db14379fe1e7. RawDBadvisories and trustedprivateDBpeer/SQLXML/preauthGSS/operator limits retained; optionalR19 and unperformedNEAR remain explicit. Final hash-bound independentJSON registration still required; no self-review or waivedwork."
+            },
+            "3": {
+              "at": "2026-11-10T06:24:45.290Z",
+              "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+              "checks": [
+                "workflow-tests",
+                "unit",
+                "typecheck",
+                "lint",
+                "integration",
+                "build",
+                "http",
+                "browser",
+                "rounds",
+                "accessibility",
+                "funds",
+                "elections",
+                "reputation",
+                "release",
+                "recovery",
+                "large-demo",
+                "dependency-audit",
+                "security",
+                "payment-records",
+                "secret-scan"
+              ],
+              "note": "Actual independent reviewer /root/final_release_reviewer completed genuine final R35.1/R35.2/R35.3 PASS before this acceptance: original/optional/amendedscope mapping, implementation/priorpart provenance and fresh207filea39source; all20actualreceipt/log identities/hashes/exit0/unchangedcurrent; all36electionmatrixcells; actualnativepackage command/rawlog/build/server/copiedassets and .envabsence;78containerfiles/473rawassessmentrecords/fullCompose-browser-restore-compatibility; preservation and noactivecheck/openblocker. Independently verified receiptSetd8485c140c5eea28d75d6d3d8cda6faa239badc9b83491f48fa84ecafe4e77a1 and handoffc027643c87e265644cef297660e6f7e86c801342d686c933c638db14379fe1e7. RawDBadvisories and trustedprivateDBpeer/SQLXML/preauthGSS/operator limits retained; optionalR19 and unperformedNEAR remain explicit. Final hash-bound independentJSON registration still required; no self-review or waivedwork."
+            }
+          }
+        },
+        "blockers": {
+          "container-database-security": {
+            "reason": "Public deployment release remains blocked: audited postgres:18-bookworm digest sha256:f1ea2a1a4fb7b68d4836be1fdcb8a6466a89b072158bf9d97663600538c294c5 has 75 HIGH/4 CRITICAL package observations (26 fixable) in Trivy0.76.2 on 7 November2026; inventory is not proof of app exploitability and minizip/zlib source-binary false positive is being separately classified. Preserve existing PostgreSQL18 volumes/distribution/collation compatibility. A same-major/same-distro patch and remaining-vendor-advisory assessment/rescan is required before public release. This does not block committing the user-requested audited standalone source; no hosted publication or clean-stack claim is made.",
+            "openedAt": "2026-11-07T15:56:55.352Z",
+            "resolvedAt": "2026-11-10T06:14:26.925Z",
+            "resolution": "Resolved as verified/disclosed standalone HTTP product boundary, not clean database or hosted approval. Final sourcea39/images and fresh10Nov all-severity scancommands bound78file index060808Z; actual b81Compose/browser/50table5invariantrestore/PG18collationfixture passed. Independent assessor report docs/security/database-assessment.json SHAa809fd51f3ec3aa69ecfd85fa981c54102096dee0d04c13fd17d2641a2bed101 preserves all473 rawrecords including4C75H17U,49vendoraffectedHCOS+16KerberosUNKNOWN as specific disclosedresiduals. Independent release reviewer separately verified everyrawassessmentfield, all78hashes/recipe/image/roleproof and sourceinputpaths, and explicitly approved resolution for parameterized standaloneHTTP with trustedprivateDBpeers/operators. SQLXML/preauthGSS/nativeutility and untrustedSQL/publichost certification excluded. No advisory suppression or patch/cleanDB claim; futureinput/image/role/peerpolicy changes require reassessment. Final20/criteria/handoff/review gates remain."
+          },
+          "independent-review-capacity": {
+            "reason": "Both existing worker agents returned an actual usage-limit error on 9November2026. The independent reviewer verified all20 previous6ac75853 receipts, but no final report was issued and the subsequent database gosu update changes the source to ce021dea. A genuine final independent source/evidence/handoff review must resume when reviewer capacity is available. Coordinator continues all independent build/scan/restore/regression work; no self-review or completion substitution is permitted.",
+            "openedAt": "2026-11-09T02:00:52.233Z",
+            "resolvedAt": "2026-11-09T02:41:15.768Z",
+            "resolution": "Both existing workers resumed successfully: actual independent reviewer is reading/hashing raw public scans/signature/binary evidence and container assessor is triaging OS advisories. Capacity alone is restored; final review and container gate remain pending and no approval is implied."
+          }
+        },
+        "checkpoints": [
+          {
+            "at": "2026-11-06T12:53:50.463Z",
+            "note": "Part 5 release integration active: standalone portable setup, isolated backup/restore (49-table real PostgreSQL snapshot), isolated 100-member/100000-BDT funded demo, templates/system analytics, native custody app and wallet ownership implemented; contract locked WASM build and 35 runtime tests passed by domain worker. Independent review identified idempotency/provenance/readiness/receipt-binding gaps, being repaired with targeted tests. Dependency install audit reports zero vulnerabilities. Real NEAR testnet wallet/funding and operations are not yet performed; user public-account question pending. No completion claimed."
+          },
+          {
+            "at": "2026-11-07T15:27:33.758Z",
+            "note": "User-approved standalone branch amendment recorded before acceptance: disable blockchain, preserve simulated history, add independently unverified append-only external payment register. Initial audit identified and repaired streamed body size, canonical auth quotas, redacted error logging, dormant route exposure, draft-source privacy and runtime DB owner coupling. Integration and current-source checks now begin; no completed release or hosted deployment claimed."
+          },
+          {
+            "at": "2026-11-07T16:19:15.881Z",
+            "note": "Release check failed twice at networkidle; isolated diagnostic confirmed rendered analytics heading/no runtime errors with pending CSV export prefetch streams. Replaced four Next CSV links with native download anchors and added no-prefetch/single-user-download assertions. Semantic report readiness now checks heading/source data; all accessibility and drill-down assertions retained. Final source rebuild/check receipts renewed after this fix; old failures preserved. Database-image release blocker remains."
+          },
+          {
+            "at": "2026-11-08T09:32:01.336Z",
+            "note": "Standalone application and documentation fixes integrated: community-scoped draft privacy, current exact external-payment analytics/CSV, compatible database patch recipe and expanded isolated demo. Current-source production build,195unit tests, typecheck/lint,27PostgreSQL checks and8security groups passed. Payment-records suite passed13service/SQL/HTTP groups and actualbrowserrecord/downloadcontent, then exposed a Windows download-observer mismatch; test instrumentation is being corrected to verify actual quota effects with no assertion waiver. Failed/superseded receipts retained. Docker database image build/scan/restore remains a named external release blocker."
+          },
+          {
+            "at": "2026-11-08T16:45:48.968Z",
+            "note": "User approved installing Docker Engine in existing Ubuntu WSL for local production container build/scan/restore verification on 8 November. Container agent is implementing that authorized prerequisite; no hosted publication or real-money action authorized. Final analytics navigation connection and browser regression added; application source re-frozen and full required checks renewed. R35/final completion still await all current-source checks and actual independent production review. No Part6."
+          },
+          {
+            "at": "2026-11-08T17:15:25.543Z",
+            "note": "All20 mandatory application checks passed against frozen source6ac75853; independent reviewer verified every current receipt/log hash and all36 funded matrix cells. Real native copied-package smoke passed with own dependencies and no source fallback. Disposable browser QA server/database cleaned up. Docker29.9.3 and Trivy0.76.2 installed in user-approved Ubuntu WSL; container build/scan/restore/upgrade-fixture verification now begins. Part5 remains active pending that actual gate and final independent binding; real NEAR unperformed under approved standalone branch scope."
+          },
+          {
+            "at": "2026-11-09T01:52:28.887Z",
+            "note": "Actual WSL database build/all-severity scan completed:75HIGH/4CRITICAL unchanged by apt update (zero upgrades available). Found unmanaged gosu1.19; official1.20 security update independently checksum+publisher-signature verified and tested dropping to nobody. Isolated candidate image build passed. Integrated exact pinned downloader/update into Dockerfile.database; all earlier6ac75853 app receipts/acceptances are retained but now stale and must renew for final snapshot. Runtime image baseline built successfully. Same Part5run; no release approval claimed."
+          },
+          {
+            "at": "2026-11-09T02:48:56.920Z",
+            "note": "Final operator-image assessment found2Medium globalnpm dependencies and1Critical wee_alloc advisory in dormant contract Cargo.lock. Purpose-limited candidate passed actualPrisma/tsx CLI checks and Trivy0allseverities. Integrated rebased tools image with onlyrequired Node ops paths; all historical contracts remain in repository. Excluded generated TypeScript cache from Dockercontext. New finalsource freeze requires all20 receipts/acceptances renewed; previous6ac/ce passes retained as superseded evidence. No final approval or containerblock resolution claimed."
+          },
+          {
+            "at": "2026-11-09T07:10:46.431Z",
+            "note": "Actual1aa Compose run migrated15 and proved runtime roles/process caps/private network/HBA/XML boundaries/doctor, then failed payment-record500. Raw DB error confirmed false future-createdAt check against transaction-start CURRENT_TIMESTAMP. Additive migration16/schemaUTC DB-default/readiness/regression repair now integrated by domainagent; isolated diagnostic running. Independent review also found reused-role ownership/membership/prior-privilege preflight gap; bounded fail-closed provisioning+security regression being implemented before next final freeze. Failedrun53b916f288 remains explicitlyfailed; no final review/complete claimed. All prior snapshots/receipts preserved."
+          },
+          {
+            "at": "2026-11-10T05:44:55.021Z",
+            "note": "10 November: user requested finish existing Part5 blockers only, no new features. Durable resume checklist is docs/parts/part-05-resume.md. Corrected factual deployment-doc scan drift before final freeze; therefore renew mandatory checks once for final source. Native packaging diagnosis, actual container proof, refreshed scans and independent reviews precede final acceptance. Preserve same run, user data and failed evidence across interruptions."
+          },
+          {
+            "at": "2026-11-10T05:57:16.442Z",
+            "note": "Final source a39f984c frozen after deployment prose correction only. Actual workflow14/unit195/type/lint passes current; production build compiled successfully and is collecting traces. Retained native keeper64151 preserves existing data. Linux pipeline35197 waits successful final native build before runtime/tools builds and refreshed all3 scans to avoid memory contention. Copied native diagnosis passed, raw final-build repeat wrapper prepared. Independent source/preservation/resume review found no additional code blocker; actual full Compose proof and final20/report still required."
+          },
+          {
+            "at": "2026-11-10T06:02:51.767Z",
+            "note": "Finala39 production build and8other checks passed(current9/20): workflow/unit/type/lint/dependency/secret/integration/recovery. Actual refreshed Trivy DB10Nov: webaddb03f2/tools833fdbc2 zero allseverities; DBea816 retains4C75H203M174L17Unknown(473total,60listedGo fixes), no suppression. Public71file index20261110T060145Z preserves actualscancommands/newartifacts. Final isolated Compose/browser/restore/compatibility starts now; remaining application browser suites next. Same run/nofeatures, user data preserved."
+          },
+          {
+            "at": "2026-11-10T06:09:31.730Z",
+            "note": "Actual finala39 Composeb81b181f94 and browser exited0: doctor16,14denied elevatedroleflags/memberships,20desktop/mobile checks6axe0runtimeerrors,50table5invariant dump/restore pluspost-snapshotmutation separation and newPG18same-distrocompatibility/collation fixture. Public78file index20261110T060808Z,privateconfigs excluded. Assessor nowfinalizing fresh473advisory supportedHTTP/privateDBpeer boundaries; no cleanDBclaim. Native11/20currentpassed, remainingbrowser/domain suites executing sequentially in job20303; no sourcechanges."
+          },
+          {
+            "at": "2026-11-10T06:18:17.667Z",
+            "note": "All18non-general-browser mandatory checks nowPASS unchangedfinala39: payment20 inclclock, elections69/all36cells, funds32, reputation14, release22, largefictionaldemo, plus earliercore/security/recovery/audits. Containerblocker independentlyresolved with fullactualproof and exact473record assessment. FinalQA40834/uniqueDBfundicate_test_1794291177504_15528 ready3002; finalsequence runs browser75/accessibility30 then captures rawcopiedpackagecommand/output/buildbinding via work/final-native-package.mjs. Handoff/24criterion renewal and actualindepreport follow; nofeatures/sourcechanges."
+          },
+          {
+            "at": "2026-11-10T06:24:06.271Z",
+            "note": "Final20/20mandatorychecks PASS finala39 withoriginalverifiedreceipts/logs. Actualfinalnativepackage .local/native-package-final-1794291663425.json PASS, rawcommand/output/buildreceipt/serverSHA preserved. FullCompose b81/78index and473recordassessment independentlyapproved scopedHTTP/privateDBpeerboundary; allblockersresolved. Finalhandoff docs/parts/part-05.md frozenhashc027643c;receiptsetd8485c14.21criteria accepted; actualreviewerjudgingR35 thenrootwillrecord3andregisterfinalhashboundreport. QA40834cleanlystopped/dropownfixtureonly; keeper64151PostgreSQLcleanlystopped; userdatapreserved. No furtherfeatures/sourcechanges or Part6."
+          }
+        ],
+        "review": {
+          "path": "workflow/reviews/part-05-standalone-72fba785.json",
+          "hash": "6813933c64f2d9d5ee4400f1e64b6ae7e3a9aba9cec2b469bfd08fd31796a602",
+          "at": "2026-11-10T06:28:34.065Z"
+        },
+        "activeCheck": null
+      },
+      "handoff": "docs/parts/part-05.md",
+      "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+      "receiptSetHash": "d8485c140c5eea28d75d6d3d8cda6faa239badc9b83491f48fa84ecafe4e77a1",
+      "handoffHash": "c027643c87e265644cef297660e6f7e86c801342d686c933c638db14379fe1e7"
     }
   },
   "requirements": {
@@ -1290,32 +1409,32 @@
       "status": "verified"
     },
     "R28": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R29": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R30": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R31": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R32": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R33": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R34": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     },
     "R35": {
-      "status": "pending"
+      "status": "verified"
     },
     "R36": {
-      "status": "acceptance_recorded"
+      "status": "verified"
     }
   },
-  "updatedAt": "2026-11-09T07:54:57.234Z"
+  "updatedAt": "2026-11-10T06:29:07.777Z"
 }

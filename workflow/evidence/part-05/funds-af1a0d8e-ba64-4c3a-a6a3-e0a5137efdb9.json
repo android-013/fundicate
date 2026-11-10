@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "part": 5,
+  "runId": "72fba785-3bf0-4f38-a257-558a5455442f",
+  "check": "funds",
+  "token": "af1a0d8e-ba64-4c3a-a6a3-e0a5137efdb9",
+  "commands": [
+    [
+      "C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe",
+      "scripts/test-db.mjs",
+      "funds"
+    ]
+  ],
+  "startedAt": "2026-11-10T06:09:29.277Z",
+  "finishedAt": "2026-11-10T06:10:38.036Z",
+  "exitCode": 0,
+  "sourceFingerprint": "a39f984c939611960e1fecbef5fba8c18e737978fd50a523ba21ded6957902d5",
+  "sourceUnchanged": true,
+  "logPath": "workflow/evidence/part-05/funds-af1a0d8e-ba64-4c3a-a6a3-e0a5137efdb9.log",
+  "logHash": "ef475899ba0c509517a9e32af1663fe9685697f1174ed01cd82c0859c5e3d224"
+}

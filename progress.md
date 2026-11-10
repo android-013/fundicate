@@ -1,9 +1,9 @@
 **Standalone branch scope:** 5/5 applies only to the user-amended standalone branch. The generated Part 5 title was captured before the amendment; NEAR testnet remains unperformed and unverified. The current scope is [the canonical standalone plan](docs/MASTER-PLAN.md). The historical state title is preserved rather than rewritten.
 
 <!-- delivery-status:start -->
-Current delivery: 4/5 parts complete. This is milestone count, not PDF feature coverage.
+Current delivery: 5/5 parts complete. This is milestone count, not PDF feature coverage.
 
-State: needs_input. Next eligible part: 5. Revision: 354.
+State: complete. Next eligible part: none. Revision: 412.
 
 | Part | Scope | Status |
 | --- | --- | --- |
@@ -11,9 +11,9 @@ State: needs_input. Next eligible part: 5. Revision: 354.
 | 2/5 | Funded rounds, accounting and governance foundation | complete |
 | 3/5 | Weighted governance, allocation policies and rejection veto | complete |
 | 4/5 | Complete election methods and participation-based reputation | complete |
-| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | needs_input |
+| 5/5 | Verified NEAR testnet, integrated analytics and full-system audit | complete |
 
-Active run: 72fba785-3bf0-4f38-a257-558a5455442f; part 5. Resume it before advancing.
+Waiting for a fresh user next request; planning does not start the next part.
 <!-- delivery-status:end -->
 
 The canonical plan is `docs/MASTER-PLAN.md`; machine state is `workflow/state.json`. All work recorded below is historical **Part 1/5**, including the earlier capability phases 1–2. The historical 100% labels describe that earlier scope, not the full PDF or this new five-part program. Milestone count and feature coverage are different measurements.

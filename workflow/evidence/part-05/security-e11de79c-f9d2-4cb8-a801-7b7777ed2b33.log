@@ -1,0 +1,99 @@
+COMMAND ["C:\\Users\\Refat\\Documents\\git web\\Startup\\fundicate\\.local\\tools\\node\\node-v22.23.4-win-x64\\node.exe","scripts/test-db.mjs","security"]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "fundicate_test_1794290860901_9124", schema "public" at "127.0.0.1:54329"
+
+16 migrations found in prisma/migrations
+
+Applying migration `20261102000000_initial`
+Applying migration `20261102000100_membership_delete_guard`
+Applying migration `20261103000000_analytics_preferences`
+Applying migration `20261105000000_funding_rounds`
+Applying migration `20261105010000_funded_rounds`
+Applying migration `20261105020000_round_receipt_guard`
+Applying migration `20261105030000_returning_declarations`
+Applying migration `20261105040000_weighted_veto_rounds`
+Applying migration `20261105050000_v3_transfer_gate_fix`
+Applying migration `20261106000000_v3_utc_cutoff`
+Applying migration `20261106010000_methods_reputation`
+Applying migration `20261106020000_reputation_completeness`
+Applying migration `20261106030000_portable_service`
+Applying migration `20261106040000_release_integrity`
+Applying migration `20261107010000_standalone_payments`
+Applying migration `20261109010000_payment_record_clock`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102000000_initial/
+    └─ migration.sql
+  └─ 20261102000100_membership_delete_guard/
+    └─ migration.sql
+  └─ 20261103000000_analytics_preferences/
+    └─ migration.sql
+  └─ 20261105000000_funding_rounds/
+    └─ migration.sql
+  └─ 20261105010000_funded_rounds/
+    └─ migration.sql
+  └─ 20261105020000_round_receipt_guard/
+    └─ migration.sql
+  └─ 20261105030000_returning_declarations/
+    └─ migration.sql
+  └─ 20261105040000_weighted_veto_rounds/
+    └─ migration.sql
+  └─ 20261105050000_v3_transfer_gate_fix/
+    └─ migration.sql
+  └─ 20261106000000_v3_utc_cutoff/
+    └─ migration.sql
+  └─ 20261106010000_methods_reputation/
+    └─ migration.sql
+  └─ 20261106020000_reputation_completeness/
+    └─ migration.sql
+  └─ 20261106030000_portable_service/
+    └─ migration.sql
+  └─ 20261106040000_release_integrity/
+    └─ migration.sql
+  └─ 20261107010000_standalone_payments/
+    └─ migration.sql
+  └─ 20261109010000_payment_record_clock/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+▲ Next.js 16.4.3
+- Local:         http://127.0.0.1:3001
+- Network:       http://127.0.0.1:3001
+✓ Ready in 0ms
+✓ Running next.config took 30ms
+PASS 1: all retired chain and wallet APIs fail closed without credentials or network
+PASS 2: CSRF, JSON shape/media and hostile nesting rejected before mutations
+PASS 3: SQL-looking identities cannot escape schemas or disclose SQL/server detail
+PASS 4: limiter thresholds remain atomic under concurrency, expire and return retry time
+PASS 5: case-cycling the same email cannot bypass auth quota; 429 contains Retry-After
+PASS 6: expired/revoked sessions and cross-user session revocations fail safely
+{"event":"action_failed","requestId":"673f0ecd-c534-4a2e-83ea-310f66fcfd63","category":"P2021"}
+PASS 7: unexpected database failures expose a generic response and opaque request ID
+PASS runtime preflight refuses SUPERUSER without mutation
+PASS runtime preflight refuses CREATEDB without mutation
+PASS runtime preflight refuses CREATEROLE without mutation
+PASS runtime preflight refuses REPLICATION without mutation
+PASS runtime preflight refuses BYPASSRLS without mutation
+PASS runtime preflight refuses outgoing membership without mutation
+PASS runtime preflight refuses incoming membership without mutation
+PASS runtime preflight refuses database ownership without mutation
+PASS runtime preflight refuses schema ownership without mutation
+PASS runtime preflight refuses table ownership without mutation
+PASS runtime preflight refuses function ownership without mutation
+PASS runtime preflight refuses type ownership without mutation
+PASS runtime preflight refuses schema CREATE without mutation
+PASS runtime preflight refuses database CREATE without mutation
+PASS runtime preflight refuses TRUNCATE without mutation
+PASS runtime preflight refuses TRIGGER without mutation
+PASS runtime preflight refuses REFERENCES without mutation
+PASS runtime preflight refuses MAINTAIN without mutation
+PASS runtime preflight refuses grant option without mutation
+PASS 8: runtime preflight refuses unsafe reused identities before migrations or role changes
+PASS 9: runtime preflight protects an identity used by another disposable database
+PASS 10: fresh and safe reused runtime roles retain only intended table privileges and read-only migration evidence
+PASS 11: health fails closed when the payment clock migration is incomplete
+11 security groups passed; isolated database only.
