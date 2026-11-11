@@ -80,6 +80,35 @@ describe("portable runtime boundary", () => {
         "must be standalone",
       );
   });
+  it("rejects connection-identity query overrides and duplicate TLS parameters", () => {
+    for (const query of [
+      "host=remote.example",
+      "hostaddr=192.0.2.1",
+      "user=owner",
+      "password=not-a-secret",
+      "port=6543",
+      "dbname=other",
+      "sslmode=verify-full&sslmode=no-verify",
+      "%75ser=owner",
+      "HOST=remote.example",
+    ]) {
+      expect(() =>
+        validateRuntimeConfig({
+          ...base,
+          NODE_ENV: "production",
+          DATABASE_URL: `postgresql://app:placeholder@127.0.0.1/fundicate?${query}`,
+        }),
+      ).toThrow("DATABASE_URL");
+    }
+    expect(
+      validateRuntimeConfig({
+        ...base,
+        NODE_ENV: "production",
+        DATABASE_URL:
+          "postgresql://app:placeholder@db.example/fundicate?sslmode=verify-full&schema=public&application_name=fundicate",
+      }).production,
+    ).toBe(true);
+  });
   it("does not report healthy when the database cannot be reached", async () => {
     await expect(
       assertRuntimeReady(async () => {

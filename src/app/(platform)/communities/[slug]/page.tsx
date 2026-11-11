@@ -11,6 +11,7 @@ import {
   Avatar,
 } from "@/components/ui";
 import { ActionForm, Field, TextArea } from "@/components/forms";
+import { auditVisibilityWhere } from "@/lib/audit-visibility";
 export default async function Overview({
   params,
 }: {
@@ -21,6 +22,7 @@ export default async function Overview({
     community: c,
     user,
     isMember,
+    isStaff,
     membership,
   } = await communityContext(slug);
   const [proposals, activity, app, members] = await Promise.all([
@@ -34,8 +36,13 @@ export default async function Overview({
       take: 3,
     }),
     db.auditEvent.findMany({
-      where: { communityId: c.id },
-      include: { actor: true },
+      where: {
+        communityId: c.id,
+        AND: [
+          auditVisibilityWhere(isMember ? [c.id] : [], isStaff ? [c.id] : []),
+        ],
+      },
+      include: { actor: { select: { displayName: true } } },
       orderBy: { createdAt: "desc" },
       take: 5,
     }),

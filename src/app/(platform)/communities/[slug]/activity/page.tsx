@@ -2,15 +2,21 @@ import { communityContext } from "@/lib/community";
 import { db } from "@/lib/db";
 import { Avatar, Empty, SectionTitle } from "@/components/ui";
 import { dateTime, titleCase } from "@/lib/format";
+import { auditVisibilityWhere } from "@/lib/audit-visibility";
 export default async function Activity({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { community: c } = await communityContext(slug);
+  const { community: c, isMember, isStaff } = await communityContext(slug);
   const events = await db.auditEvent.findMany({
-    where: { communityId: c.id },
+    where: {
+      communityId: c.id,
+      AND: [
+        auditVisibilityWhere(isMember ? [c.id] : [], isStaff ? [c.id] : []),
+      ],
+    },
     include: { actor: { select: { displayName: true } } },
     orderBy: { createdAt: "desc" },
     take: 150,

@@ -581,6 +581,43 @@ export async function closeRoundVeto(
     return decision;
   });
 }
+const publishedPower = z
+  .string()
+  .regex(/^\d+$/)
+  .transform((value) => BigInt(value));
+const publishedSelectionSchema = z.object({
+  outcome: z.enum([
+    "NO_QUORUM",
+    "TIED",
+    "WINNER_SELECTED",
+    "ALLOCATION_SELECTED",
+  ]),
+  winnerSchemeId: uuid.nullable(),
+  eligible: publishedPower,
+  participation: publishedPower,
+  quorumRequired: publishedPower,
+  counts: z.record(uuid, publishedPower),
+  ranking: z
+    .array(
+      z.object({
+        schemeId: uuid,
+        support: publishedPower,
+        rank: z.number().int().min(1).max(50),
+      }),
+    )
+    .max(50),
+  elected: z.array(uuid).max(50).optional(),
+  transcript: z.json().optional(),
+});
+function publishedSelectionResult(value: unknown) {
+  const parsed = publishedSelectionSchema.safeParse(value);
+  ensure(
+    parsed.success,
+    "The immutable published selection snapshot is invalid.",
+    409,
+  );
+  return parsed.data;
+}
 export async function getV3RoundView(
   communityId: string,
   roundId: string,
@@ -636,13 +673,15 @@ export async function getV3RoundView(
             })),
           )
         : null;
-      const selectionResult =
-        round.status === "DECIDED" && round.selectionOpensAt
-          ? await tallyV3Selection(tx, round)
-          : null;
       const decision = await tx.roundDecision.findUnique({
         where: { roundId },
       });
+      // Published history is evidence, not a request to run today's engine.
+      // A calculation repair must never silently rewrite a past public result.
+      const selectionResult =
+        round.status === "DECIDED" && round.selectionOpensAt
+          ? publishedSelectionResult(decision?.result)
+          : null;
       const tally = await vetoTally(tx, round);
       const open = Boolean(
         decision?.vetoClosesAt &&

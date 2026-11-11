@@ -14,6 +14,7 @@ import {
   sessionCookie,
 } from "../src/lib/auth";
 import { AppError } from "../src/lib/errors";
+import { createCommunity } from "../src/lib/service";
 
 const origin = process.env.APP_ORIGIN!;
 let checks = 0;
@@ -233,6 +234,146 @@ async function main() {
     },
   );
   await check(
+    "legacy suspension requires recent authentication and strict governance remains member-controlled",
+    async () => {
+      const suffix = randomUUID().replaceAll("-", "").slice(0, 10);
+      const actors = await Promise.all(
+        ["staff", "target", "member"].map((kind) =>
+          register({
+            email: `${kind}${suffix}@security.invalid`,
+            username: `${kind}${suffix}`,
+            displayName: `Authority ${kind}`,
+            password: "AuthorityPassword!2026",
+          }),
+        ),
+      );
+      const [admin, target, ordinary] = actors;
+      const input = {
+        name: "Authority regression community",
+        slug: `authority-${suffix}`,
+        description:
+          "An isolated fixture proving sensitive membership actions stay protected.",
+        purpose:
+          "Verify current-session authority without changing existing communities.",
+        currency: "USD",
+        minimumContribution: "0",
+        questions: "",
+      };
+      const legacy = await createCommunity(admin.id, input);
+      const strict = await createCommunity(admin.id, {
+        ...input,
+        slug: `strict-${suffix}`,
+        governanceProfile: "STRICT",
+        founderContribution: "0",
+        founderIntroduction:
+          "The fictional founder participates under the same published governance rules.",
+      });
+      await db.communityMembership.createMany({
+        data: [legacy, strict].flatMap((community) =>
+          [target, ordinary].map((user) => ({
+            communityId: community.id,
+            userId: user.id,
+            declaredContribution: 0n,
+            declaredAt: new Date(),
+          })),
+        ),
+      });
+      const staffSession = await createSession(admin.id);
+      const memberSession = await createSession(ordinary.id);
+      const cookie = { Cookie: `${sessionCookie}=${staffSession.token}` };
+      const command = {
+        communityId: legacy.id,
+        userId: target.id,
+        action: "suspend",
+        reason:
+          "A detailed fictional safety concern for the authority regression test.",
+      };
+      await db.session.update({
+        where: { tokenHash: hashToken(staffSession.token) },
+        data: { reauthenticatedAt: new Date(Date.now() - 6 * 60000) },
+      });
+      const before = {
+        proposals: await db.proposal.count({
+          where: { communityId: legacy.id },
+        }),
+        audit: await db.auditEvent.count({ where: { communityId: legacy.id } }),
+      };
+      assert.equal((await post("member", command, cookie)).status, 428);
+      assert.equal(
+        (
+          await db.communityMembership.findUniqueOrThrow({
+            where: {
+              communityId_userId: { communityId: legacy.id, userId: target.id },
+            },
+          })
+        ).status,
+        "ACTIVE",
+      );
+      assert.equal(
+        await db.proposal.count({ where: { communityId: legacy.id } }),
+        before.proposals,
+      );
+      assert.equal(
+        await db.auditEvent.count({ where: { communityId: legacy.id } }),
+        before.audit,
+      );
+      assert.equal(
+        (
+          await post("member", command, {
+            Cookie: `${sessionCookie}=${memberSession.token}`,
+          })
+        ).status,
+        403,
+      );
+      assert.equal(
+        (
+          await post(
+            "reauthenticate",
+            { password: "AuthorityPassword!2026" },
+            cookie,
+          )
+        ).status,
+        200,
+      );
+      assert.equal(
+        (await post("member", { ...command, communityId: strict.id }, cookie))
+          .status,
+        403,
+      );
+      assert.equal(
+        (
+          await db.communityMembership.findUniqueOrThrow({
+            where: {
+              communityId_userId: { communityId: strict.id, userId: target.id },
+            },
+          })
+        ).status,
+        "ACTIVE",
+      );
+      assert.equal((await post("member", command, cookie)).status, 200);
+      assert.equal(
+        (
+          await db.communityMembership.findUniqueOrThrow({
+            where: {
+              communityId_userId: { communityId: legacy.id, userId: target.id },
+            },
+          })
+        ).status,
+        "SUSPENDED",
+      );
+      assert.equal(
+        await db.proposal.count({
+          where: {
+            communityId: legacy.id,
+            type: "SUSPENSION_REVIEW",
+            targetUserId: target.id,
+          },
+        }),
+        1,
+      );
+    },
+  );
+  await check(
     "unexpected database failures expose a generic response and opaque request ID",
     async () => {
       const user = await db.user.findFirstOrThrow();
@@ -337,6 +478,67 @@ async function main() {
             },
           ],
           [
+            "direct SECURITY DEFINER execution",
+            async (role, object) => {
+              await client.query(
+                `CREATE FUNCTION public.${quote(object)}() RETURNS text LANGUAGE sql SECURITY DEFINER AS 'SELECT current_user::text'`,
+              );
+              await client.query(
+                `REVOKE ALL ON FUNCTION public.${quote(object)}() FROM PUBLIC`,
+              );
+              await client.query(
+                `GRANT EXECUTE ON FUNCTION public.${quote(object)}() TO ${quote(role)}`,
+              );
+            },
+          ],
+          [
+            "PUBLIC SECURITY DEFINER execution",
+            async (_role, object) => {
+              await client.query(
+                `CREATE FUNCTION public.${quote(object)}() RETURNS text LANGUAGE sql SECURITY DEFINER AS 'SELECT current_user::text'`,
+              );
+              await client.query(
+                `GRANT EXECUTE ON FUNCTION public.${quote(object)}() TO PUBLIC`,
+              );
+            },
+          ],
+          ...["pg_catalog", "information_schema"].map(
+            (
+              schema,
+            ): [string, (role: string, object: string) => Promise<unknown>] => [
+              `custom ${schema} SECURITY DEFINER execution`,
+              async (_role, object) =>
+                client.query(
+                  `CREATE FUNCTION ${quote(schema)}.${quote(object)}() RETURNS text LANGUAGE sql SECURITY DEFINER AS 'SELECT current_user::text'`,
+                ),
+            ],
+          ),
+          ...["pg_catalog", "public"].map(
+            (
+              schema,
+            ): [string, (role: string, object: string) => Promise<unknown>] => [
+              `custom ${schema} native routine execution`,
+              async (_role, object) => {
+                const source = (
+                  await client.query(
+                    "SELECT prosrc FROM pg_catalog.pg_proc WHERE oid='pg_catalog.lo_export(oid,text)'::regprocedure",
+                  )
+                ).rows[0].prosrc as string;
+                assert.match(source, /^[a-zA-Z_][a-zA-Z_0-9]*$/);
+                await client.query(
+                  `CREATE FUNCTION ${quote(schema)}.${quote(object)}(oid,text) RETURNS integer LANGUAGE internal AS '${source}'`,
+                );
+              },
+            ],
+          ),
+          [
+            "direct restricted native-function execution",
+            (role) =>
+              client.query(
+                `GRANT EXECUTE ON FUNCTION pg_catalog.lo_export(oid,text) TO ${quote(role)}`,
+              ),
+          ],
+          [
             "type ownership",
             async (role, object) => {
               await client.query(
@@ -357,6 +559,13 @@ async function main() {
             (role) =>
               client.query(
                 `GRANT CREATE ON DATABASE ${quote(database)} TO ${quote(role)}`,
+              ),
+          ],
+          [
+            "PUBLIC restricted native-function execution",
+            () =>
+              client.query(
+                "GRANT EXECUTE ON FUNCTION pg_catalog.lo_export(oid,text) TO PUBLIC",
               ),
           ],
           ...[
@@ -421,6 +630,11 @@ async function main() {
                   "SELECT oid,relowner,relacl::text FROM pg_class ORDER BY oid",
                 )
               ).rows,
+              functions: (
+                await client.query(
+                  "SELECT md5(COALESCE(string_agg(md5(row_to_json(p)::text),'' ORDER BY oid),'')) AS fingerprint FROM (SELECT oid,proowner,prosecdef,proacl::text FROM pg_proc) p",
+                )
+              ).rows,
             });
             const before = await snapshot();
             let migrations = 0;
@@ -451,6 +665,45 @@ async function main() {
             `PASS runtime preflight refuses ${name} without mutation`,
           );
         }
+        const missingSuffix = randomUUID().replaceAll("-", "");
+        const missingRole = `fundicate_test_role_${missingSuffix}`;
+        const definer = `fundicate_probe_${missingSuffix}`;
+        await client.query("BEGIN");
+        try {
+          await client.query(
+            `CREATE FUNCTION public.${quote(definer)}() RETURNS text LANGUAGE sql SECURITY DEFINER AS 'SELECT current_user::text'`,
+          );
+          let migrations = 0;
+          await assert.rejects(
+            assertSafeRuntimeRole(client, missingRole),
+            /unsafe existing authority/,
+          );
+          await assert.rejects(
+            provisionRuntimeRole(client, {
+              roleName: missingRole,
+              password: randomUUID(),
+              migrate: async () => {
+                migrations++;
+              },
+            }),
+            /unsafe existing authority/,
+          );
+          assert.equal(migrations, 0);
+          assert.equal(
+            (
+              await client.query("SELECT 1 FROM pg_roles WHERE rolname=$1", [
+                missingRole,
+              ])
+            ).rowCount,
+            0,
+            "Unsafe default PUBLIC execution must be refused before role creation",
+          );
+        } finally {
+          await client.query("ROLLBACK");
+        }
+        console.log(
+          "PASS runtime preflight refuses inherited PUBLIC definer execution before creating a missing role",
+        );
       } finally {
         await client.end();
       }

@@ -11,6 +11,12 @@ import {
 } from "../src/lib/payment-records";
 import { createSession, hashToken, sessionCookie } from "../src/lib/auth";
 import { runPaymentRecordsBrowserChecks } from "./payment-records-browser";
+import {
+  getAnalytics,
+  inspectAnalyticsRecord,
+  reportRecords,
+} from "../src/lib/analytics";
+import { parseFilters } from "../src/lib/analytics-core";
 
 let checks = 0;
 async function check(name: string, work: () => Promise<void>) {
@@ -778,6 +784,93 @@ async function main() {
           assert.equal(csv.includes('\",\"=HYPERLINK'), false);
         }
       }
+    },
+  );
+  await check(
+    "payment audit identities remain member-only across public feeds and scoped analytics",
+    async () => {
+      const origin = process.env.APP_ORIGIN!;
+      const events = await db.auditEvent.findMany({
+        where: {
+          communityId: community.id,
+          action: {
+            in: ["EXTERNAL_PAYMENT_RECORDED", "EXTERNAL_PAYMENT_REVERSED"],
+          },
+        },
+      });
+      assert.ok(
+        events.some((event) => event.action === "EXTERNAL_PAYMENT_REVERSED"),
+      );
+      const sessions = await Promise.all(
+        [member, former, outside].map((person) => createSession(person.id)),
+      );
+      const cookies = sessions.map(
+        (session) => `${sessionCookie}=${session.token}`,
+      );
+      const activity = `${origin}/communities/${community.slug}/activity`;
+      for (const cookie of ["", cookies[1], cookies[2]]) {
+        const response = await fetch(activity, {
+          headers: cookie ? { Cookie: cookie } : {},
+        });
+        assert.equal(response.status, 200);
+        const html = await response.text();
+        for (const event of events)
+          assert.equal(
+            html.includes(event.id),
+            false,
+            "Guests, former members and foreign staff cannot inspect payment audit identities",
+          );
+        const overview = (
+          await (
+            await fetch(`${origin}/communities/${community.slug}`, {
+              headers: cookie ? { Cookie: cookie } : {},
+            })
+          ).text()
+        ).toLowerCase();
+        assert.equal(overview.includes("external payment recorded"), false);
+        assert.equal(overview.includes("external payment reversed"), false);
+      }
+      const memberHtml = await (
+        await fetch(activity, { headers: { Cookie: cookies[0] } })
+      ).text();
+      for (const event of events)
+        assert.equal(
+          memberHtml.includes(event.id),
+          true,
+          "Active members retain payment audit history",
+        );
+      const report = await getAnalytics(
+        member.id,
+        parseFilters({
+          community: community.slug,
+          range: "all",
+          dataset: "activity",
+        }),
+      );
+      const records = reportRecords(report);
+      for (const event of events) {
+        assert.ok(records.some((row) => row.id === event.id));
+        assert.equal(
+          (await inspectAnalyticsRecord(member.id, "activity", event.id)).record
+            .id,
+          event.id,
+        );
+        await assert.rejects(
+          () => inspectAnalyticsRecord(outside.id, "activity", event.id),
+          /not found/i,
+        );
+      }
+      assert.equal(
+        await db.auditEvent.count({
+          where: {
+            communityId: community.id,
+            action: {
+              in: ["EXTERNAL_PAYMENT_RECORDED", "EXTERNAL_PAYMENT_REVERSED"],
+            },
+          },
+        }),
+        events.length,
+      );
     },
   );
   await runPaymentRecordsBrowserChecks(check);

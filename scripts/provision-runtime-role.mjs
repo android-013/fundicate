@@ -3,6 +3,7 @@ import pg from "pg";
 import { spawnSync } from "node:child_process";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { postgresUrl } from "../src/lib/postgres-url.mjs";
 
 class UnsafeRuntimeRoleError extends Error {
   constructor() {
@@ -46,6 +47,8 @@ export async function assertSafeRuntimeRole(
   )
     throw unsafeIdentity();
   const oid = role?.oid ?? null;
+  // PostgreSQL 18 reserves initdb object OIDs below FirstNormalObjectId (16384).
+  // A system-schema name or missing initial ACL alone does not establish origin.
   const authority = await client.query(
     `SELECT
       EXISTS(SELECT 1 FROM pg_catalog.pg_auth_members WHERE roleid=$1::oid OR member=$1::oid) AS membership,
@@ -74,7 +77,26 @@ export async function assertSafeRuntimeRole(
           OR (c.relkind='S' AND a.privilege_type='UPDATE'))) AS table_authority,
       EXISTS(SELECT 1 FROM pg_catalog.pg_attribute c,
         LATERAL pg_catalog.aclexplode(c.attacl) a WHERE a.grantee IN (0,$1::oid)
-        AND (a.is_grantable OR a.privilege_type='REFERENCES')) AS column_authority`,
+        AND (a.is_grantable OR a.privilege_type='REFERENCES')) AS column_authority,
+      EXISTS(SELECT 1 FROM pg_catalog.pg_proc p
+        WHERE p.prosecdef
+        AND (($1::oid IS NOT NULL AND pg_catalog.has_function_privilege($1::oid,p.oid,'EXECUTE'))
+          OR EXISTS(SELECT 1 FROM pg_catalog.aclexplode(COALESCE(p.proacl,pg_catalog.acldefault('f',p.proowner))) a
+            WHERE a.grantee=0 AND a.privilege_type='EXECUTE'))) AS definer_authority,
+      EXISTS(SELECT 1 FROM pg_catalog.pg_proc p
+        JOIN pg_catalog.pg_namespace n ON n.oid=p.pronamespace
+        JOIN pg_catalog.pg_language l ON l.oid=p.prolang
+        LEFT JOIN pg_catalog.pg_init_privs i ON i.classoid='pg_catalog.pg_proc'::regclass
+          AND i.objoid=p.oid AND i.objsubid=0
+        CROSS JOIN LATERAL pg_catalog.aclexplode(COALESCE(p.proacl,pg_catalog.acldefault('f',p.proowner))) a
+        WHERE (a.grantee=$1::oid AND (a.privilege_type='EXECUTE' OR a.is_grantable))
+          OR (a.grantee=0 AND a.is_grantable)
+          OR (l.lanname IN ('c','internal') AND a.grantee IN (0,$1::oid)
+            AND a.privilege_type='EXECUTE'
+            AND NOT (n.nspname='pg_catalog' AND p.oid<16384))
+          OR (n.nspname='pg_catalog' AND a.grantee=0 AND a.privilege_type='EXECUTE'
+            AND NOT EXISTS(SELECT 1 FROM pg_catalog.aclexplode(COALESCE(i.initprivs,pg_catalog.acldefault('f',p.proowner))) baseline
+              WHERE baseline.grantee=0 AND baseline.privilege_type='EXECUTE'))) AS routine_authority`,
     [oid, configured],
   );
   if (Object.values(authority.rows[0]).some(Boolean)) throw unsafeIdentity();
@@ -126,8 +148,11 @@ export async function provisionRuntimeRole(
 
 // Operator-only migration/provisioning command, never an HTTP capability.
 async function main() {
-  const runtime = new URL(process.env.RUNTIME_DATABASE_URL ?? "");
-  const owner = new URL(process.env.DATABASE_URL ?? "");
+  const runtime = postgresUrl(
+    process.env.RUNTIME_DATABASE_URL,
+    "RUNTIME_DATABASE_URL",
+  );
+  const owner = postgresUrl(process.env.DATABASE_URL);
   if (
     !["postgres:", "postgresql:"].includes(runtime.protocol) ||
     !["postgres:", "postgresql:"].includes(owner.protocol) ||

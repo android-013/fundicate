@@ -35,6 +35,7 @@
     "maintenance": "node scripts/maintenance.mjs",
     "test:release": "node scripts/test-db.mjs release",
     "test:security": "node scripts/test-db.mjs security",
+    "test:ops-security": "node --test tests/operations-security.test.mjs",
     "test:payments": "node scripts/test-db.mjs payment-records",
     "audit:dependencies": "node scripts/dependency-audit.mjs"
   },

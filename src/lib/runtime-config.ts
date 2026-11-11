@@ -1,3 +1,5 @@
+import { postgresUrl } from "./postgres-url.mjs";
+
 export type RuntimeEnvironment = Record<string, string | undefined>;
 export type RuntimeConfig = {
   mode: "standalone" | "near-testnet";
@@ -65,12 +67,7 @@ export function validateRuntimeConfig(
     throw new Error(
       "Public deployment requires an explicitly trusted client IP header from an isolated reverse proxy.",
     );
-  const database = validUrl(env.DATABASE_URL, "DATABASE_URL");
-  if (
-    !["postgres:", "postgresql:"].includes(database.protocol) ||
-    !database.pathname.slice(1)
-  )
-    throw new Error("DATABASE_URL must name a PostgreSQL database.");
+  const database = postgresUrl(env.DATABASE_URL);
   if (production && env.ALLOW_DEMO_SEED === "true")
     throw new Error("ALLOW_DEMO_SEED must be disabled in production.");
   if (production && !loopback(database.hostname)) {

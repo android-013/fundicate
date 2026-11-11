@@ -150,7 +150,9 @@ export async function POST(
         typeof body === "object" &&
         body !== null &&
         "action" in body &&
-        ["moderator", "member", "transfer"].includes(String(body.action)))
+        ["moderator", "member", "transfer", "suspend"].includes(
+          String(body.action),
+        ))
     ) {
       await security.requireRecentAuthentication(user.id, token);
     }

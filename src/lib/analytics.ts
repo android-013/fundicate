@@ -3,6 +3,7 @@ import { db } from "./db";
 import { ensure } from "./errors";
 import { atomic } from "./service";
 import { calculateOutcome } from "./governance";
+import { auditVisibilityForMemberships } from "./audit-visibility";
 import {
   analyticsHref,
   averageMinor,
@@ -115,7 +116,11 @@ export async function getAnalytics(userId: string, filters: AnalyticsFilters) {
           take: 50001,
         }),
         tx.auditEvent.findMany({
-          where: { communityId, createdAt: date },
+          where: {
+            communityId,
+            createdAt: date,
+            AND: [auditVisibilityForMemberships(userId, scope.selected)],
+          },
           include: {
             actor: { select: identity },
             community: { select: { name: true, slug: true } },
@@ -561,7 +566,7 @@ export async function inspectAnalyticsRecord(
   kind: string,
   id: string,
 ) {
-  const { ids } = await analyticsScope(userId, {
+  const scope = await analyticsScope(userId, {
     community: "all",
     range: "all",
     currency: "all",
@@ -572,6 +577,7 @@ export async function inspectAnalyticsRecord(
     type: "",
     page: 1,
   });
+  const { ids } = scope;
   if (kind === "transactions") {
     const record = await db.ledgerTransaction.findFirst({
       where: { id, communityId: { in: ids } },
@@ -603,7 +609,11 @@ export async function inspectAnalyticsRecord(
     return { kind, record };
   }
   const record = await db.auditEvent.findFirst({
-    where: { id, communityId: { in: ids } },
+    where: {
+      id,
+      communityId: { in: ids },
+      AND: [auditVisibilityForMemberships(userId, scope.selected)],
+    },
     include: {
       actor: { select: identity },
       community: { select: { name: true, slug: true } },

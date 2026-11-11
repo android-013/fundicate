@@ -661,6 +661,16 @@ function frequency(value: bigint) {
     throw new Error("Rating frequency exceeds exact safe-integer domain.");
   return Number(value);
 }
+function exactBatchEloRating(net: bigint) {
+  // All candidates start at 1500 with K=32, so 32*sum(f*(score-.5))
+  // is exactly 16*sum(twiceScore-frequency). Do not divide and then
+  // re-multiply paid frequencies: cancellation can invent a winner.
+  const rating = 1500n + 16n * net;
+  const limit = BigInt(Number.MAX_SAFE_INTEGER);
+  if (rating < -limit || rating > limit)
+    throw new Error("Elo rating exceeds the exact safe-integer domain.");
+  return Number(rating);
+}
 function ratingGroups(ids: string[], ratings: ReadonlyMap<string, number>) {
   const units = new Map(
     ids.map((id) => [id, BigInt(Math.round(ratings.get(id)! * 1000000))]),
@@ -708,31 +718,32 @@ function pairwise(config: MethodConfig, ids: string[], votes: ValidVote[]) {
   for (const pair of pairs) {
     if (!pair.frequency) continue;
     const count = frequency(pair.frequency);
+    if (config.selectionMethod === "ELO") continue;
     const score = Number(pair.twiceA) / (2 * count);
     games
       .get(pair.a)!
       .push({ rating: 1500, deviation: 350, score, frequency: count });
-    games
-      .get(pair.b)!
-      .push({
-        rating: 1500,
-        deviation: 350,
-        score: 1 - score,
-        frequency: count,
-      });
+    games.get(pair.b)!.push({
+      rating: 1500,
+      deviation: 350,
+      score: 1 - score,
+      frequency: count,
+    });
   }
   const baseline = { rating: 1500, deviation: 350, volatility: 0.06 };
   const states = ids.map((schemeId) => ({
     schemeId,
     ...(config.selectionMethod === "ELO"
-      ? { rating: eloPeriod(1500, games.get(schemeId)!) }
+      ? { rating: exactBatchEloRating(net.get(schemeId)!) }
       : glicko2(baseline, games.get(schemeId)!)),
   }));
   const ranking = rankGroups(
-    ratingGroups(
-      ids,
-      new Map(states.map((state) => [state.schemeId, state.rating])),
-    ),
+    config.selectionMethod === "ELO"
+      ? groupsByBigInt(ids, net)
+      : ratingGroups(
+          ids,
+          new Map(states.map((state) => [state.schemeId, state.rating])),
+        ),
     votes.length > 0,
   );
   return {

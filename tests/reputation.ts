@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import type { Prisma } from "@prisma/client";
 import { db } from "../src/lib/db";
 import {
   createCommunity,
@@ -24,6 +25,12 @@ import {
   processRoundSettlement,
 } from "../src/lib/funded-rounds";
 import { castRoundVetoVote } from "../src/lib/rounds-v3";
+import {
+  getAnalytics,
+  inspectAnalyticsRecord,
+  reportRecords,
+} from "../src/lib/analytics";
+import { parseFilters } from "../src/lib/analytics-core";
 import {
   createReputationReview,
   editReputationReview,
@@ -655,6 +662,135 @@ async function main() {
         staff.reviews.find((row) => row.id === schemeReview.id)!.reports[0]
           .reason,
         command.reason,
+      );
+      const privateEvent = await db.auditEvent.findFirstOrThrow({
+        where: {
+          communityId: community.id,
+          actorId: peer.user.id,
+          entityId: schemeReview.id,
+          action: "REPUTATION_ABUSE_REPORTED",
+        },
+      });
+      const activityPath = `${origin}/communities/${community.slug}/activity`;
+      for (const actor of [undefined, reviewer, peer, idle, outsider]) {
+        const response = await fetch(activityPath, {
+          headers: actor ? { Cookie: actor.cookie } : {},
+        });
+        assert.equal(response.status, 200);
+        assert.equal(
+          (await response.text()).includes(privateEvent.id),
+          false,
+          "Non-staff activity must not expose abuse-report event identities",
+        );
+        const overview = await fetch(
+          `${origin}/communities/${community.slug}`,
+          { headers: actor ? { Cookie: actor.cookie } : {} },
+        );
+        assert.equal(
+          (await overview.text())
+            .toLowerCase()
+            .includes("reputation abuse reported"),
+          false,
+          "Non-staff overview must not expose abuse-report actions",
+        );
+      }
+      assert.equal(
+        (
+          await (
+            await fetch(activityPath, { headers: { Cookie: moderator.cookie } })
+          ).text()
+        ).includes(privateEvent.id),
+        true,
+        "Scoped staff retain private audit visibility",
+      );
+      // Being staff in another community must never unlock this community's reports.
+      await db.communityMembership.create({
+        data: {
+          communityId: foreign.id,
+          userId: peer.user.id,
+          role: "MODERATOR",
+        },
+      });
+      const filters = parseFilters({
+        dataset: "activity",
+        community: "all",
+        range: "all",
+        currency: "all",
+      });
+      for (const actor of [reviewer, peer, idle]) {
+        const report = await getAnalytics(actor.user.id, filters);
+        assert.equal(
+          report.activity.some((row) => row.id === privateEvent.id),
+          false,
+        );
+        assert.equal(
+          reportRecords(report).some((row) => row.id === privateEvent.id),
+          false,
+        );
+        await assert.rejects(
+          () =>
+            inspectAnalyticsRecord(actor.user.id, "activity", privateEvent.id),
+          /not found/i,
+        );
+        const csv = await fetch(
+          `${origin}/api/analytics/export?dataset=activity&range=all`,
+          { headers: { Cookie: actor.cookie } },
+        );
+        assert.equal(csv.status, 200);
+        assert.equal(
+          (await csv.text()).includes(privateEvent.id),
+          false,
+          "Member CSV must not export private audit identities",
+        );
+      }
+      const staffReport = await getAnalytics(moderator.user.id, filters);
+      assert.equal(
+        staffReport.activity.some((row) => row.id === privateEvent.id),
+        true,
+      );
+      assert.equal(
+        (
+          await inspectAnalyticsRecord(
+            moderator.user.id,
+            "activity",
+            privateEvent.id,
+          )
+        ).record.id,
+        privateEvent.id,
+      );
+      const marker = await db.auditEvent.create({
+        data: {
+          communityId: community.id,
+          actorId: admin.user.id,
+          action: "AUDIT_VISIBILITY_PUBLIC_PROBE",
+          entityId: randomUUID(),
+          details: { fixture: true },
+        },
+      });
+      await db.auditEvent.createMany({
+        data: Array.from({ length: 151 }, () => ({
+          communityId: community.id,
+          actorId: peer.user.id,
+          action: "REPUTATION_ABUSE_REPORTED",
+          entityId: schemeReview.id,
+          details: privateEvent.details as Prisma.InputJsonValue,
+        })),
+      });
+      const limitedFeed = await (await fetch(activityPath)).text();
+      assert.equal(
+        limitedFeed.includes(marker.id),
+        true,
+        "Private-event filtering must happen before the public feed limit",
+      );
+      assert.equal(
+        await db.auditEvent.count({
+          where: {
+            communityId: community.id,
+            action: "REPUTATION_ABUSE_REPORTED",
+          },
+        }),
+        152,
+        "Visibility must preserve immutable source events",
       );
     },
   );

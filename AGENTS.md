@@ -2,6 +2,10 @@
 
 The user approved a separate standalone governance and external-payment-tracking product on this branch. See workflow/DECISIONS.md. This supersedes the NEAR-specific Part 5 gates below only on this branch. Preserve all history and keep the active run; do not describe omitted testnet work as verified.
 
+## Explicit maintenance audit — 10 November 2026
+
+After the five-part delivery completed at revision 412, the user explicitly requested fresh tests, confirmed bug/security fixes and specification verification. This is a separate maintenance audit, not Part 6 or a reopening of completed history. Read `docs/security/post-release-audit-20261110.md` and its referenced durable audit state before continuing this work. An unfinished maintenance audit resumes on continue; never replace its evidence with historical Part 5 passes. Preserve all user data, original decisions and failed/baseline evidence. The audit must report actual current-source tests, independent review and remaining risk; no zero-bug/security guarantee or implicit hosted/chain deployment is authorized.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

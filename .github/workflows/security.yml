@@ -19,5 +19,6 @@ jobs:
       - run: npx prisma generate
       - run: npm run audit:dependencies
       - run: npm test
+      - run: npm run test:ops-security
       - run: npm run typecheck
       - run: npm run lint

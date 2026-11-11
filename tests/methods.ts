@@ -104,6 +104,7 @@ export async function runMethodChecks(check: Check) {
     allocationPolicy: Policy = "WINNER_ALL",
     extra: Record<string, unknown> = {},
     base = old,
+    contributionAmounts: readonly string[] = ["0.50", "0.30", "0.20"],
   ) {
     const at = (offset: number) => new Date(base.getTime() + offset * day);
     const round = await createFundingRound(
@@ -141,7 +142,7 @@ export async function runMethodChecks(check: Check) {
       { ...scope(round.id), action: "open" },
       base,
     );
-    for (const [index, amount] of ["0.50", "0.30", "0.20"].entries())
+    for (const [index, amount] of contributionAmounts.entries())
       await contributeToRound(
         voters[index].id,
         { ...scope(round.id), amount, idempotencyKey: randomUUID() },
@@ -344,6 +345,196 @@ export async function runMethodChecks(check: Check) {
       where: { roundId: f.round.id },
     });
   }
+
+  async function paidCycle() {
+    const f = await fixture(
+      "ELO",
+      "CONTRIBUTION",
+      "WINNER_ALL",
+      { maximumContribution: "9999999.99" },
+      old,
+      ["9999999.99", "0.02", "0.01"],
+    );
+    const cycle = methodPairs(f.ids).map((pair) => ({
+      ...pair,
+      choice:
+        pair.a === f.ids[0] && pair.b === f.ids[2]
+          ? ("B" as const)
+          : ("A" as const),
+    }));
+    const votes = [
+      { userId: admin.id, power: 999999999n, ballot: { pairs: cycle } },
+      {
+        userId: member.id,
+        power: 2n,
+        ballot: {
+          pairs: cycle.map((pair) => ({
+            ...pair,
+            choice: pair.choice === "A" ? ("B" as const) : ("A" as const),
+          })),
+        },
+      },
+    ];
+    for (const vote of votes)
+      await castMethodSelectionVote(
+        vote.userId,
+        { ...scope(f.round.id), ballot: vote.ballot },
+        f.at(2.02),
+      );
+    const corrected = tallyMethod(
+      { selectionMethod: "ELO", selectionSeats: 1 },
+      f.ids,
+      votes,
+      1000000002n,
+      5000,
+    );
+    assert.equal(corrected.outcome, "TIED");
+    return { f, corrected };
+  }
+
+  await check(
+    "V4 paid Elo large cyclic tie refunds original sources instead of inventing a payout winner",
+    async () => {
+      const { f } = await paidCycle();
+      await fundingRoundAction(
+        admin.id,
+        { ...scope(f.round.id), action: "close-selection" },
+        f.at(3.02),
+      );
+      const decision = await db.roundDecision.findUniqueOrThrow({
+        where: { roundId: f.round.id },
+      });
+      assert.equal(
+        (decision.result as unknown as { outcome: string }).outcome,
+        "TIED",
+      );
+      assert.deepEqual(
+        (decision.allocation as unknown as Allocation).payouts,
+        [],
+      );
+      assert.equal(
+        (decision.allocation as unknown as Allocation).refundTotal,
+        "1000000002",
+      );
+      await prepareRoundSettlement(admin.id, scope(f.round.id), f.at(3.03));
+      await processRoundSettlement(admin.id, scope(f.round.id), f.at(3.04));
+      const final = await conservation(f.round.id, true);
+      assert.equal(final.settlement.paid, 0n);
+      assert.equal(final.settlement.refunded, 1000000002n);
+      assert.deepEqual(
+        new Map(
+          final.operations.map((operation) => [
+            operation.beneficiaryId,
+            operation.amount,
+          ]),
+        ),
+        new Map([
+          [admin.id, 999999999n],
+          [member.id, 2n],
+          [third.id, 1n],
+        ]),
+      );
+    },
+  );
+
+  await check(
+    "V4 public reads preserve an immutable historical result after an engine calculation repair",
+    async () => {
+      const { f, corrected } = await paidCycle();
+      const publishedAt = f.at(3.02);
+      // Reproduce a pre-repair publication in this disposable fixture through
+      // the ordinary SQL guards, without editing any published row or disabling a trigger.
+      const historicalResult = {
+        outcome: "WINNER_SELECTED",
+        winnerSchemeId: f.ids[0],
+        eligible: "1000000002",
+        participation: "1000000001",
+        quorumRequired: "500000001",
+        counts: { [f.ids[0]]: "3", [f.ids[1]]: "2", [f.ids[2]]: "2" },
+        ranking: f.ids.map((schemeId, index) => ({
+          schemeId,
+          rank: index ? 2 : 1,
+          support: index ? "2" : "3",
+        })),
+        elected: [f.ids[0]],
+        transcript: {
+          spec: "FUNDICATE_METHODS_V1",
+          engine: {
+            variant: "BATCH_ELO_V1_PAID_FREQUENCY_EXTENSION",
+            states: f.ids.map((schemeId, index) => ({
+              schemeId,
+              rating: index ? 1500 : 1500.0000019073486,
+            })),
+          },
+        },
+      };
+      const allocation = {
+        rulesVersion: 4,
+        assetId: "fiat:USD",
+        received: "1000000002",
+        policy: "WINNER_ALL",
+        payouts: [
+          {
+            schemeId: f.ids[0],
+            amount: "100",
+            beneficiaryId: author.id,
+            recipient: f.schemes[0].recipient,
+          },
+        ],
+        refundTotal: "999999902",
+        reason: "WINNER_SELECTED",
+      };
+      await db.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT id FROM "Community" WHERE id=${communityId}::uuid FOR UPDATE`;
+        await tx.fundingRound.update({
+          where: { id: f.round.id },
+          data: {
+            status: "DECIDED",
+            decidedAt: publishedAt,
+            outcome: "WINNER_SELECTED",
+            winnerSchemeId: f.ids[0],
+          },
+        });
+        await tx.roundDecision.create({
+          data: {
+            roundId: f.round.id,
+            publishedAt,
+            totalVetoPower: 3n,
+            vetoFinalizedAt: publishedAt,
+            result: json(historicalResult),
+            allocation: json(allocation),
+          },
+        });
+      });
+      const before = await db.roundDecision.findUniqueOrThrow({
+        where: { roundId: f.round.id },
+      });
+      const ledgerBefore = await conservation(f.round.id);
+      assert.notEqual(corrected.outcome, historicalResult.outcome);
+      for (const userId of [admin.id, author.id, undefined]) {
+        const view = await getV3RoundView(
+          communityId,
+          f.round.id,
+          userId,
+          f.at(3.03),
+        );
+        assert.equal(view!.selectionResult!.winnerSchemeId, f.ids[0]);
+        assert.equal(view!.selectionResult!.counts[f.ids[0]], 3n);
+        assert.deepEqual(
+          view!.selectionResult!.transcript,
+          historicalResult.transcript,
+        );
+        assert.deepEqual(view!.decision, before);
+      }
+      assert.deepEqual(
+        await db.roundDecision.findUniqueOrThrow({
+          where: { roundId: f.round.id },
+        }),
+        before,
+      );
+      assert.deepEqual(await conservation(f.round.id), ledgerBefore);
+    },
+  );
 
   for (const method of METHODS)
     for (const weight of ["EQUAL", "CONTRIBUTION"] as const)

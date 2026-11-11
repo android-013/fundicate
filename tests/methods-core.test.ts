@@ -123,6 +123,166 @@ describe("published V4 methods", () => {
       ]),
     ).toBe(1532);
   });
+  it("paid Elo preserves an exact cyclic tie instead of inventing a monetary winner", () => {
+    const cycle = methodPairs(ids).map((pair) => ({
+      ...pair,
+      choice:
+        pair.a === "a" && pair.b === "c" ? ("B" as const) : ("A" as const),
+    }));
+    const votes = [
+      { userId: "large", power: 999999999n, ballot: { pairs: cycle } },
+      {
+        userId: "small",
+        power: 2n,
+        ballot: {
+          pairs: cycle.map((pair) => ({
+            ...pair,
+            choice: pair.choice === "A" ? ("B" as const) : ("A" as const),
+          })),
+        },
+      },
+    ];
+    const config = { selectionMethod: "ELO" as const, selectionSeats: 1 };
+    const received = 1000000001n;
+    const result = tallyMethod(config, ids, votes, received, 10000);
+    expect(result.outcome).toBe("TIED");
+    expect(result.winnerSchemeId).toBeNull();
+    expect(result.ranking).toEqual(
+      ids.map((schemeId) => ({ schemeId, rank: 1, support: 3n })),
+    );
+    expect(result.transcript).toMatchObject({
+      engine: { states: ids.map((schemeId) => ({ schemeId, rating: 1500 })) },
+    });
+    expect(
+      tallyMethod(
+        config,
+        [...ids].reverse(),
+        [...votes].reverse(),
+        received,
+        10000,
+      ),
+    ).toEqual(result);
+    for (const policy of [
+      "WINNER_ALL",
+      "PROPORTIONAL",
+      "RANKED_CUTS",
+    ] as const) {
+      const plan = allocateV3(
+        received,
+        result.ranking.map((entry) => ({
+          ...entry,
+          request: 999999999n,
+          recipient: `recipient ${entry.schemeId}`,
+          beneficiaryId: `owner${entry.schemeId}`,
+        })),
+        policy,
+        policy === "RANKED_CUTS" ? [6000, 3000, 1000] : [],
+      );
+      if (policy === "PROPORTIONAL") {
+        expect(plan.payouts.map((entry) => entry.amount)).toEqual([
+          333333334n,
+          333333334n,
+          333333333n,
+        ]);
+        expect(plan.refundTotal).toBe(0n);
+      } else {
+        expect(plan.payouts).toEqual([]);
+        expect(plan.refundTotal).toBe(received);
+      }
+    }
+  });
+  it("paid Elo retains a genuine one-unit preference beside large cancelling power", () => {
+    const cycle = methodPairs(ids).map((pair) => ({
+      ...pair,
+      choice:
+        pair.a === "a" && pair.b === "c" ? ("B" as const) : ("A" as const),
+    }));
+    const result = tallyMethod(
+      { selectionMethod: "ELO", selectionSeats: 1 },
+      ids,
+      [
+        { userId: "large", power: 999999999n, ballot: { pairs: cycle } },
+        {
+          userId: "small",
+          power: 2n,
+          ballot: {
+            pairs: cycle.map((pair) => ({
+              ...pair,
+              choice: pair.choice === "A" ? ("B" as const) : ("A" as const),
+            })),
+          },
+        },
+        { userId: "decisive", power: 1n, ballot: ballot("ELO", ids) },
+      ],
+      1000000002n,
+      10000,
+    );
+    expect(result.winnerSchemeId).toBe("a");
+    expect(result.transcript).toMatchObject({
+      engine: {
+        states: [
+          { schemeId: "a", rating: 1532 },
+          { schemeId: "b", rating: 1500 },
+          { schemeId: "c", rating: 1468 },
+        ],
+      },
+    });
+  });
+  it("exact paid Elo covers the published maximum cumulative contribution electorate", () => {
+    const candidates = Array.from(
+      { length: 50 },
+      (_, index) => `c${String(index).padStart(2, "0")}`,
+    );
+    // Ten thousand eligible contributors, each cumulatively capped at 999999999 minor units.
+    // Identical complete ballots aggregate to this frequency without changing the period algebra.
+    const power = 10000n * 999999999n;
+    const result = tallyMethod(
+      { selectionMethod: "ELO", selectionSeats: 1 },
+      candidates,
+      [
+        {
+          userId: "aggregated-identical-ballots",
+          power,
+          ballot: {
+            pairs: methodPairs(candidates).map((pair) => ({
+              ...pair,
+              choice: "A",
+            })),
+          },
+        },
+      ],
+      power,
+      10000,
+    );
+    const highest = 1500n + 16n * 49n * power;
+    expect(highest < BigInt(Number.MAX_SAFE_INTEGER)).toBe(true);
+    expect(result.winnerSchemeId).toBe(candidates[0]);
+    expect(result.transcript).toMatchObject({
+      engine: {
+        states: expect.arrayContaining([
+          { schemeId: candidates[0], rating: Number(highest) },
+        ]),
+      },
+    });
+  });
+  it("paid Elo rejects an out-of-domain exact rating instead of silently rounding it", () => {
+    const power = BigInt(Number.MAX_SAFE_INTEGER);
+    expect(() =>
+      tallyMethod(
+        { selectionMethod: "ELO", selectionSeats: 1 },
+        ["a", "b"],
+        [
+          {
+            userId: "outside-application-bounds",
+            power,
+            ballot: { pairs: [{ a: "a", b: "b", choice: "A" }] },
+          },
+        ],
+        power,
+        10000,
+      ),
+    ).toThrow(/exact safe-integer domain/);
+  });
   it("IRV transfers preferences to a majority and discloses exhaustion and elimination ties", () => {
     const result = tallyMethod(
       { selectionMethod: "IRV", selectionSeats: 1 },

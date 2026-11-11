@@ -9,6 +9,7 @@ import { dateTime, moneyFormat } from "@/lib/format";
 import { LiveRefresh } from "@/components/live-refresh";
 import { Avatar, Status } from "@/components/ui";
 import { ActionButton, ActionForm, Select, TextArea } from "@/components/forms";
+import { auditVisibilityWhere } from "@/lib/audit-visibility";
 export default async function ProposalDetail({
   params,
 }: {
@@ -66,7 +67,13 @@ export default async function ProposalDetail({
   const live =
     p.status === "OPEN" && p.opensAt <= new Date() && p.closesAt > new Date();
   const events = await db.auditEvent.findMany({
-    where: { communityId: c.id, entityId: p.id },
+    where: {
+      communityId: c.id,
+      entityId: p.id,
+      AND: [
+        auditVisibilityWhere(isMember ? [c.id] : [], isStaff ? [c.id] : []),
+      ],
+    },
     include: { actor: { select: { displayName: true } } },
     orderBy: { createdAt: "asc" },
   });

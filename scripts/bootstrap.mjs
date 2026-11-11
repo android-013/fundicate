@@ -8,6 +8,7 @@ import {
 } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { postgresUrl } from "../src/lib/postgres-url.mjs";
 
 const args = process.argv.slice(2);
 const allowed = new Set(["--docker", "--origin", "--prepare-only"]);
@@ -49,22 +50,42 @@ mkdirSync(directory, { recursive: true, mode: 0o700 });
 const envPath = resolve(directory, "compose.env");
 if (existsSync(envPath)) {
   const saved = readFileSync(envPath, "utf8");
-  if (!saved.includes(`APP_ORIGIN=${origin.origin}\n`))
+  function savedValue(name) {
+    const values = [...saved.matchAll(new RegExp(`^${name}=(.*)$`, "gm"))];
+    if (values.length > 1)
+      throw new Error(
+        "Existing deployment configuration repeats a protected setting; no credentials were changed.",
+      );
+    const raw = values[0]?.[1].replace(/\r$/, "").trim();
+    if (raw === undefined) return raw;
+    if (
+      (raw.startsWith('"') && raw.endsWith('"')) ||
+      (raw.startsWith("'") && raw.endsWith("'"))
+    )
+      return raw.slice(1, -1);
+    return raw.replace(/\s+#.*$/, "").trimEnd();
+  }
+  const ownerUrl = postgresUrl(savedValue("DATABASE_URL"));
+  const currentRuntime = savedValue("RUNTIME_DATABASE_URL");
+  savedValue("POSTGRES_PASSWORD");
+  if (currentRuntime !== undefined) {
+    const runtimeUrl = postgresUrl(currentRuntime, "RUNTIME_DATABASE_URL");
+    if (
+      runtimeUrl.username !== "fundicate_app" ||
+      !runtimeUrl.password ||
+      runtimeUrl.host !== ownerUrl.host ||
+      runtimeUrl.pathname !== ownerUrl.pathname
+    )
+      throw new Error(
+        "Existing runtime identity must use fundicate_app on the same deployment database; no credentials were changed.",
+      );
+  }
+  if (savedValue("APP_ORIGIN") !== origin.origin)
     throw new Error(
       "Existing container configuration has a different origin. Edit the ignored .local/deploy/compose.env deliberately; credentials and database volumes were preserved.",
     );
-  if (!/^RUNTIME_DATABASE_URL=/m.test(saved)) {
-    const ownerLine = saved.match(/^DATABASE_URL=(.+)$/m)?.[1];
-    let runtimeUrl;
-    try {
-      runtimeUrl = new URL(ownerLine);
-      if (!["postgres:", "postgresql:"].includes(runtimeUrl.protocol))
-        throw new Error();
-    } catch {
-      throw new Error(
-        "Existing deployment DATABASE_URL is invalid; its value was not logged.",
-      );
-    }
+  if (currentRuntime === undefined) {
+    const runtimeUrl = new URL(ownerUrl);
     runtimeUrl.username = "fundicate_app";
     runtimeUrl.password = randomBytes(32).toString("hex");
     writeFileSync(
