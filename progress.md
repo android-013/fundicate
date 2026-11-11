@@ -112,7 +112,7 @@ The canonical plan is `docs/MASTER-PLAN.md`; machine state is `workflow/state.js
 
 The user regrouped all completed work into Part 1. The former pending capability phases are now expanded into delivery Parts 2–5 in `docs/MASTER-PLAN.md`: funded rounds/accounting; weighted allocation/veto; advanced methods/reputation; verified NEAR testnet and full integration.
 
-Round selections currently record a preference without moving or reserving funds. Existing dashboard, analytics, proposals and treasury features remain available. See `docs/UPGRADE-PHASES.md` for rules and boundaries.
+Round selections currently record a preference without moving or reserving funds. Existing dashboard, analytics, proposals and treasury features remain available. See the [historical phase rules](docs/archive/early-upgrades.md).
 
 ## Future work — not claimed as complete
 
@@ -122,4 +122,4 @@ Round selections currently record a preference without moving or reserving funds
 - [ ] Production deployment/security review, monitoring, backups, pagination on remaining community lists and scheduled maintenance/finalization.
 - [ ] File uploads, advanced round allocation/settlement and a ledger reversal UI.
 
-These future items do not change the fact that the delivered treasury uses local simulated funds. See `docs/NEAR-INTEGRATION.md` and `docs/VERIFICATION.md` for boundaries and evidence.
+These future items do not change the fact that the delivered treasury uses local simulated funds. See the [historical NEAR design](docs/archive/near-integration.md) and [baseline verification](docs/archive/baseline-verification.md).

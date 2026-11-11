@@ -1,6 +1,6 @@
 # Fundicate capability upgrades
 
-> Historical sub-phase record: the user has regrouped **all completed work here into Part 1/5**. The authoritative remaining four-step roadmap and next-triggered agent workflow are in [MASTER-PLAN.md](MASTER-PLAN.md). The old phase 3–5 labels below are superseded, not an independent delivery counter. Current detailed rules below still describe the implemented baseline.
+> Historical sub-phase record: the user has regrouped **all completed work here into Part 1/5**. The authoritative remaining four-step roadmap and next-triggered agent workflow are in [MASTER-PLAN.md](../MASTER-PLAN.md). The old phase 3–5 labels below are superseded, not an independent delivery counter. Current detailed rules below still describe the implemented baseline.
 
 The existing dashboard, analytics, community membership, proposal workflow and simulated treasury remain available. New funding rounds are an additional workflow. Completion of a phase is not a claim that the whole Money Heist concept is complete.
 
