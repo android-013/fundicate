@@ -219,7 +219,7 @@ erDiagram
 | `ReputationAppeal` | Author's appeal tied to a moderation event | `id, reviewId, moderationId, authorId, statement, createdAt` |
 | `ExternalPaymentRecord` | Scoped attestation, external reference and optional source reversal | `id, communityId, roundId?, recordedById, counterpartyId?, kind, amount, currency, reference, note, evidenceUrl?, occurredAt, createdAt, reversesId?` |
 
-## Retained chain design records
+## NEAR testnet custody and wallets
 
 ```mermaid
 erDiagram

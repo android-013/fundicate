@@ -1,4 +1,4 @@
-**Standalone branch, 7 November 2026:** This branch is community governance plus staff-recorded external-payment tracking. Blockchain execution is disabled; older NEAR instructions below are historical and cannot enable it. See [the standalone guide](STANDALONE.md). Existing treasury balances remain simulated.
+For deployment and wallet setup, follow the [NEAR testnet hackathon handoff](guides/near-testnet.md).
 
 # Native NEAR testnet treasury contract v1
 

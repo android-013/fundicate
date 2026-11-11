@@ -21,6 +21,21 @@ Use UTC calendar dates in YYYY-MM-DD format. The [analytics guide](../guides/ana
 
 Send requests to `/api/<operation>`. The table names the significant fields. Defaults, length limits and conditional fields live in the linked schemas and service modules.
 
+### Optional NEAR testnet operations
+
+| Operation | Input and behavior |
+| --- | --- |
+| `wallet-challenge` | Testnet `accountId`. Create a session-bound ownership challenge after password confirmation. |
+| `wallet-verify` | `challengeId`, `accountId`, `publicKey`, `signature`. Verify a signed ownership message. |
+| `wallet-revoke` | `id` of the current user's wallet link, after password confirmation |
+| `chain-create` | Community and source round IDs, title, collection length or explicit deadlines, and qualified scheme payout caps with testnet recipients |
+| `chain-prepare` | Community and pool IDs, linked `accountId`, `action`, `idempotencyKey`, and applicable amount or contract operation ID |
+| `chain-authorize` | Prepared application `operationId`. Reserve the wallet handoff and return immutable signing instructions. |
+| `chain-submitted` | Application operation ID and wallet `transactionHash` |
+| `chain-reconcile` | Application operation ID. Independently query testnet and record the outcome. |
+
+See the [testnet handoff](../guides/near-testnet.md) for activation and the live evidence command.
+
 ### Account and report settings
 
 | Operation | Input or behavior |

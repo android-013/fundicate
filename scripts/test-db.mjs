@@ -43,6 +43,12 @@ try {
     APP_ORIGIN: "http://127.0.0.1:3001",
     HOSTNAME: "127.0.0.1",
     PORT: "3001",
+    FUNDICATE_MODE: mode === "chain" ? "near-testnet" : "standalone",
+    ...(mode === "chain" && {
+      NEAR_CONTRACT_ID: "fundicate-fixture.testnet",
+      NEAR_CONTRACT_CODE_HASH: "A".repeat(43),
+      NEAR_RPC_URL: "https://near-rpc.invalid",
+    }),
     TEMP: browserTemp,
     TMP: browserTemp,
     PLAYWRIGHT_BROWSERS_PATH:

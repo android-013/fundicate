@@ -18,6 +18,7 @@
     "test:e2e": "node scripts/test-db.mjs e2e",
     "test:rounds": "node scripts/test-db.mjs rounds",
     "test:funds": "node scripts/test-db.mjs funds",
+    "test:near": "node scripts/test-db.mjs chain",
     "test:elections": "node scripts/test-db.mjs elections",
     "progress": "node scripts/progress.mjs",
     "test:progress": "node --test tests/progress-workflow.test.mjs",
@@ -28,6 +29,9 @@
     "setup": "npm run db:local && prisma generate && npm run db:migrate && npm run db:seed",
     "test:reputation": "node scripts/test-db.mjs reputation",
     "doctor": "node scripts/doctor.mjs",
+    "near:contract": "node contracts/near-treasury/check.mjs",
+    "near:check": "node scripts/near-check.mjs",
+    "near:evidence": "node scripts/verify-near-testnet.mjs",
     "bootstrap": "node scripts/bootstrap.mjs",
     "ops:backup": "node scripts/backup.mjs",
     "ops:restore": "node scripts/restore.mjs",
@@ -67,6 +71,7 @@
     "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   },
   "dependencies": {
+    "@hot-labs/near-connect": "0.12.0",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
     "dotenv": "^18.0.9",

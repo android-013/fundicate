@@ -4,6 +4,8 @@
 
 Fundicate runs as a native standalone Node.js service or as a Docker Compose stack. Both use PostgreSQL for accounts, governance, financial simulations and audit history. For a first local run, follow [getting started](getting-started.md).
 
+The [NEAR testnet handoff](near-testnet.md) covers the optional hackathon wallet and treasury configuration.
+
 ## Native service
 
 Provision a dedicated PostgreSQL database and inject configuration from your secret manager or a restricted environment file. Apply migrations with the operator connection. Run the application with a dedicated runtime role. Use the supported Node.js version from [package.json](../../package.json).

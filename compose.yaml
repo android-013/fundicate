@@ -42,7 +42,10 @@ services:
       ALLOW_DEMO_SEED: "false"
       DATABASE_URL: ${RUNTIME_DATABASE_URL:?Regenerate deployment credentials with bootstrap}
       APP_ORIGIN: ${APP_ORIGIN:?Configure the deployment origin}
-      FUNDICATE_MODE: standalone
+      FUNDICATE_MODE: ${FUNDICATE_MODE:-standalone}
+      NEAR_CONTRACT_ID: ${NEAR_CONTRACT_ID:-}
+      NEAR_CONTRACT_CODE_HASH: ${NEAR_CONTRACT_CODE_HASH:-}
+      NEAR_RPC_URL: ${NEAR_RPC_URL:-https://test.rpc.fastnear.com}
       DATABASE_ALLOW_INSECURE_INTERNAL: "true"
       TRUSTED_CLIENT_IP_HEADER: ${TRUSTED_CLIENT_IP_HEADER:-}
     ports: ["127.0.0.1:3000:3000"]

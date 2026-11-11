@@ -30,6 +30,8 @@ import {
   trustedClientIp,
 } from "@/lib/http-security";
 import * as templates from "@/lib/round-templates";
+import * as chain from "@/lib/chain-service";
+import * as wallet from "@/lib/wallet";
 import {
   loginSchema,
   registerSchema,
@@ -65,8 +67,10 @@ export async function POST(
       403,
     );
     const { operation } = await context.params;
+    const nearOperation =
+      operation.startsWith("wallet-") || operation.startsWith("chain-");
     ensure(
-      !operation.startsWith("wallet-") && !operation.startsWith("chain-"),
+      !nearOperation || process.env.FUNDICATE_MODE === "near-testnet",
       "Action not found.",
       404,
     );
@@ -133,6 +137,12 @@ export async function POST(
       requestPolicy.mutation.limit,
       requestPolicy.mutation.seconds,
     );
+    if (nearOperation)
+      await rateLimit(
+        `near:${user.id}`,
+        requestPolicy.action.limit,
+        requestPolicy.action.seconds,
+      );
     if (operation === "reauthenticate")
       await rateLimit(
         `reauth:${user.id}`,
@@ -188,6 +198,34 @@ export async function POST(
         requestPolicy.action.seconds,
       );
     switch (operation) {
+      case "wallet-challenge":
+        result = await wallet.createWalletChallenge(user.id, token, body);
+        break;
+      case "wallet-verify":
+        await wallet.verifyWalletChallenge(user.id, token, body);
+        result = { message: "Testnet wallet linked." };
+        break;
+      case "wallet-revoke":
+        await wallet.revokeWalletLink(user.id, token, body);
+        result = { message: "Testnet wallet link revoked." };
+        break;
+      case "chain-create":
+        await security.requireRecentAuthentication(user.id, token);
+        result = { id: (await chain.createChainVault(user.id, body)).id };
+        break;
+      case "chain-prepare":
+        result = await chain.prepareChainAction(user.id, body);
+        break;
+      case "chain-authorize":
+        result = await chain.authorizeChainWallet(user.id, body);
+        break;
+      case "chain-submitted":
+        await chain.recordChainSubmission(user.id, body);
+        result = { message: "Testnet hash recorded." };
+        break;
+      case "chain-reconcile":
+        result = await chain.reconcileChainOperation(user.id, body);
+        break;
       case "reauthenticate":
         await security.reauthenticate(user.id, token, body);
         result = {

@@ -39,10 +39,8 @@ export function validateRuntimeConfig(
       "The web service does not accept signing keys; use wallet approvals or a separately protected signer.",
     );
   const mode = env.FUNDICATE_MODE ?? "standalone";
-  if (mode !== "standalone")
-    throw new Error(
-      "FUNDICATE_MODE must be standalone on this product branch.",
-    );
+  if (mode !== "standalone" && mode !== "near-testnet")
+    throw new Error("FUNDICATE_MODE must be standalone or near-testnet.");
   const origin = validUrl(env.APP_ORIGIN, "APP_ORIGIN");
   if (
     !["http:", "https:"].includes(origin.protocol) ||
@@ -80,7 +78,29 @@ export function validateRuntimeConfig(
         "Production PostgreSQL requires verified TLS or explicit DATABASE_ALLOW_INSECURE_INTERNAL=true on a private network.",
       );
   }
-  const near = null;
+  let near: RuntimeConfig["near"] = null;
+  if (mode === "near-testnet") {
+    const rpc = validUrl(
+      env.NEAR_RPC_URL ?? "https://test.rpc.fastnear.com",
+      "NEAR_RPC_URL",
+    );
+    if (rpc.protocol !== "https:" || rpc.username || rpc.password || rpc.hash)
+      throw new Error(
+        "NEAR_RPC_URL must be HTTPS without embedded credentials.",
+      );
+    const contractId = env.NEAR_CONTRACT_ID ?? "";
+    if (
+      contractId.length > 64 ||
+      !/^(?:[a-z0-9]+(?:[-_][a-z0-9]+)*\.)+testnet$/.test(contractId)
+    )
+      throw new Error("NEAR_CONTRACT_ID must be a named .testnet account.");
+    const codeHash = env.NEAR_CONTRACT_CODE_HASH ?? "";
+    if (!/^[1-9A-HJ-NP-Za-km-z]{43,44}$/.test(codeHash))
+      throw new Error(
+        "NEAR_CONTRACT_CODE_HASH must be the reviewed WASM hash in base58.",
+      );
+    near = { network: "testnet", rpcUrl: rpc.href, contractId, codeHash };
+  }
   return {
     mode,
     origin: origin.origin,

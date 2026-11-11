@@ -1,7 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-export function CommunityNav({ slug }: { slug: string }) {
+export function CommunityNav({
+  slug,
+  nearEnabled,
+}: {
+  slug: string;
+  nearEnabled: boolean;
+}) {
   const path = usePathname();
   return (
     <nav className="community-tabs" aria-label="Community sections">
@@ -14,6 +20,7 @@ export function CommunityNav({ slug }: { slug: string }) {
         { p: "/reputation", l: "Reputation" },
         { p: "/templates", l: "Templates" },
         { p: "/payments", l: "Payment records" },
+        ...(nearEnabled ? [{ p: "/chain", l: "NEAR testnet" }] : []),
         { p: "/governance", l: "Governance" },
         { p: "/activity", l: "Activity" },
       ].map((t) => {

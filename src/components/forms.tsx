@@ -215,6 +215,7 @@ export function Field({
   placeholder,
   min,
   max,
+  maxLength,
   help,
   step,
   autoComplete,
@@ -227,6 +228,7 @@ export function Field({
   placeholder?: string;
   min?: string | number;
   max?: string | number;
+  maxLength?: number;
   help?: string;
   step?: string | number;
   autoComplete?: string;
@@ -244,6 +246,7 @@ export function Field({
         placeholder={placeholder}
         min={min}
         max={max}
+        maxLength={maxLength}
         step={step ?? (type === "number" ? "0.01" : undefined)}
         aria-labelledby={`${fieldId}-label`}
         aria-describedby={help ? `${fieldId}-help` : undefined}

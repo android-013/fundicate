@@ -69,6 +69,10 @@ const values = [
   process.env.DATABASE_URL,
   process.env.RUNTIME_DATABASE_URL,
   process.env.POSTGRES_PASSWORD,
+  process.env.NEAR_PRIVATE_KEY,
+  process.env.NEAR_SIGNER_PRIVATE_KEY,
+  process.env.NEXT_PUBLIC_NEAR_PRIVATE_KEY,
+  process.env.NEXT_PUBLIC_PRIVATE_KEY,
 ];
 try {
   for (const url of [
@@ -97,13 +101,6 @@ function scan(path, browser) {
         throw new Error(
           `Private configuration found in distribution artifact: ${file}`,
         );
-      if (
-        browser &&
-        /@hot-labs\/near-connect|test\.rpc\.fastnear\.com/.test(data)
-      )
-        throw new Error(
-          `Retired wallet integration found in browser artifact: ${file}`,
-        );
     }
   }
 }
@@ -115,6 +112,5 @@ console.log(
     browserArtifactFiles: browserFiles,
     serverArtifactFiles: files - browserFiles,
     configuredSecretMatches: 0,
-    retiredWalletSdkMatches: 0,
   }),
 );

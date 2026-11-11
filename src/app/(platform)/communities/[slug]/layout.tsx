@@ -48,7 +48,10 @@ export default async function CommunityLayout({
           </span>
         </div>
       </div>
-      <CommunityNav slug={slug} />
+      <CommunityNav
+        slug={slug}
+        nearEnabled={isMember && process.env.FUNDICATE_MODE === "near-testnet"}
+      />
       {children}
     </>
   );

@@ -24,6 +24,9 @@ export default async function Security() {
         <Link className="selected" href="/settings/security">
           Security
         </Link>
+        {process.env.FUNDICATE_MODE === "near-testnet" && (
+          <Link href="/settings/wallet">NEAR wallets</Link>
+        )}
       </div>
       <section className="panel padded narrow">
         <h2>Confirm a sensitive action</h2>

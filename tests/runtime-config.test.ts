@@ -74,10 +74,39 @@ describe("portable runtime boundary", () => {
         "APP_ORIGIN",
       );
   });
-  it("rejects blockchain modes on the standalone product branch", () => {
-    for (const FUNDICATE_MODE of ["near-testnet", "mainnet", "other"])
+  it("accepts only an explicitly configured testnet treasury", () => {
+    const testnet = {
+      ...base,
+      FUNDICATE_MODE: "near-testnet",
+      NEAR_CONTRACT_ID: "fundicate.testnet",
+      NEAR_CONTRACT_CODE_HASH: "A".repeat(43),
+    };
+    expect(validateRuntimeConfig(testnet).near).toMatchObject({
+      network: "testnet",
+      contractId: "fundicate.testnet",
+      codeHash: testnet.NEAR_CONTRACT_CODE_HASH,
+    });
+    expect(() =>
+      validateRuntimeConfig({ ...testnet, NEAR_CONTRACT_ID: "fundicate.near" }),
+    ).toThrow("NEAR_CONTRACT_ID");
+    expect(() =>
+      validateRuntimeConfig({ ...testnet, NEAR_CONTRACT_CODE_HASH: "" }),
+    ).toThrow("NEAR_CONTRACT_CODE_HASH");
+    expect(() =>
+      validateRuntimeConfig({
+        ...testnet,
+        NEAR_RPC_URL: "http://untrusted.test",
+      }),
+    ).toThrow("HTTPS");
+    expect(() =>
+      validateRuntimeConfig({
+        ...testnet,
+        NEAR_SIGNER_PRIVATE_KEY: "not-an-app-secret",
+      }),
+    ).toThrow("does not accept signing keys");
+    for (const FUNDICATE_MODE of ["mainnet", "other"])
       expect(() => validateRuntimeConfig({ ...base, FUNDICATE_MODE })).toThrow(
-        "must be standalone",
+        "standalone or near-testnet",
       );
   });
   it("rejects connection-identity query overrides and duplicate TLS parameters", () => {
