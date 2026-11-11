@@ -4,6 +4,8 @@ Fundicate brings community networking, voting, funding decisions and growth anal
 
 Fundicate runs as a standalone Next.js service backed by PostgreSQL. The interface draws on blockchain visual design and presents traceable local records. Treasury contributions, round deposits, payouts and refunds are simulations. The external-payment register records staff attestations about activity outside Fundicate.
 
+This project is licensed under the [MIT License](LICENSE).
+
 ## Start here
 
 | I want to… | Read |
