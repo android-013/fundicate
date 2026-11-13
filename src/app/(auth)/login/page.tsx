@@ -1,43 +1,19 @@
-import Link from "next/link";
-import { ActionForm, Field } from "@/components/forms";
+import { NearWalletLogin } from "@/components/near-wallet-login";
+import { walletLoginEnabled } from "@/lib/wallet-auth-config";
+export const dynamic = "force-dynamic";
 export default function Login() {
   return (
     <>
-      <div className="eyebrow">GOOD TO HAVE YOU BACK</div>
+      <div className="eyebrow">YOUR WALLET. YOUR COMMUNITY.</div>
       <h1>Welcome to your collective.</h1>
       <p className="muted">
-        Sign in to see what your community is making happen.
+        Connect your NEAR testnet wallet to sign in or create your account.
       </p>
-      <ActionForm operation="login" submit="Sign in">
-        <Field
-          label="Email address"
-          name="email"
-          type="email"
-          placeholder="you@example.com"
-        />
-        <Field label="Password" name="password" type="password" />
-      </ActionForm>
-      <p className="auth-switch">
-        New here?{" "}
-        <Link href="/register">
-          Create an account <span>↗</span>
-        </Link>
-      </p>
-      <details className="demo-credentials">
-        <summary>Try the local demo</summary>
-        <p>
-          Administrator: <code>amara@fundicate.demo</code>
-          <br />
-          Moderator: <code>sami@fundicate.demo</code>
-          <br />
-          Member: <code>jules@fundicate.demo</code>
-          <br />
-          Password: <code>FundicateDemo!2026</code>
-        </p>
-        <small>
-          These fictional accounts exist only after the development seed runs.
-        </small>
-      </details>
+      {walletLoginEnabled() ? (
+        <NearWalletLogin />
+      ) : (
+        <p role="status">Wallet sign-in is currently unavailable.</p>
+      )}
     </>
   );
 }

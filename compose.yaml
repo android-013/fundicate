@@ -43,6 +43,7 @@ services:
       DATABASE_URL: ${RUNTIME_DATABASE_URL:?Regenerate deployment credentials with bootstrap}
       APP_ORIGIN: ${APP_ORIGIN:?Configure the deployment origin}
       FUNDICATE_MODE: ${FUNDICATE_MODE:-standalone}
+      NEAR_WALLET_LOGIN: ${NEAR_WALLET_LOGIN:-true}
       NEAR_CONTRACT_ID: ${NEAR_CONTRACT_ID:-}
       NEAR_CONTRACT_CODE_HASH: ${NEAR_CONTRACT_CODE_HASH:-}
       NEAR_RPC_URL: ${NEAR_RPC_URL:-https://test.rpc.fastnear.com}

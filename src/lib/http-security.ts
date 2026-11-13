@@ -1,6 +1,35 @@
 import { isIP } from "node:net";
 import { AppError, ensure } from "./errors";
 
+/** Local browser aliases are allowed only for same-origin development requests. */
+export function requestOriginAllowed(
+  incoming: string | null,
+  requestUrl: string,
+  configured: string,
+  environment: string | undefined = process.env.NODE_ENV,
+) {
+  if (!incoming) return false;
+  if (incoming === configured) return true;
+  if (environment !== "development") return false;
+  try {
+    const origin = new URL(incoming);
+    const target = new URL(requestUrl);
+    const canonical = new URL(configured);
+    const loopback = (url: URL) =>
+      ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+    return (
+      incoming === origin.origin &&
+      origin.origin === target.origin &&
+      loopback(origin) &&
+      loopback(canonical) &&
+      origin.protocol === canonical.protocol &&
+      origin.port === canonical.port
+    );
+  } catch {
+    return false;
+  }
+}
+
 export const requestPolicy = {
   maxBodyBytes: 250_000,
   authGlobal: { limit: 1000, seconds: 900 },

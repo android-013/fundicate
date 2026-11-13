@@ -2,9 +2,11 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { requireUser, hashToken, sessionCookie } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ActionButton, ActionForm, Field } from "@/components/forms";
+import { ActionButton } from "@/components/forms";
 import { PageHeading, Badge } from "@/components/ui";
 import { dateTime } from "@/lib/format";
+import { NearWalletLogin } from "@/components/near-wallet-login";
+import { walletLoginEnabled } from "@/lib/wallet-auth-config";
 export default async function Security() {
   const user = await requireUser();
   const token = (await cookies()).get(sessionCookie)?.value ?? "";
@@ -24,25 +26,18 @@ export default async function Security() {
         <Link className="selected" href="/settings/security">
           Security
         </Link>
-        {process.env.FUNDICATE_MODE === "near-testnet" && (
+        {(walletLoginEnabled() ||
+          process.env.FUNDICATE_MODE === "near-testnet") && (
           <Link href="/settings/wallet">NEAR wallets</Link>
         )}
       </div>
       <section className="panel padded narrow">
         <h2>Confirm a sensitive action</h2>
         <p className="muted">
-          Password confirmation lasts five minutes for this session. Authority
+          Identity confirmation lasts five minutes for this session. Authority
           changes and sensitive payment-record actions require it.
         </p>
-        <ActionForm operation="reauthenticate" submit="Confirm password">
-          <Field
-            label="Current password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-          />
-        </ActionForm>
+        <NearWalletLogin />
       </section>
       <section className="panel padded narrow">
         <h2>Active sessions</h2>
@@ -77,11 +72,11 @@ export default async function Security() {
         </ActionButton>
       </section>
       <section className="panel padded narrow">
-        <h3>Password protection</h3>
+        <h3>Account protection</h3>
         <p className="muted">
-          Passwords are protected with salted scrypt hashing. Sign-in is rate
-          limited, and sessions use an HttpOnly cookie. Password reset and email
-          verification are outside this local MVP.
+          Sign-in is rate limited and sessions use an HttpOnly cookie. Accounts
+          require access to a linked wallet; keep your wallet recovery method
+          safe. Existing password accounts use salted scrypt hashing.
         </p>
       </section>
     </>

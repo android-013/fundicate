@@ -22,7 +22,7 @@ export default async function Profile() {
           <Avatar name={user.displayName} url={user.avatarUrl} />
           <div>
             <h2>{user.displayName}</h2>
-            <p className="muted">{user.email}</p>
+            <p className="muted">@{user.username}</p>
           </div>
         </div>
         <ActionForm operation="profile" submit="Save profile">

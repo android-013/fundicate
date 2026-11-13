@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { readJsonBody, trustedClientIp } from "../src/lib/http-security";
+import {
+  readJsonBody,
+  trustedClientIp,
+  requestOriginAllowed,
+} from "../src/lib/http-security";
 import { loginSchema, registerSchema } from "../src/lib/validation";
 
 const req = (body: string, headers = {}) =>
@@ -9,6 +13,34 @@ const req = (body: string, headers = {}) =>
     body,
   });
 describe("HTTP security boundaries", () => {
+  it("accepts same-origin loopback aliases only in development", () => {
+    const canonical = "http://127.0.0.1:3000";
+    const local = "http://localhost:3000";
+    expect(
+      requestOriginAllowed(
+        local,
+        local + "/api/wallet-login-challenge",
+        canonical,
+        "development",
+      ),
+    ).toBe(true);
+    for (const [origin, url, environment] of [
+      [local, local, "production"],
+      [local, canonical, "development"],
+      ["http://localhost:4000", "http://localhost:4000", "development"],
+      ["https://attacker.example", "https://attacker.example", "development"],
+      ["null", local, "development"],
+    ])
+      expect(requestOriginAllowed(origin, url, canonical, environment)).toBe(
+        false,
+      );
+    expect(requestOriginAllowed(null, local, canonical, "development")).toBe(
+      false,
+    );
+    expect(
+      requestOriginAllowed(canonical, canonical, canonical, "production"),
+    ).toBe(true);
+  });
   it("caps chunked bytes before collecting a complete body", async () => {
     let cancelled = false;
     const stream = new ReadableStream({

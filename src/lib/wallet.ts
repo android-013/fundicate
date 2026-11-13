@@ -10,6 +10,7 @@ import { uuid } from "./validation";
 import { accountIdSchema } from "./chain-core";
 import { NearRpc } from "./near-rpc";
 import { verifyWalletSignature } from "./wallet-core";
+import { walletLoginEnabled, walletLoginRpcUrl } from "./wallet-auth-config";
 
 export async function createWalletChallenge(
   userId: string,
@@ -57,9 +58,13 @@ export async function verifyWalletChallenge(
   now = new Date(),
   clock: () => Date = () => new Date(),
 ) {
-  const { near } = validateRuntimeConfig();
-  ensure(near, "The NEAR testnet integration is disabled.", 404);
-  const rpc = new NearRpc(near.rpcUrl);
+  const near = walletLoginEnabled() ? null : validateRuntimeConfig().near;
+  ensure(
+    walletLoginEnabled() || near,
+    "The NEAR testnet integration is disabled.",
+    404,
+  );
+  const rpc = new NearRpc(near?.rpcUrl ?? walletLoginRpcUrl());
   await requireRecentAuthentication(userId, token, now);
   const data = z
     .object({
@@ -123,7 +128,7 @@ export async function verifyWalletChallenge(
         session.expiresAt > commitNow &&
         session.reauthenticatedAt &&
         session.reauthenticatedAt.getTime() > commitNow.getTime() - 5 * 60000,
-      "Confirm your password again before completing this wallet link.",
+      "Confirm your identity again in Security before completing this wallet link.",
       428,
     );
     const consumed = await tx.walletChallenge.updateMany({
@@ -177,9 +182,21 @@ export async function revokeWalletLink(
 ) {
   await requireRecentAuthentication(userId, token);
   const { id } = z.object({ id: uuid }).strict().parse(input);
-  const updated = await db.walletLink.updateMany({
-    where: { id, userId, revokedAt: null },
-    data: { revokedAt: new Date() },
+  const updated = await atomic(async (tx) => {
+    await tx.$queryRaw`SELECT id FROM "User" WHERE id=${userId}::uuid FOR UPDATE`;
+    const remaining = await tx.walletLink.count({
+      where: { userId, network: "testnet", revokedAt: null, id: { not: id } },
+    });
+    ensure(
+      remaining > 0,
+      "Link another wallet before revoking your last sign-in wallet.",
+      409,
+    );
+
+    return tx.walletLink.updateMany({
+      where: { id, userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
   });
   ensure(updated.count === 1, "Wallet link not found.", 404);
 }

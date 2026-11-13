@@ -18,6 +18,7 @@ if (
     "chain",
     "payment-records",
     "security",
+    "wallet-login",
   ].includes(mode)
 )
   throw new Error("Unknown test mode");
@@ -44,6 +45,7 @@ try {
     HOSTNAME: "127.0.0.1",
     PORT: "3001",
     FUNDICATE_MODE: mode === "chain" ? "near-testnet" : "standalone",
+    NEAR_WALLET_LOGIN: mode === "wallet-login" ? "true" : "false",
     ...(mode === "chain" && {
       NEAR_CONTRACT_ID: "fundicate-fixture.testnet",
       NEAR_CONTRACT_CODE_HASH: "A".repeat(43),

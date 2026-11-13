@@ -14,7 +14,8 @@ export async function hashPassword(password: string) {
   const key = (await derive(password, salt, 64)) as Buffer;
   return `scrypt:${salt}:${key.toString("hex")}`;
 }
-export async function verifyPassword(password: string, stored: string) {
+export async function verifyPassword(password: string, stored: string | null) {
+  if (!stored) return false;
   const [kind, salt, hash] = stored.split(":");
   if (kind !== "scrypt" || !salt || !hash) return false;
   const key = (await derive(password, salt, 64)) as Buffer;

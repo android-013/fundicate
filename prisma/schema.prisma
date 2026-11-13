@@ -66,11 +66,11 @@ enum SchemeStatus {
 
 model User {
   id String @id @default(uuid()) @db.Uuid
-  email String @unique
+  email String? @unique
   username String @unique
   displayName String
   avatarUrl String?
-  passwordHash String
+  passwordHash String?
   createdAt DateTime @default(now())
   sessions Session[]
   communities Community[]
@@ -373,8 +373,8 @@ model RoundTemplateRevision {
 }
 model WalletChallenge {
   id String @id @default(uuid()) @db.Uuid
-  userId String @db.Uuid
-  user User @relation(fields:[userId],references:[id],onDelete:Restrict)
+  userId String? @db.Uuid
+  user User? @relation(fields:[userId],references:[id],onDelete:Restrict)
   sessionHash String
   accountId String
   network String

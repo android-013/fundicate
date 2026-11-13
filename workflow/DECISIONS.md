@@ -1,5 +1,18 @@
 # Delivery decisions
 
+## Wallet-only authentication � user clarified 13 November 2026
+
+All login and signup now use NEAR testnet wallet signatures. Remove email/password forms and disable public login/register/password-reauthentication endpoints. Preserve historical users and credentials without deletion. Fresh wallet signatures provide identity confirmation for all accounts; users must retain at least one sign-in wallet. Existing users with no linked wallet require a separately authorized ownership-recovery process; never assign an old account by matching an unverified wallet name.
+
+
+## Wallet-only registration — user requested 13 November 2026
+
+New users may create an account and sign in by proving NEAR testnet wallet ownership, without an email or password. Create the user and unique wallet identity only after a valid, browser-bound, single-use signature and finalized full-access-key verification. Existing linked wallets retain their owners and revoked links cannot silently create replacement accounts. Fresh signatures provide five-minute identity confirmation for wallet-only users; password accounts retain password confirmation. Keep the last sign-in wallet available for wallet-only accounts. This does not enable payment custody or claim live-wallet verification.
+
+## Testnet wallet login — user requested 13 November 2026
+
+The user authorized adding NEAR testnet wallet login. This narrow amendment permits signed-message authentication and password-confirmed wallet linking independently of standalone accounting. Existing accounts link a wallet before using it to log in; wallet signatures do not replace recent password confirmation for sensitive actions. Enable with NEAR_WALLET_LOGIN=true. Chain transfers, custody, mainnet and hosted deployment remain outside this change. Completed delivery and maintenance evidence remain historical and are not verification of this new source.
+
 ## Standalone branch scope — user approved 7 November 2026
 
 On codex/standalone-security-audit the user approved the proposed first release: community governance plus transparent tracking of externally handled payments, separate from blockchain. This explicitly supersedes NEAR-specific Part 5 acceptance on this branch. It does not mark unperformed testnet work complete. Existing historical milestones and evidence stay intact. The active Part 5 run is retained.

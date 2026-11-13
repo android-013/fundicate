@@ -1,16 +1,8 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { ZodError, z } from "zod";
-import {
-  currentUser,
-  createSession,
-  hashToken,
-  login,
-  rateLimit,
-  register,
-  sessionCookie,
-} from "@/lib/auth";
+import { currentUser, hashToken, rateLimit, sessionCookie } from "@/lib/auth";
 import { AppError, ensure } from "@/lib/errors";
 import { db } from "@/lib/db";
 import {
@@ -28,16 +20,18 @@ import {
   readJsonBody,
   requestPolicy,
   trustedClientIp,
+  requestOriginAllowed,
 } from "@/lib/http-security";
 import * as templates from "@/lib/round-templates";
 import * as chain from "@/lib/chain-service";
 import * as wallet from "@/lib/wallet";
+import { walletLoginEnabled } from "@/lib/wallet-auth-config";
 import {
-  loginSchema,
-  registerSchema,
-  profileSchema,
-  uuid,
-} from "@/lib/validation";
+  createWalletLoginChallenge,
+  verifyWalletLogin,
+  walletLoginCookie,
+} from "@/lib/wallet-login";
+import { profileSchema, uuid } from "@/lib/validation";
 import { saveAnalyticsView, saveDashboardPreference } from "@/lib/analytics";
 import {
   createFundingRound,
@@ -62,7 +56,7 @@ export async function POST(
   try {
     const origin = process.env.APP_ORIGIN ?? "http://127.0.0.1:3000";
     ensure(
-      req.headers.get("origin") === origin,
+      requestOriginAllowed(req.headers.get("origin"), req.url, origin),
       "Request origin is not allowed.",
       403,
     );
@@ -70,65 +64,90 @@ export async function POST(
     const nearOperation =
       operation.startsWith("wallet-") || operation.startsWith("chain-");
     ensure(
-      !nearOperation || process.env.FUNDICATE_MODE === "near-testnet",
+      !nearOperation ||
+        process.env.FUNDICATE_MODE === "near-testnet" ||
+        (walletLoginEnabled() &&
+          [
+            "wallet-challenge",
+            "wallet-verify",
+            "wallet-revoke",
+            "wallet-login-challenge",
+            "wallet-login-verify",
+          ].includes(operation)),
       "Action not found.",
       404,
     );
+    ensure(
+      !["login", "register", "reauthenticate"].includes(operation),
+      "Use wallet sign-in.",
+      404,
+    );
     const body = await readJsonBody(req);
-    let result: unknown;
-    if (operation === "login" || operation === "register") {
+    if (
+      operation === "wallet-login-challenge" ||
+      operation === "wallet-login-verify"
+    ) {
+      ensure(walletLoginEnabled(), "Action not found.", 404);
+      ensure(
+        process.env.NODE_ENV !== "production" ||
+          origin.startsWith("https://") ||
+          ["localhost", "127.0.0.1"].includes(new URL(origin).hostname),
+        "Production requires HTTPS.",
+        500,
+      );
       const ip = trustedClientIp(req.headers);
+      await rateLimit(
+        "auth:global",
+        requestPolicy.authGlobal.limit,
+        requestPolicy.authGlobal.seconds,
+      );
       if (ip)
         await rateLimit(
           `auth:ip:${ip}`,
           requestPolicy.authIp.limit,
           requestPolicy.authIp.seconds,
         );
+      const account = z
+        .object({ accountId: z.string().min(2).max(64) })
+        .passthrough()
+        .parse(body);
       await rateLimit(
-        "auth:global",
-        requestPolicy.authGlobal.limit,
-        requestPolicy.authGlobal.seconds,
+        `wallet-auth:${account.accountId}`,
+        requestPolicy.loginAccount.limit,
+        requestPolicy.loginAccount.seconds,
       );
-      const credentials = (
-        operation === "register" ? registerSchema : loginSchema
-      ).parse(body);
-      const accountPolicy =
-        operation === "login"
-          ? requestPolicy.loginAccount
-          : requestPolicy.registerAccount;
-      await rateLimit(
-        `auth:${credentials.email}`,
-        accountPolicy.limit,
-        accountPolicy.seconds,
+      const cookieOptions = {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        secure: origin.startsWith("https://"),
+        path: "/",
+      };
+      if (operation === "wallet-login-challenge") {
+        const token = randomBytes(32).toString("hex");
+        const challenge = await createWalletLoginChallenge(body, token);
+        const res = NextResponse.json(challenge, { headers: privateHeaders });
+        res.cookies.set(walletLoginCookie, token, {
+          ...cookieOptions,
+          maxAge: 300,
+        });
+        return res;
+      }
+      const session = await verifyWalletLogin(
+        body,
+        req.cookies.get(walletLoginCookie)?.value ?? "",
       );
-      const user =
-        operation === "register"
-          ? await register(credentials)
-          : await login(credentials);
-      const session = await createSession(user.id);
       const res = NextResponse.json(
-        {
-          redirect:
-            operation === "register" ? "/explore?welcome=1" : "/dashboard",
-        },
+        { redirect: "/dashboard" },
         { headers: privateHeaders },
       );
-      ensure(
-        process.env.NODE_ENV !== "production" ||
-          origin.startsWith("https://") ||
-          ["localhost", "127.0.0.1"].includes(new URL(origin).hostname),
-        "Production requires an HTTPS application origin.",
-        500,
-      );
       res.cookies.set(sessionCookie, session.token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: origin.startsWith("https://"),
+        ...cookieOptions,
         expires: session.expiresAt,
-        path: "/",
       });
+      res.cookies.set(walletLoginCookie, "", { ...cookieOptions, maxAge: 0 });
       return res;
     }
+    let result: unknown;
     const user = await currentUser();
     ensure(user, "Please sign in to continue.", 401);
     const token = req.cookies.get(sessionCookie)?.value ?? "";

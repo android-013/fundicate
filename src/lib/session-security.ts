@@ -17,7 +17,7 @@ export async function requireRecentAuthentication(
       session.expiresAt > now &&
       session.reauthenticatedAt &&
       session.reauthenticatedAt.getTime() > now.getTime() - 5 * 60000,
-    "Confirm your password in Security before this sensitive action (valid for five minutes).",
+    "Confirm your identity in Security before this sensitive action (valid for five minutes).",
     428,
   );
   return session;
@@ -33,7 +33,7 @@ export async function reauthenticate(
     .parse(input);
   const user = await db.user.findUniqueOrThrow({ where: { id: userId } });
   ensure(
-    await verifyPassword(password, user.passwordHash),
+    user.passwordHash && (await verifyPassword(password, user.passwordHash)),
     "Password confirmation failed.",
     401,
   );

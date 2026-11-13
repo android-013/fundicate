@@ -19,6 +19,7 @@
     "test:rounds": "node scripts/test-db.mjs rounds",
     "test:funds": "node scripts/test-db.mjs funds",
     "test:near": "node scripts/test-db.mjs chain",
+    "test:wallet-login": "node scripts/test-db.mjs wallet-login",
     "test:elections": "node scripts/test-db.mjs elections",
     "progress": "node scripts/progress.mjs",
     "test:progress": "node --test tests/progress-workflow.test.mjs",
