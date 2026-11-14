@@ -1,0 +1,1 @@
+In the intended escrow model, contributions are prepaid and held separately for the funding process. Members cannot withdraw them while the process is active. Admins and moderators cannot independently access or redirect the pool. The local app can be deployed live. When configured for escrow mode, payments run on NEAR testnet.

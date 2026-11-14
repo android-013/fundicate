@@ -1,0 +1,1 @@
+Under the escrow design, accepted outcomes release funds to winning schemes. Rejected or cancelled processes trigger refunds to the original contributors. Every deposit, transfer, and refund belongs in the financial record. Fundicate keeps analytics and transfer records. When configured for escrow mode, payments run on NEAR testnet.

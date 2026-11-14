@@ -1,1 +1,0 @@
-Fundicate's complete workflow: organize a syndicate, make collective funding decisions, and understand the intended escrow controls. A narrated walkthrough of membership, voting, allocation, rejection, and settlement. Live escrow payments are not yet enabled.

@@ -1,1 +1,0 @@
-In the intended escrow model, contributions are prepaid and held separately for the funding process. Members cannot withdraw them while the process is active. Admins and moderators cannot independently access or redirect the pool. This describes the designed workflow; the current local app has simulated accounting, and live escrow payments are not enabled.

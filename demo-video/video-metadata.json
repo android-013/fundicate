@@ -1,0 +1,78 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "nb_frames": "6616"
+        },
+        {
+            "codec_name": "aac",
+            "nb_frames": "12923"
+        },
+        {
+            "codec_name": "bin_data",
+            "nb_frames": "12"
+        }
+    ],
+    "chapters": [
+        {
+            "start_time": "0.000000",
+            "end_time": "20.493000"
+        },
+        {
+            "start_time": "20.493000",
+            "end_time": "42.395000"
+        },
+        {
+            "start_time": "42.395000",
+            "end_time": "63.699000"
+        },
+        {
+            "start_time": "63.699000",
+            "end_time": "86.197000"
+        },
+        {
+            "start_time": "86.197000",
+            "end_time": "104.835000"
+        },
+        {
+            "start_time": "104.835000",
+            "end_time": "127.867000"
+        },
+        {
+            "start_time": "127.867000",
+            "end_time": "148.851000"
+        },
+        {
+            "start_time": "148.851000",
+            "end_time": "172.736000"
+        },
+        {
+            "start_time": "172.736000",
+            "end_time": "194.531000"
+        },
+        {
+            "start_time": "194.531000",
+            "end_time": "217.584000"
+        },
+        {
+            "start_time": "217.584000",
+            "end_time": "242.536000"
+        },
+        {
+            "start_time": "242.536000",
+            "end_time": "275.631000"
+        }
+    ],
+    "format": {
+        "duration": "275.666667",
+        "size": "65764973"
+    }
+}

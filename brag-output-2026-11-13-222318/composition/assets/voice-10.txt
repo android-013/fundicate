@@ -1,1 +1,0 @@
-Under the escrow design, accepted outcomes release funds to winning schemes. Rejected or cancelled processes trigger refunds to the original contributors. Every deposit, transfer, and refund belongs in the financial record. The current external payment register tracks independently unverified attestations; recording a payment is not proof that Fundicate transferred money.

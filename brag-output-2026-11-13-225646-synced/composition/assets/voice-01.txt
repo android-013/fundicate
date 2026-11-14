@@ -1,1 +1,0 @@
-Start by creating a syndicate. Its creator becomes the administrator. There is exactly one admin, who can appoint or remove moderators and transfer admin status. Moderators help manage the community, but their role gives them no extra voting power. New users enter with a NEAR testnet wallet, without an email or password.
