@@ -2,11 +2,19 @@
 
 **Fund together. Decide together.** A community governance app with passwordless NEAR testnet sign-in. Built for [NEAR HACKATHON 2026](https://nearhackathon.com/).
 
+## Application demo
+
+[![Fundicate’s NEAR testnet sign-in screen](docs/media/fundicate-near-sign-in.png)](docs/media/fundicate-application-demo.mp4)
+
+[Watch the application demo (4:36)](docs/media/fundicate-application-demo.mp4) · [View the demo cover](docs/media/fundicate-demo-cover.jpg) · [Browse the video and screenshots](docs/media/)
+
+The walkthrough follows a collective from setting its rules and admitting members through screening projects, voting, and deciding how to allocate funds. It also explains the rejection window and how unused contributions return to their original sources in the simulated workflow.
+
 ## In a nutshell
 
 ### What it does
 
-Fundicate gives clubs, collectives, and community groups one place to track proposals, votes, and funding decisions that would otherwise be spread across chats and spreadsheets. Members can compare projects, vote under published rules, and see the result in the community’s activity history. Organizers can reuse funding round templates and track participation in analytics.
+Fundicate gives clubs, collectives, and community groups a shared record of who can participate, what they are deciding, and how the decision was reached. Organizers publish the rules for a funding round. Members submit and screen proposals, vote on eligible projects, and review the outcome and proposed allocation. Communities can use participation-based reputation, reusable round templates, and analytics to track how they work over time.
 
 **How NEAR fits in.** Fundicate uses NEAR Connect to request a signed ownership message from a testnet wallet. The first verified signature creates an account and later sign-ins return to that account. Users enter no email or password, and signing in sends no transaction. Next.js runs the app, and PostgreSQL stores the governance records and simulated ledgers. A separate Rust treasury contract supports optional testnet settlement.
 
@@ -47,6 +55,7 @@ For a public demo, configure an HTTPS origin and reverse proxy using the [wallet
 
 | I want to… | Read |
 | --- | --- |
+| Watch the walkthrough or see the sign-in screen | [Demo media](docs/media/) |
 | Run Fundicate locally and try a complete workflow | [Getting started](docs/guides/getting-started.md) |
 | Explore everything members and staff can do | [Documentation home](docs/README.md) |
 | Create an account or sign in with a wallet | [NEAR testnet wallet sign-in](docs/guides/testnet-wallet-login.md) |
