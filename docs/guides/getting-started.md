@@ -2,7 +2,7 @@
 
 [Documentation home](../README.md)
 
-You can run Fundicate on your computer with Node.js, npm and PostgreSQL. Use a dedicated local database for experiments, including the fictional demo accounts below. The supported Node.js ranges are declared in [package.json](../../package.json).
+You can run Fundicate on your computer with Node.js, npm and PostgreSQL. Bring a NEAR testnet wallet to try the app. Use a dedicated local database for experiments. The supported Node.js ranges are declared in [package.json](../../package.json).
 
 ## Start a local instance
 
@@ -23,13 +23,13 @@ npm run db:migrate
 npm run dev
 ```
 
-Open [Fundicate on loopback](http://127.0.0.1:3000). Use the exact origin configured in `APP_ORIGIN`. For a separately provisioned PostgreSQL server, configure the ignored `.env` from [.env.example](../../.env.example), then run the client, migration and app commands. Type `stop` in the keeper terminal when you finish and the app and tests have stopped.
+Open [Fundicate on loopback](http://127.0.0.1:3000). Use the exact origin configured in `APP_ORIGIN`. For a separately provisioned PostgreSQL server, configure the ignored `.env` from [.env.example](../../.env.example), then run the client, migration and app commands. Follow [wallet sign-in](testnet-wallet-login.md) to open your dashboard. Type `stop` in the keeper terminal when you finish and the app and tests have stopped.
 
-### Load the fictional demo
+### Load the fictional test data
 
 Set `ALLOW_DEMO_SEED="true"` in the ignored environment file for your intended development database, then run `npm run db:seed`. The seed preserves an already seeded community. The `npm run setup` shortcut combines local database start, client generation, migrations and the opt-in seed.
 
-The fictional accounts share the demo password `FundicateDemo!2026`.
+These accounts are test fixtures. To try the current UI, sign in with your testnet wallet and create a community you control.
 
 | Account | Campus Collective role |
 | --- | --- |
@@ -49,14 +49,14 @@ Sami also administers Neighborhood Commons. Campus Collective begins with $12,45
 | **Analytics** | Choose a time and community scope, inspect trends, and open the underlying records |
 | **Community hub** | Move between members, governance, proposals, funding rounds, treasury, payments, reputation, templates and activity |
 | **Profile** | Update display name, username or avatar |
-| **Security** | Inspect sessions, confirm your password for a sensitive action and revoke a session or all other sessions |
+| **Security** | Inspect sessions, renew identity confirmation with your wallet, and revoke sessions |
 
-An account can belong to several communities. Active memberships define the available reports and member actions in each one. Registering starts a session and opens Explore. Signing in returns you to the dashboard.
+An account can belong to several communities. Active memberships define the available reports and member actions in each one. Your first verified wallet signature creates an account and opens the dashboard.
 
 ## Try a complete decision
 
-1. Register and create a community. Your account becomes its administrator.
-2. Register a second account and submit an application from the community page.
+1. Sign in with a testnet wallet and create a community. Your account becomes its administrator.
+2. Use a second testnet wallet in a separate browser profile, then submit an application from the community page.
 3. Return as the administrator. Open the admission ballot from **Members**, vote, and finalize once the sole eligible voter has voted.
 4. As the new member, use **Treasury** to record a simulated contribution and submit a funding proposal.
 5. As staff, open the proposal ballot. Cast votes with both eligible accounts and finalize the result.

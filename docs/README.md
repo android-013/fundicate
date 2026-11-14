@@ -12,7 +12,9 @@ Fundicate connects people through communities and records how proposals, funding
 | Members and staff | [Payments and reputation](guides/payments-and-reputation.md) | Simulated treasury, external attestations, reviews, moderation and appeals |
 | Analysts and organizers | [Analytics and templates](guides/analytics-and-templates.md) | Overview, drill-downs, metric definitions, saved views, exports and round templates |
 | Operators | [Deployment and operations](guides/deployment.md) | Native and Compose deployment, runtime configuration, maintenance and recovery |
-| Hackathon team | [NEAR testnet handoff](guides/near-testnet.md) | Deploy the reviewed contract, link a wallet, settle a testnet pool and export receipt evidence |
+| Wallet users | [NEAR testnet sign-in](guides/testnet-wallet-login.md) | Create an account or return to it with a signed wallet message |
+| Hackathon demo operators | [Wallet demo deployment](guides/testnet-wallet-deployment.md) | Host and check the app with wallet sign-in |
+| Treasury operators | [NEAR testnet handoff](guides/near-testnet.md) | Deploy the contract, settle a testnet pool and export receipt evidence |
 | Developers and integrators | [Architecture](reference/architecture.md) · [HTTP API](reference/api.md) · [Data model](reference/data-model.md) | Component diagrams, request sequence, endpoint catalog and ER diagrams |
 | Reviewers | [Verification](verification/README.md) · [Passed cases](verification/test-cases.md) | Successful checks, source snapshot, named test cases and evidence paths |
 
