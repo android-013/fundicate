@@ -1,0 +1,98 @@
+[
+  {
+    "id": 0,
+    "chapter": "The principle",
+    "title": "Members decide. Money follows the rules.",
+    "voice": "What if managing a community didn't mean controlling its money? Fundicate separates three responsibilities. Admins and moderators organize the syndicate. Members make the decisions. And the proposed independent escrow system follows the agreed rules. Here's the complete management and crowdfunding workflow.",
+    "voiceFile": "assets/voice-00.wav",
+    "words": 41
+  },
+  {
+    "id": 1,
+    "chapter": "01 / Syndicate management",
+    "title": "Create the collective.",
+    "voice": "Start by creating a syndicate. Its creator becomes the administrator. There is exactly one admin, who can appoint or remove moderators and transfer admin status. Moderators help manage the community, but their role gives them no extra voting power. New users enter with a NEAR testnet wallet, without an email or password.",
+    "voiceFile": "assets/voice-01.wav",
+    "words": 52
+  },
+  {
+    "id": 2,
+    "chapter": "02 / Set the rules",
+    "title": "Agree before the vote.",
+    "voice": "Admins or moderators create an agenda: the rulebook for a funding process. Set its title and description, who may propose, the voting method, contribution weights, distribution rules, and optional rejection powers. Publish those choices before participation begins, so members know how decisions and allocations will work.",
+    "voiceFile": "assets/voice-02.wav",
+    "words": 46
+  },
+  {
+    "id": 3,
+    "chapter": "03 / Membership",
+    "title": "A community chooses its members.",
+    "voice": "Applicants declare their contribution amount, answer preset questions, and explain why they want to join. Existing members vote on admission, with more than fifty percent approval required. Removing a member requires a two thirds majority, approximately sixty six point seven percent. Management roles don't replace these member decisions.",
+    "voiceFile": "assets/voice-03.wav",
+    "words": 48
+  },
+  {
+    "id": 4,
+    "chapter": "04 / Reputation",
+    "title": "Feedback with context.",
+    "voice": "Members can rate one another, agendas, and proposals from one to five stars, supported by written descriptions. After a funding process, they can also review proposals and outcomes. The goal is a useful record of participation, not a star score without explanation.",
+    "voiceFile": "assets/voice-04.wav",
+    "words": 42
+  },
+  {
+    "id": 5,
+    "chapter": "05 / Financial model",
+    "title": "Contribute first. Protect the pool.",
+    "voice": "In the intended escrow model, contributions are prepaid and held separately for the funding process. Members cannot withdraw them while the process is active. Admins and moderators cannot independently access or redirect the pool. This describes the designed workflow; the current local app has simulated accounting, and live escrow payments are not enabled.",
+    "voiceFile": "assets/voice-05.wav",
+    "words": 53
+  },
+  {
+    "id": 6,
+    "chapter": "06 / Proposal screening",
+    "title": "From an idea to the ballot.",
+    "voice": "Eligible users submit a scheme with a title, description, requested amount, and purpose. The agenda determines whether everyone or staff only can propose. Members then screen each scheme within a twenty four hour approval window. More than fifty percent approval is required before it enters the selection election.",
+    "voiceFile": "assets/voice-06.wav",
+    "words": 48
+  },
+  {
+    "id": 7,
+    "chapter": "07 / Election methods",
+    "title": "Choose how your collective decides.",
+    "voice": "Approved schemes compete under the configured election method. Choose First Past the Post, Ranked Choice, or Single Transferable Vote. Rating based alternatives include Elo and Glicko two, plus one versus one Elo or Glicko comparisons without draws. Each method has its own published calculation rules; they are not interchangeable ways to count the same ballot.",
+    "voiceFile": "assets/voice-07.wav",
+    "words": 55
+  },
+  {
+    "id": 8,
+    "chapter": "08 / Weight and privacy",
+    "title": "A fair ballot. A private process.",
+    "voice": "Voting can follow one member, one vote, or use contribution based weights defined in advance. A moderator's title adds no voting weight. Individual votes and running results stay hidden until the election ends. Only then does the chosen system calculate and publish the result, keeping the process separate from payment execution.",
+    "voiceFile": "assets/voice-08.wav",
+    "words": 51
+  },
+  {
+    "id": 9,
+    "chapter": "09 / Allocation and rejection",
+    "title": "The result is not the release.",
+    "voice": "The agenda can give the winner the full allocation, distribute funds proportionally, or use custom top ranked shares, such as fifty, thirty, and twenty percent. An optional rejection stage lasts twenty four hours. Rejection requires at least ninety percent of the frozen eligible rejection power. Funds stay held until the required periods finish.",
+    "voiceFile": "assets/voice-09.wav",
+    "words": 53
+  },
+  {
+    "id": 10,
+    "chapter": "10 / Settlement and records",
+    "title": "Release, or return to the source.",
+    "voice": "Under the escrow design, accepted outcomes release funds to winning schemes. Rejected or cancelled processes trigger refunds to the original contributors. Every deposit, transfer, and refund belongs in the financial record. The current external payment register tracks independently unverified attestations; recording a payment is not proof that Fundicate transferred money.",
+    "voiceFile": "assets/voice-10.wav",
+    "words": 50
+  },
+  {
+    "id": 11,
+    "chapter": "The complete workflow",
+    "title": "Fund together. Decide together.",
+    "voice": "Create the syndicate. Configure its roles and agenda. Recruit and approve members. Collect contributions, receive schemes, screen them, and elect the winners. Complete any rejection vote, then settle or refund. Finally, rate participation and outcomes. That's Fundicate's core principle: managers organize, members decide, and an independent escrow system is intended to control the money. Wallet login is available locally; live payment verification remains a separate step.",
+    "voiceFile": "assets/voice-11.wav",
+    "words": 66
+  }
+]

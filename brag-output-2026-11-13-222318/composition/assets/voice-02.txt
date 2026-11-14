@@ -1,0 +1,1 @@
+Admins or moderators create an agenda: the rulebook for a funding process. Set its title and description, who may propose, the voting method, contribution weights, distribution rules, and optional rejection powers. Publish those choices before participation begins, so members know how decisions and allocations will work.

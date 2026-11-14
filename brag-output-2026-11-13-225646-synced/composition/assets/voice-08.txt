@@ -1,0 +1,1 @@
+Voting can follow one member, one vote, or use contribution based weights defined in advance. A moderator's title adds no voting weight. Individual votes and running results stay hidden until the election ends. Only then does the chosen system calculate and publish the result, keeping the process separate from payment execution.

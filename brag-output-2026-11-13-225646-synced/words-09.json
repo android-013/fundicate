@@ -1,0 +1,320 @@
+[
+  {
+    "word": "The",
+    "start": 0.02,
+    "end": 0.1,
+    "confidence": 0.898
+  },
+  {
+    "word": "agenda",
+    "start": 0.16,
+    "end": 0.54,
+    "confidence": 0.845
+  },
+  {
+    "word": "can",
+    "start": 0.6,
+    "end": 0.7,
+    "confidence": 0.999
+  },
+  {
+    "word": "give",
+    "start": 0.76,
+    "end": 0.881,
+    "confidence": 0.943
+  },
+  {
+    "word": "the",
+    "start": 0.921,
+    "end": 0.981,
+    "confidence": 0.999
+  },
+  {
+    "word": "winner",
+    "start": 1.021,
+    "end": 1.201,
+    "confidence": 0.955
+  },
+  {
+    "word": "the",
+    "start": 1.261,
+    "end": 1.321,
+    "confidence": 0.997
+  },
+  {
+    "word": "full",
+    "start": 1.421,
+    "end": 1.621,
+    "confidence": 0.973
+  },
+  {
+    "word": "allocation",
+    "start": 1.721,
+    "end": 2.261,
+    "confidence": 0.897
+  },
+  {
+    "word": "distribute",
+    "start": 2.682,
+    "end": 3.162,
+    "confidence": 0.979
+  },
+  {
+    "word": "funds",
+    "start": 3.242,
+    "end": 3.462,
+    "confidence": 0.994
+  },
+  {
+    "word": "proportionally",
+    "start": 3.562,
+    "end": 4.183,
+    "confidence": 0.924
+  },
+  {
+    "word": "or",
+    "start": 4.643,
+    "end": 4.703,
+    "confidence": 0.989
+  },
+  {
+    "word": "use",
+    "start": 4.823,
+    "end": 4.923,
+    "confidence": 0.995
+  },
+  {
+    "word": "custom",
+    "start": 5.003,
+    "end": 5.303,
+    "confidence": 0.999
+  },
+  {
+    "word": "top",
+    "start": 5.383,
+    "end": 5.583,
+    "confidence": 1.0
+  },
+  {
+    "word": "ranked",
+    "start": 5.684,
+    "end": 5.884,
+    "confidence": 0.667
+  },
+  {
+    "word": "shares",
+    "start": 5.924,
+    "end": 6.284,
+    "confidence": 0.961
+  },
+  {
+    "word": "such",
+    "start": 6.624,
+    "end": 6.784,
+    "confidence": 0.911
+  },
+  {
+    "word": "as",
+    "start": 6.824,
+    "end": 6.884,
+    "confidence": 0.997
+  },
+  {
+    "word": "fifty",
+    "start": 6.984,
+    "end": 7.305,
+    "confidence": 0.984
+  },
+  {
+    "word": "thirty",
+    "start": 7.705,
+    "end": 8.005,
+    "confidence": 0.998
+  },
+  {
+    "word": "and",
+    "start": 8.225,
+    "end": 8.305,
+    "confidence": 0.996
+  },
+  {
+    "word": "twenty",
+    "start": 8.365,
+    "end": 8.565,
+    "confidence": 0.969
+  },
+  {
+    "word": "percent",
+    "start": 8.625,
+    "end": 8.966,
+    "confidence": 0.957
+  },
+  {
+    "word": "An",
+    "start": 9.666,
+    "end": 9.706,
+    "confidence": 0.998
+  },
+  {
+    "word": "optional",
+    "start": 9.886,
+    "end": 10.186,
+    "confidence": 0.946
+  },
+  {
+    "word": "rejection",
+    "start": 10.246,
+    "end": 10.707,
+    "confidence": 0.97
+  },
+  {
+    "word": "stage",
+    "start": 10.787,
+    "end": 11.107,
+    "confidence": 0.979
+  },
+  {
+    "word": "lasts",
+    "start": 11.407,
+    "end": 11.687,
+    "confidence": 0.999
+  },
+  {
+    "word": "twenty",
+    "start": 11.787,
+    "end": 12.027,
+    "confidence": 0.89
+  },
+  {
+    "word": "four",
+    "start": 12.087,
+    "end": 12.288,
+    "confidence": 0.994
+  },
+  {
+    "word": "hours",
+    "start": 12.348,
+    "end": 12.688,
+    "confidence": 0.956
+  },
+  {
+    "word": "Rejection",
+    "start": 13.348,
+    "end": 13.849,
+    "confidence": 0.943
+  },
+  {
+    "word": "requires",
+    "start": 13.969,
+    "end": 14.449,
+    "confidence": 0.973
+  },
+  {
+    "word": "at",
+    "start": 14.589,
+    "end": 14.629,
+    "confidence": 1.0
+  },
+  {
+    "word": "least",
+    "start": 14.689,
+    "end": 14.849,
+    "confidence": 0.993
+  },
+  {
+    "word": "ninety",
+    "start": 14.989,
+    "end": 15.289,
+    "confidence": 0.99
+  },
+  {
+    "word": "percent",
+    "start": 15.349,
+    "end": 15.71,
+    "confidence": 0.991
+  },
+  {
+    "word": "of",
+    "start": 15.87,
+    "end": 15.91,
+    "confidence": 1.0
+  },
+  {
+    "word": "the",
+    "start": 15.97,
+    "end": 16.03,
+    "confidence": 0.997
+  },
+  {
+    "word": "frozen",
+    "start": 16.15,
+    "end": 16.53,
+    "confidence": 0.988
+  },
+  {
+    "word": "eligible",
+    "start": 16.71,
+    "end": 17.151,
+    "confidence": 0.999
+  },
+  {
+    "word": "rejection",
+    "start": 17.231,
+    "end": 17.691,
+    "confidence": 0.978
+  },
+  {
+    "word": "power",
+    "start": 17.771,
+    "end": 18.011,
+    "confidence": 0.867
+  },
+  {
+    "word": "Funds",
+    "start": 18.792,
+    "end": 19.052,
+    "confidence": 0.818
+  },
+  {
+    "word": "stay",
+    "start": 19.112,
+    "end": 19.312,
+    "confidence": 0.928
+  },
+  {
+    "word": "held",
+    "start": 19.392,
+    "end": 19.632,
+    "confidence": 0.998
+  },
+  {
+    "word": "until",
+    "start": 19.872,
+    "end": 20.052,
+    "confidence": 0.975
+  },
+  {
+    "word": "the",
+    "start": 20.092,
+    "end": 20.152,
+    "confidence": 0.998
+  },
+  {
+    "word": "required",
+    "start": 20.192,
+    "end": 20.693,
+    "confidence": 0.992
+  },
+  {
+    "word": "periods",
+    "start": 20.753,
+    "end": 21.153,
+    "confidence": 0.97
+  },
+  {
+    "word": "finish",
+    "start": 21.213,
+    "end": 21.473,
+    "confidence": 0.947
+  }
+]

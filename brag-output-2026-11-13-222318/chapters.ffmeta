@@ -1,0 +1,62 @@
+;FFMETADATA1
+title=Fundicate — Management & Crowdfunding Workflow
+[CHAPTER]
+TIMEBASE=1/1000
+START=0
+END=20493
+title=The principle
+[CHAPTER]
+TIMEBASE=1/1000
+START=20493
+END=42394
+title=01 / Syndicate management
+[CHAPTER]
+TIMEBASE=1/1000
+START=42395
+END=63699
+title=02 / Set the rules
+[CHAPTER]
+TIMEBASE=1/1000
+START=63699
+END=86198
+title=03 / Membership
+[CHAPTER]
+TIMEBASE=1/1000
+START=86197
+END=104834
+title=04 / Reputation
+[CHAPTER]
+TIMEBASE=1/1000
+START=104835
+END=127867
+title=05 / Financial model
+[CHAPTER]
+TIMEBASE=1/1000
+START=127867
+END=148851
+title=06 / Proposal screening
+[CHAPTER]
+TIMEBASE=1/1000
+START=148851
+END=172736
+title=07 / Election methods
+[CHAPTER]
+TIMEBASE=1/1000
+START=172736
+END=194531
+title=08 / Weight and privacy
+[CHAPTER]
+TIMEBASE=1/1000
+START=194531
+END=217584
+title=09 / Allocation and rejection
+[CHAPTER]
+TIMEBASE=1/1000
+START=217584
+END=242536
+title=10 / Settlement and records
+[CHAPTER]
+TIMEBASE=1/1000
+START=242536
+END=275631
+title=The complete workflow

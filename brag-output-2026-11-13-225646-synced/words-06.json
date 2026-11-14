@@ -1,0 +1,290 @@
+[
+  {
+    "word": "Eligible",
+    "start": 0.08,
+    "end": 0.501,
+    "confidence": 1.0
+  },
+  {
+    "word": "users",
+    "start": 0.661,
+    "end": 0.981,
+    "confidence": 0.951
+  },
+  {
+    "word": "submit",
+    "start": 1.101,
+    "end": 1.382,
+    "confidence": 0.967
+  },
+  {
+    "word": "a",
+    "start": 1.422,
+    "end": 1.442,
+    "confidence": 0.998
+  },
+  {
+    "word": "scheme",
+    "start": 1.502,
+    "end": 1.802,
+    "confidence": 0.998
+  },
+  {
+    "word": "with",
+    "start": 2.002,
+    "end": 2.123,
+    "confidence": 0.997
+  },
+  {
+    "word": "a",
+    "start": 2.163,
+    "end": 2.183,
+    "confidence": 0.998
+  },
+  {
+    "word": "title",
+    "start": 2.263,
+    "end": 2.643,
+    "confidence": 0.991
+  },
+  {
+    "word": "description",
+    "start": 3.044,
+    "end": 3.604,
+    "confidence": 0.937
+  },
+  {
+    "word": "requested",
+    "start": 4.065,
+    "end": 4.506,
+    "confidence": 0.946
+  },
+  {
+    "word": "amount",
+    "start": 4.586,
+    "end": 4.886,
+    "confidence": 0.954
+  },
+  {
+    "word": "and",
+    "start": 5.307,
+    "end": 5.367,
+    "confidence": 0.989
+  },
+  {
+    "word": "purpose",
+    "start": 5.427,
+    "end": 5.787,
+    "confidence": 0.999
+  },
+  {
+    "word": "The",
+    "start": 6.528,
+    "end": 6.608,
+    "confidence": 0.881
+  },
+  {
+    "word": "agenda",
+    "start": 6.668,
+    "end": 7.029,
+    "confidence": 0.992
+  },
+  {
+    "word": "determines",
+    "start": 7.109,
+    "end": 7.649,
+    "confidence": 0.98
+  },
+  {
+    "word": "whether",
+    "start": 7.709,
+    "end": 7.93,
+    "confidence": 0.998
+  },
+  {
+    "word": "everyone",
+    "start": 8.09,
+    "end": 8.49,
+    "confidence": 0.99
+  },
+  {
+    "word": "or",
+    "start": 8.591,
+    "end": 8.651,
+    "confidence": 1.0
+  },
+  {
+    "word": "staff",
+    "start": 8.731,
+    "end": 9.031,
+    "confidence": 0.992
+  },
+  {
+    "word": "only",
+    "start": 9.291,
+    "end": 9.492,
+    "confidence": 0.995
+  },
+  {
+    "word": "can",
+    "start": 9.552,
+    "end": 9.652,
+    "confidence": 1.0
+  },
+  {
+    "word": "propose",
+    "start": 9.732,
+    "end": 10.192,
+    "confidence": 0.984
+  },
+  {
+    "word": "Members",
+    "start": 10.913,
+    "end": 11.254,
+    "confidence": 0.979
+  },
+  {
+    "word": "then",
+    "start": 11.334,
+    "end": 11.474,
+    "confidence": 0.97
+  },
+  {
+    "word": "screen",
+    "start": 11.594,
+    "end": 11.875,
+    "confidence": 0.999
+  },
+  {
+    "word": "each",
+    "start": 12.075,
+    "end": 12.215,
+    "confidence": 0.999
+  },
+  {
+    "word": "scheme",
+    "start": 12.295,
+    "end": 12.555,
+    "confidence": 0.938
+  },
+  {
+    "word": "within",
+    "start": 12.635,
+    "end": 12.836,
+    "confidence": 0.996
+  },
+  {
+    "word": "a",
+    "start": 12.876,
+    "end": 12.896,
+    "confidence": 0.996
+  },
+  {
+    "word": "twenty",
+    "start": 12.956,
+    "end": 13.216,
+    "confidence": 0.99
+  },
+  {
+    "word": "four",
+    "start": 13.276,
+    "end": 13.477,
+    "confidence": 0.995
+  },
+  {
+    "word": "hour",
+    "start": 13.557,
+    "end": 13.777,
+    "confidence": 0.996
+  },
+  {
+    "word": "approval",
+    "start": 13.857,
+    "end": 14.237,
+    "confidence": 0.971
+  },
+  {
+    "word": "window",
+    "start": 14.318,
+    "end": 14.638,
+    "confidence": 0.999
+  },
+  {
+    "word": "More",
+    "start": 15.339,
+    "end": 15.479,
+    "confidence": 0.993
+  },
+  {
+    "word": "than",
+    "start": 15.519,
+    "end": 15.619,
+    "confidence": 0.994
+  },
+  {
+    "word": "fifty",
+    "start": 15.719,
+    "end": 16.0,
+    "confidence": 0.987
+  },
+  {
+    "word": "percent",
+    "start": 16.06,
+    "end": 16.34,
+    "confidence": 0.926
+  },
+  {
+    "word": "approval",
+    "start": 16.4,
+    "end": 16.781,
+    "confidence": 0.864
+  },
+  {
+    "word": "is",
+    "start": 16.981,
+    "end": 17.041,
+    "confidence": 0.995
+  },
+  {
+    "word": "required",
+    "start": 17.121,
+    "end": 17.642,
+    "confidence": 0.983
+  },
+  {
+    "word": "before",
+    "start": 17.742,
+    "end": 18.002,
+    "confidence": 1.0
+  },
+  {
+    "word": "it",
+    "start": 18.042,
+    "end": 18.082,
+    "confidence": 1.0
+  },
+  {
+    "word": "enters",
+    "start": 18.162,
+    "end": 18.423,
+    "confidence": 0.999
+  },
+  {
+    "word": "the",
+    "start": 18.503,
+    "end": 18.563,
+    "confidence": 0.998
+  },
+  {
+    "word": "selection",
+    "start": 18.603,
+    "end": 19.003,
+    "confidence": 0.941
+  },
+  {
+    "word": "election",
+    "start": 19.063,
+    "end": 19.424,
+    "confidence": 1.0
+  }
+]

@@ -1,0 +1,314 @@
+[
+  {
+    "word": "Start",
+    "start": 0.08,
+    "end": 0.32,
+    "confidence": 0.961
+  },
+  {
+    "word": "by",
+    "start": 0.42,
+    "end": 0.501,
+    "confidence": 1.0
+  },
+  {
+    "word": "creating",
+    "start": 0.601,
+    "end": 0.981,
+    "confidence": 0.995
+  },
+  {
+    "word": "a",
+    "start": 1.021,
+    "end": 1.041,
+    "confidence": 0.998
+  },
+  {
+    "word": "syndicate",
+    "start": 1.101,
+    "end": 1.522,
+    "confidence": 0.922
+  },
+  {
+    "word": "Its",
+    "start": 2.142,
+    "end": 2.262,
+    "confidence": 0.965
+  },
+  {
+    "word": "creator",
+    "start": 2.322,
+    "end": 2.783,
+    "confidence": 0.922
+  },
+  {
+    "word": "becomes",
+    "start": 2.863,
+    "end": 3.203,
+    "confidence": 0.995
+  },
+  {
+    "word": "the",
+    "start": 3.263,
+    "end": 3.343,
+    "confidence": 0.976
+  },
+  {
+    "word": "administrator",
+    "start": 3.404,
+    "end": 3.944,
+    "confidence": 0.952
+  },
+  {
+    "word": "There",
+    "start": 4.545,
+    "end": 4.705,
+    "confidence": 0.946
+  },
+  {
+    "word": "is",
+    "start": 4.745,
+    "end": 4.825,
+    "confidence": 0.967
+  },
+  {
+    "word": "exactly",
+    "start": 4.885,
+    "end": 5.366,
+    "confidence": 0.956
+  },
+  {
+    "word": "one",
+    "start": 5.486,
+    "end": 5.586,
+    "confidence": 0.978
+  },
+  {
+    "word": "admin",
+    "start": 5.726,
+    "end": 5.966,
+    "confidence": 0.646
+  },
+  {
+    "word": "who",
+    "start": 6.347,
+    "end": 6.407,
+    "confidence": 1.0
+  },
+  {
+    "word": "can",
+    "start": 6.447,
+    "end": 6.547,
+    "confidence": 1.0
+  },
+  {
+    "word": "appoint",
+    "start": 6.587,
+    "end": 6.927,
+    "confidence": 0.933
+  },
+  {
+    "word": "or",
+    "start": 7.087,
+    "end": 7.147,
+    "confidence": 0.921
+  },
+  {
+    "word": "remove",
+    "start": 7.248,
+    "end": 7.548,
+    "confidence": 0.994
+  },
+  {
+    "word": "moderators",
+    "start": 7.628,
+    "end": 8.209,
+    "confidence": 0.985
+  },
+  {
+    "word": "and",
+    "start": 8.349,
+    "end": 8.429,
+    "confidence": 1.0
+  },
+  {
+    "word": "transfer",
+    "start": 8.489,
+    "end": 8.949,
+    "confidence": 0.959
+  },
+  {
+    "word": "admin",
+    "start": 9.13,
+    "end": 9.37,
+    "confidence": 0.782
+  },
+  {
+    "word": "status",
+    "start": 9.47,
+    "end": 9.87,
+    "confidence": 0.942
+  },
+  {
+    "word": "Moderators",
+    "start": 10.611,
+    "end": 11.152,
+    "confidence": 0.99
+  },
+  {
+    "word": "help",
+    "start": 11.232,
+    "end": 11.412,
+    "confidence": 1.0
+  },
+  {
+    "word": "manage",
+    "start": 11.532,
+    "end": 11.832,
+    "confidence": 0.999
+  },
+  {
+    "word": "the",
+    "start": 11.912,
+    "end": 11.993,
+    "confidence": 0.939
+  },
+  {
+    "word": "community",
+    "start": 12.033,
+    "end": 12.473,
+    "confidence": 0.961
+  },
+  {
+    "word": "but",
+    "start": 12.913,
+    "end": 13.014,
+    "confidence": 0.984
+  },
+  {
+    "word": "their",
+    "start": 13.054,
+    "end": 13.194,
+    "confidence": 0.96
+  },
+  {
+    "word": "role",
+    "start": 13.294,
+    "end": 13.514,
+    "confidence": 0.965
+  },
+  {
+    "word": "gives",
+    "start": 13.614,
+    "end": 13.794,
+    "confidence": 0.999
+  },
+  {
+    "word": "them",
+    "start": 13.854,
+    "end": 13.975,
+    "confidence": 0.999
+  },
+  {
+    "word": "no",
+    "start": 14.095,
+    "end": 14.235,
+    "confidence": 0.993
+  },
+  {
+    "word": "extra",
+    "start": 14.475,
+    "end": 14.735,
+    "confidence": 0.976
+  },
+  {
+    "word": "voting",
+    "start": 14.835,
+    "end": 15.116,
+    "confidence": 0.993
+  },
+  {
+    "word": "power",
+    "start": 15.176,
+    "end": 15.396,
+    "confidence": 0.982
+  },
+  {
+    "word": "New",
+    "start": 16.197,
+    "end": 16.317,
+    "confidence": 0.984
+  },
+  {
+    "word": "users",
+    "start": 16.417,
+    "end": 16.717,
+    "confidence": 0.877
+  },
+  {
+    "word": "enter",
+    "start": 16.878,
+    "end": 17.098,
+    "confidence": 0.94
+  },
+  {
+    "word": "with",
+    "start": 17.138,
+    "end": 17.238,
+    "confidence": 1.0
+  },
+  {
+    "word": "a",
+    "start": 17.298,
+    "end": 17.318,
+    "confidence": 0.99
+  },
+  {
+    "word": "NEAR",
+    "start": 17.358,
+    "end": 17.518,
+    "confidence": 0.983
+  },
+  {
+    "word": "testnet",
+    "start": 17.598,
+    "end": 17.979,
+    "confidence": 0.84
+  },
+  {
+    "word": "wallet",
+    "start": 18.059,
+    "end": 18.359,
+    "confidence": 0.956
+  },
+  {
+    "word": "without",
+    "start": 18.679,
+    "end": 18.92,
+    "confidence": 0.957
+  },
+  {
+    "word": "an",
+    "start": 18.96,
+    "end": 19.0,
+    "confidence": 0.998
+  },
+  {
+    "word": "email",
+    "start": 19.14,
+    "end": 19.44,
+    "confidence": 0.81
+  },
+  {
+    "word": "or",
+    "start": 19.701,
+    "end": 19.761,
+    "confidence": 0.93
+  },
+  {
+    "word": "password",
+    "start": 19.881,
+    "end": 20.321,
+    "confidence": 0.882
+  }
+]

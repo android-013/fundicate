@@ -1,0 +1,1 @@
+Approved schemes compete under the configured election method. Choose First Past the Post, Ranked Choice, or Single Transferable Vote. Rating based alternatives include Elo and Glicko two, plus one versus one Elo or Glicko comparisons without draws. Each method has its own published calculation rules; they are not interchangeable ways to count the same ballot.

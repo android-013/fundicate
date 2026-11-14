@@ -1,0 +1,1126 @@
+[
+  {
+    "id": 0,
+    "switchAt": 3.713,
+    "switchPhrase": "Fundicate separates three responsibilities.",
+    "cues": [
+      {
+        "phrase": "managing a community",
+        "selector": "#scene-0 .principle",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 0.53,
+        "end": 2.271,
+        "confidence": 0.992,
+        "wordEnd": 1.611
+      },
+      {
+        "phrase": "controlling its money",
+        "selector": "#scene-0 .big-line.violet",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 2.151,
+        "end": 4.651,
+        "confidence": 0.975,
+        "wordEnd": 3.252
+      },
+      {
+        "phrase": "Admins and moderators organize the syndicate.",
+        "selector": "#scene-0 .roles .box:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 6.875,
+        "end": 9.966,
+        "confidence": 0.905,
+        "wordEnd": 9.516
+      },
+      {
+        "phrase": "Members make the decisions.",
+        "selector": "#scene-0 .roles .box:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 10.057,
+        "end": 12.198,
+        "confidence": 0.98,
+        "wordEnd": 11.438
+      },
+      {
+        "phrase": "proposed independent escrow system",
+        "selector": "#scene-0 .roles .box:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 12.078,
+        "end": 14.61,
+        "confidence": 0.948,
+        "wordEnd": 14.16
+      },
+      {
+        "phrase": "agreed rules",
+        "selector": "#scene-0 .note",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 15.0,
+        "end": 17.5,
+        "confidence": 0.767,
+        "wordEnd": 15.781
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "switchAt": 36.76,
+    "switchPhrase": "New users enter with a NEAR testnet wallet",
+    "cues": [
+      {
+        "phrase": "creating a syndicate",
+        "selector": "#scene-1 .admin",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 21.244,
+        "end": 23.744,
+        "confidence": 0.972,
+        "wordEnd": 22.265
+      },
+      {
+        "phrase": "exactly one admin",
+        "selector": "#scene-1 .admin",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 25.528,
+        "end": 27.35,
+        "confidence": 0.86,
+        "wordEnd": 26.709
+      },
+      {
+        "phrase": "appoint or remove moderators",
+        "selector": "#scene-1 .mods .box:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 27.23,
+        "end": 29.252,
+        "confidence": 0.958,
+        "wordEnd": 28.952
+      },
+      {
+        "phrase": "transfer admin status",
+        "selector": "#scene-1 .mods .box:nth-child(2)",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 29.132,
+        "end": 31.632,
+        "confidence": 0.894,
+        "wordEnd": 30.613
+      },
+      {
+        "phrase": "no extra voting power",
+        "selector": "#scene-1 .stage-a .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 34.738,
+        "end": 37.238,
+        "confidence": 0.986,
+        "wordEnd": 36.139
+      },
+      {
+        "phrase": "NEAR testnet wallet",
+        "selector": "#scene-1 .login-crop",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 38.001,
+        "end": 39.442,
+        "confidence": 0.926,
+        "wordEnd": 39.102
+      },
+      {
+        "phrase": "without an email or password",
+        "selector": "#scene-1 .wallet-copy .support",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 39.322,
+        "end": 41.822,
+        "confidence": 0.915,
+        "wordEnd": 41.064
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "switchAt": 56.262,
+    "switchPhrase": "Publish those choices before participation begins",
+    "cues": [
+      {
+        "phrase": "create an agenda",
+        "selector": "#scene-2 .agenda-title",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 44.107,
+        "end": 46.607,
+        "confidence": 0.881,
+        "wordEnd": 45.028
+      },
+      {
+        "phrase": "title and description",
+        "selector": "#scene-2 .ruleboard .box:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 48.092,
+        "end": 49.593,
+        "confidence": 0.969,
+        "wordEnd": 49.233
+      },
+      {
+        "phrase": "who may propose",
+        "selector": "#scene-2 .ruleboard .box:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 49.473,
+        "end": 50.635,
+        "confidence": 0.999,
+        "wordEnd": 50.334
+      },
+      {
+        "phrase": "the voting method",
+        "selector": "#scene-2 .ruleboard .box:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 50.515,
+        "end": 51.816,
+        "confidence": 0.979,
+        "wordEnd": 51.376
+      },
+      {
+        "phrase": "contribution weights",
+        "selector": "#scene-2 .ruleboard .box:nth-child(4)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 51.696,
+        "end": 53.078,
+        "confidence": 0.841,
+        "wordEnd": 52.697
+      },
+      {
+        "phrase": "distribution rules",
+        "selector": "#scene-2 .ruleboard .box:nth-child(5)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 52.958,
+        "end": 54.519,
+        "confidence": 0.972,
+        "wordEnd": 53.959
+      },
+      {
+        "phrase": "optional rejection powers",
+        "selector": "#scene-2 .ruleboard .box:nth-child(6)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 54.399,
+        "end": 56.462,
+        "confidence": 0.941,
+        "wordEnd": 55.741
+      },
+      {
+        "phrase": "Publish those choices",
+        "selector": "#scene-2 .sealed",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 56.342,
+        "end": 58.842,
+        "confidence": 0.976,
+        "wordEnd": 57.523
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "switchAt": 75.559,
+    "switchPhrase": "Removing a member requires",
+    "cues": [
+      {
+        "phrase": "contribution amount",
+        "selector": "#scene-3 .application .box:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 65.01,
+        "end": 66.832,
+        "confidence": 0.98,
+        "wordEnd": 66.031
+      },
+      {
+        "phrase": "preset questions",
+        "selector": "#scene-3 .application .box:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 66.712,
+        "end": 68.833,
+        "confidence": 0.928,
+        "wordEnd": 67.672
+      },
+      {
+        "phrase": "why they want to join",
+        "selector": "#scene-3 .application .box:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 68.713,
+        "end": 70.655,
+        "confidence": 0.962,
+        "wordEnd": 69.814
+      },
+      {
+        "phrase": "Existing members vote on admission",
+        "selector": "#scene-3 .threshold",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 70.535,
+        "end": 72.937,
+        "confidence": 0.956,
+        "wordEnd": 72.336
+      },
+      {
+        "phrase": "more than fifty percent approval",
+        "selector": "#scene-3 .threshold strong",
+        "kind": "fill",
+        "hold": 2.5,
+        "time": 72.817,
+        "end": 75.317,
+        "confidence": 0.98,
+        "wordEnd": 74.458
+      },
+      {
+        "phrase": "two thirds majority",
+        "selector": "#scene-3 .compare>div:nth-child(2)",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 77.241,
+        "end": 79.741,
+        "confidence": 0.962,
+        "wordEnd": 78.462
+      },
+      {
+        "phrase": "Management roles don't replace",
+        "selector": "#scene-3 .stage-b .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 82.105,
+        "end": 84.605,
+        "confidence": 0.954,
+        "wordEnd": 83.787
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "switchAt": 93.594,
+    "switchPhrase": "After a funding process",
+    "cues": [
+      {
+        "phrase": "Members can rate one another",
+        "selector": "#scene-4 .synced-review .box:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 86.427,
+        "end": 88.269,
+        "confidence": 0.962,
+        "wordEnd": 87.808
+      },
+      {
+        "phrase": "agendas",
+        "selector": "#scene-4 .synced-review .box:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 88.149,
+        "end": 89.17,
+        "confidence": 0.967,
+        "wordEnd": 88.789
+      },
+      {
+        "phrase": "proposals from",
+        "selector": "#scene-4 .synced-review .box:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 89.05,
+        "end": 90.111,
+        "confidence": 0.979,
+        "wordEnd": 89.931
+      },
+      {
+        "phrase": "one to five stars",
+        "selector": "#scene-4 .stars",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 89.991,
+        "end": 92.153,
+        "confidence": 0.988,
+        "wordEnd": 91.072
+      },
+      {
+        "phrase": "written descriptions",
+        "selector": "#scene-4 .review-detail .review-text",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 92.033,
+        "end": 94.533,
+        "confidence": 0.98,
+        "wordEnd": 92.994
+      },
+      {
+        "phrase": "review proposals and outcomes",
+        "selector": "#scene-4 .outcome-review h3",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 95.837,
+        "end": 98.337,
+        "confidence": 0.945,
+        "wordEnd": 97.578
+      },
+      {
+        "phrase": "useful record of participation",
+        "selector": "#scene-4 .stage-b .note",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 99.14,
+        "end": 101.64,
+        "confidence": 0.978,
+        "wordEnd": 100.902
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "switchAt": 114.15,
+    "switchPhrase": "Admins and moderators cannot independently access",
+    "cues": [
+      {
+        "phrase": "intended escrow model",
+        "selector": "#scene-5 .escrow-flow .pool",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 105.285,
+        "end": 106.966,
+        "confidence": 0.708,
+        "wordEnd": 106.526
+      },
+      {
+        "phrase": "contributions are prepaid",
+        "selector": "#scene-5 .actor",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 106.846,
+        "end": 108.487,
+        "confidence": 0.81,
+        "wordEnd": 108.267
+      },
+      {
+        "phrase": "held separately",
+        "selector": "#scene-5 .escrow-flow .pool",
+        "kind": "fill",
+        "hold": 2.5,
+        "time": 108.367,
+        "end": 110.867,
+        "confidence": 0.97,
+        "wordEnd": 109.167
+      },
+      {
+        "phrase": "Members cannot withdraw",
+        "selector": "#scene-5 .restrictions .pill:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 110.788,
+        "end": 112.509,
+        "confidence": 0.946,
+        "wordEnd": 111.969
+      },
+      {
+        "phrase": "process is active",
+        "selector": "#scene-5 .restrictions .pill:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 112.389,
+        "end": 114.35,
+        "confidence": 0.804,
+        "wordEnd": 113.51
+      },
+      {
+        "phrase": "Admins and moderators",
+        "selector": "#scene-5 .manager-label",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 114.23,
+        "end": 116.73,
+        "confidence": 0.935,
+        "wordEnd": 115.591
+      },
+      {
+        "phrase": "access or redirect the pool",
+        "selector": "#scene-5 .gate-label",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 116.832,
+        "end": 119.332,
+        "confidence": 0.66,
+        "wordEnd": 118.432
+      },
+      {
+        "phrase": "simulated accounting",
+        "selector": "#scene-5 .stage-b .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 122.695,
+        "end": 124.516,
+        "confidence": 0.936,
+        "wordEnd": 123.915
+      },
+      {
+        "phrase": "live escrow payments are not enabled",
+        "selector": "#scene-5 .finance",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 124.396,
+        "end": 126.947,
+        "confidence": 0.827,
+        "wordEnd": 126.497
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "switchAt": 138.85,
+    "switchPhrase": "Members then screen each scheme",
+    "cues": [
+      {
+        "phrase": "submit a scheme",
+        "selector": "#scene-6 .scheme",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 129.118,
+        "end": 130.3,
+        "confidence": 0.988,
+        "wordEnd": 129.919
+      },
+      {
+        "phrase": "a title",
+        "selector": "#scene-6 .scheme-fields .pill:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 130.18,
+        "end": 131.181,
+        "confidence": 0.994,
+        "wordEnd": 130.76
+      },
+      {
+        "phrase": "description",
+        "selector": "#scene-6 .scheme-fields .pill:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 131.061,
+        "end": 132.202,
+        "confidence": 0.937,
+        "wordEnd": 131.721
+      },
+      {
+        "phrase": "requested amount",
+        "selector": "#scene-6 .scheme-fields .pill:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 132.082,
+        "end": 133.444,
+        "confidence": 0.95,
+        "wordEnd": 133.003
+      },
+      {
+        "phrase": "and purpose",
+        "selector": "#scene-6 .scheme-fields .pill:nth-child(4)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 133.324,
+        "end": 135.824,
+        "confidence": 0.994,
+        "wordEnd": 133.904
+      },
+      {
+        "phrase": "everyone or staff only",
+        "selector": "#scene-6 .proposal-right .support",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 136.107,
+        "end": 138.607,
+        "confidence": 0.994,
+        "wordEnd": 137.609
+      },
+      {
+        "phrase": "twenty four hour approval window",
+        "selector": "#scene-6 .screen-gate:nth-child(2)",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 140.973,
+        "end": 143.473,
+        "confidence": 0.99,
+        "wordEnd": 142.755
+      },
+      {
+        "phrase": "More than fifty percent approval",
+        "selector": "#scene-6 .screen-gate:nth-child(3)",
+        "kind": "fill",
+        "hold": 2.5,
+        "time": 143.356,
+        "end": 145.856,
+        "confidence": 0.953,
+        "wordEnd": 144.898
+      },
+      {
+        "phrase": "selection election",
+        "selector": "#scene-6 .stage-b .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 146.62,
+        "end": 148.701,
+        "confidence": 0.97,
+        "wordEnd": 147.541
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "switchAt": 157.363,
+    "switchPhrase": "Rating based alternatives include",
+    "cues": [
+      {
+        "phrase": "configured election method",
+        "selector": "#scene-7 .stage-a .support",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 150.601,
+        "end": 152.862,
+        "confidence": 0.986,
+        "wordEnd": 151.862
+      },
+      {
+        "phrase": "First Past the Post",
+        "selector": "#scene-7 .method-grid .box:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 152.742,
+        "end": 154.242,
+        "confidence": 0.902,
+        "wordEnd": 153.802
+      },
+      {
+        "phrase": "Ranked Choice",
+        "selector": "#scene-7 .method-grid .box:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 154.122,
+        "end": 155.503,
+        "confidence": 0.871,
+        "wordEnd": 154.862
+      },
+      {
+        "phrase": "Single Transferable Vote",
+        "selector": "#scene-7 .method-grid .box:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 155.383,
+        "end": 157.883,
+        "confidence": 0.967,
+        "wordEnd": 156.783
+      },
+      {
+        "phrase": "include Elo",
+        "selector": "#scene-7 .rating-group:nth-child(1) .pill:nth-of-type(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 158.823,
+        "end": 160.024,
+        "confidence": 0.805,
+        "wordEnd": 159.624
+      },
+      {
+        "phrase": "Glicko two",
+        "selector": "#scene-7 .rating-group:nth-child(1) .pill:nth-of-type(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 159.904,
+        "end": 161.444,
+        "confidence": 0.809,
+        "wordEnd": 160.544
+      },
+      {
+        "phrase": "one versus one Elo",
+        "selector": "#scene-7 .rating-group:nth-child(2) .pill:nth-of-type(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 161.324,
+        "end": 162.924,
+        "confidence": 0.881,
+        "wordEnd": 162.464
+      },
+      {
+        "phrase": "Glicko comparisons",
+        "selector": "#scene-7 .rating-group:nth-child(2) .pill:nth-of-type(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 162.804,
+        "end": 164.005,
+        "confidence": 0.846,
+        "wordEnd": 163.905
+      },
+      {
+        "phrase": "without draws",
+        "selector": "#scene-7 .rating-group:nth-child(2) p",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 163.885,
+        "end": 166.385,
+        "confidence": 0.831,
+        "wordEnd": 164.645
+      },
+      {
+        "phrase": "published calculation rules",
+        "selector": "#scene-7 .stage-b .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 166.625,
+        "end": 169.125,
+        "confidence": 0.966,
+        "wordEnd": 168.046
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "switchAt": 182.093,
+    "switchPhrase": "Individual votes and running results",
+    "cues": [
+      {
+        "phrase": "one member, one vote",
+        "selector": "#scene-8 .weight:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 173.987,
+        "end": 176.088,
+        "confidence": 0.974,
+        "wordEnd": 175.228
+      },
+      {
+        "phrase": "contribution based weights",
+        "selector": "#scene-8 .weight:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 175.968,
+        "end": 178.468,
+        "confidence": 0.915,
+        "wordEnd": 177.389
+      },
+      {
+        "phrase": "moderator's title adds no voting weight",
+        "selector": "#scene-8 .stage-a .support",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 179.271,
+        "end": 182.042,
+        "confidence": 0.971,
+        "wordEnd": 181.592
+      },
+      {
+        "phrase": "Individual votes and running results",
+        "selector": "#scene-8 .private-box:nth-child(1)",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 182.173,
+        "end": 184.154,
+        "confidence": 0.96,
+        "wordEnd": 184.054
+      },
+      {
+        "phrase": "stay hidden",
+        "selector": "#scene-8 .private-box:nth-child(1) .lock",
+        "kind": "fill",
+        "hold": 2.5,
+        "time": 184.034,
+        "end": 185.375,
+        "confidence": 0.987,
+        "wordEnd": 184.714
+      },
+      {
+        "phrase": "election ends",
+        "selector": "#scene-8 .published",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 185.255,
+        "end": 187.755,
+        "confidence": 0.994,
+        "wordEnd": 186.035
+      },
+      {
+        "phrase": "calculate and publish the result",
+        "selector": "#scene-8 .published p",
+        "kind": "reveal",
+        "hold": 2.5,
+        "time": 188.397,
+        "end": 190.897,
+        "confidence": 0.981,
+        "wordEnd": 190.278
+      },
+      {
+        "phrase": "separate from payment execution",
+        "selector": "#scene-8 .stage-b .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 191.64,
+        "end": 194.14,
+        "confidence": 0.974,
+        "wordEnd": 193.221
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "switchAt": 204.267,
+    "switchPhrase": "An optional rejection stage",
+    "cues": [
+      {
+        "phrase": "winner the full allocation",
+        "selector": "#scene-9 .allocation-modes .pill:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 195.702,
+        "end": 197.483,
+        "confidence": 0.956,
+        "wordEnd": 197.042
+      },
+      {
+        "phrase": "distribute funds proportionally",
+        "selector": "#scene-9 .allocation-modes .pill:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 197.363,
+        "end": 199.804,
+        "confidence": 0.966,
+        "wordEnd": 198.964
+      },
+      {
+        "phrase": "custom top ranked shares",
+        "selector": "#scene-9 .allocation-modes .pill:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 199.684,
+        "end": 201.785,
+        "confidence": 0.907,
+        "wordEnd": 201.065
+      },
+      {
+        "phrase": "fifty",
+        "selector": "#scene-9 .share.a",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 201.665,
+        "end": 202.506,
+        "confidence": 0.984,
+        "wordEnd": 202.086
+      },
+      {
+        "phrase": "thirty",
+        "selector": "#scene-9 .share.b",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 202.386,
+        "end": 203.166,
+        "confidence": 0.998,
+        "wordEnd": 202.786
+      },
+      {
+        "phrase": "twenty percent",
+        "selector": "#scene-9 .share.c",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 203.046,
+        "end": 205.546,
+        "confidence": 0.963,
+        "wordEnd": 203.747
+      },
+      {
+        "phrase": "twenty four hours",
+        "selector": "#scene-9 .veto-num",
+        "kind": "count",
+        "hold": 2.5,
+        "time": 206.468,
+        "end": 208.968,
+        "confidence": 0.947,
+        "wordEnd": 207.469
+      },
+      {
+        "phrase": "at least ninety percent",
+        "selector": "#scene-9 .veto strong",
+        "kind": "fill",
+        "hold": 2.5,
+        "time": 209.27,
+        "end": 210.951,
+        "confidence": 0.994,
+        "wordEnd": 210.491
+      },
+      {
+        "phrase": "frozen eligible rejection power",
+        "selector": "#scene-9 .veto p:nth-of-type(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 210.831,
+        "end": 213.331,
+        "confidence": 0.958,
+        "wordEnd": 212.792
+      },
+      {
+        "phrase": "Funds stay held",
+        "selector": "#scene-9 .veto p:nth-of-type(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 213.473,
+        "end": 215.973,
+        "confidence": 0.915,
+        "wordEnd": 214.413
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "switchAt": 227.559,
+    "switchPhrase": "Every deposit, transfer, and refund",
+    "cues": [
+      {
+        "phrase": "escrow design",
+        "selector": "#scene-10 .settle .pool",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 218.194,
+        "end": 219.555,
+        "confidence": 0.904,
+        "wordEnd": 219.075
+      },
+      {
+        "phrase": "accepted outcomes release funds",
+        "selector": "#scene-10 .settle-paths .box:nth-child(1)",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 219.435,
+        "end": 221.436,
+        "confidence": 0.931,
+        "wordEnd": 221.176
+      },
+      {
+        "phrase": "winning schemes",
+        "selector": "#scene-10 .settle-paths .box:nth-child(1) p",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 221.316,
+        "end": 222.797,
+        "confidence": 0.654,
+        "wordEnd": 222.076
+      },
+      {
+        "phrase": "Rejected or cancelled processes",
+        "selector": "#scene-10 .settle-paths .box:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 222.677,
+        "end": 225.177,
+        "confidence": 0.957,
+        "wordEnd": 224.657
+      },
+      {
+        "phrase": "original contributors",
+        "selector": "#scene-10 .settle-paths .box:nth-child(2) p",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 225.898,
+        "end": 227.759,
+        "confidence": 0.941,
+        "wordEnd": 227.019
+      },
+      {
+        "phrase": "Every deposit",
+        "selector": "#scene-10 .record-row:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 227.639,
+        "end": 228.9,
+        "confidence": 0.948,
+        "wordEnd": 228.499
+      },
+      {
+        "phrase": "transfer",
+        "selector": "#scene-10 .record-row:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 228.78,
+        "end": 229.56,
+        "confidence": 0.971,
+        "wordEnd": 229.34
+      },
+      {
+        "phrase": "and refund",
+        "selector": "#scene-10 .record-row:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 229.44,
+        "end": 231.94,
+        "confidence": 0.969,
+        "wordEnd": 230.08
+      },
+      {
+        "phrase": "independently unverified attestations",
+        "selector": "#scene-10 .stage-b .note",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 234.983,
+        "end": 237.754,
+        "confidence": 0.892,
+        "wordEnd": 237.304
+      },
+      {
+        "phrase": "not proof that Fundicate transferred money",
+        "selector": "#scene-10 .finance",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 238.885,
+        "end": 241.636,
+        "confidence": 0.874,
+        "wordEnd": 241.186
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "switchAt": 259.614,
+    "switchPhrase": "That's Fundicate's core principle",
+    "cues": [
+      {
+        "phrase": "Create the syndicate",
+        "selector": "#scene-11 .flow-step:nth-child(1)",
+        "kind": "trace",
+        "hold": 2.5,
+        "time": 242.746,
+        "end": 245.047,
+        "confidence": 0.897,
+        "wordEnd": 243.746
+      },
+      {
+        "phrase": "roles and agenda",
+        "selector": "#scene-11 .flow-step:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 244.927,
+        "end": 246.648,
+        "confidence": 0.821,
+        "wordEnd": 246.008
+      },
+      {
+        "phrase": "Recruit and approve members",
+        "selector": "#scene-11 .flow-step:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 246.528,
+        "end": 248.509,
+        "confidence": 0.989,
+        "wordEnd": 247.989
+      },
+      {
+        "phrase": "Collect contributions",
+        "selector": "#scene-11 .flow-step:nth-child(4)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 248.389,
+        "end": 250.889,
+        "confidence": 0.96,
+        "wordEnd": 249.609
+      },
+      {
+        "phrase": "screen them",
+        "selector": "#scene-11 .flow-step:nth-child(5)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 250.83,
+        "end": 251.75,
+        "confidence": 0.988,
+        "wordEnd": 251.45
+      },
+      {
+        "phrase": "elect the winners",
+        "selector": "#scene-11 .flow-step:nth-child(6)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 251.63,
+        "end": 253.831,
+        "confidence": 0.966,
+        "wordEnd": 252.471
+      },
+      {
+        "phrase": "rejection vote",
+        "selector": "#scene-11 .end-flow .pill:nth-child(1)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 253.711,
+        "end": 255.152,
+        "confidence": 0.939,
+        "wordEnd": 254.592
+      },
+      {
+        "phrase": "settle or refund",
+        "selector": "#scene-11 .end-flow .pill:nth-child(2)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 255.032,
+        "end": 257.532,
+        "confidence": 0.899,
+        "wordEnd": 256.253
+      },
+      {
+        "phrase": "rate participation and outcomes",
+        "selector": "#scene-11 .end-flow .pill:nth-child(3)",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 257.493,
+        "end": 259.993,
+        "confidence": 0.924,
+        "wordEnd": 259.334
+      },
+      {
+        "phrase": "managers organize, members decide",
+        "selector": "#scene-11 .closing p",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 261.855,
+        "end": 264.726,
+        "confidence": 0.959,
+        "wordEnd": 264.276
+      },
+      {
+        "phrase": "independent escrow system",
+        "selector": "#scene-11 .closing-finance",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 264.877,
+        "end": 267.377,
+        "confidence": 0.932,
+        "wordEnd": 266.317
+      },
+      {
+        "phrase": "Wallet login is available locally",
+        "selector": "#scene-11 .closing-status",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 268.939,
+        "end": 271.439,
+        "confidence": 0.891,
+        "wordEnd": 270.98
+      },
+      {
+        "phrase": "live payment verification remains a separate step",
+        "selector": "#scene-11 .closing-status",
+        "kind": "focus",
+        "hold": 2.5,
+        "time": 271.4,
+        "end": 274.731,
+        "confidence": 0.971,
+        "wordEnd": 274.281
+      }
+    ]
+  }
+]

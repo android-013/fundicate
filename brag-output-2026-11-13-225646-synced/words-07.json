@@ -1,0 +1,332 @@
+[
+  {
+    "word": "Approved",
+    "start": 0.02,
+    "end": 0.38,
+    "confidence": 0.775
+  },
+  {
+    "word": "schemes",
+    "start": 0.44,
+    "end": 0.78,
+    "confidence": 0.963
+  },
+  {
+    "word": "compete",
+    "start": 0.88,
+    "end": 1.26,
+    "confidence": 1.0
+  },
+  {
+    "word": "under",
+    "start": 1.34,
+    "end": 1.46,
+    "confidence": 0.993
+  },
+  {
+    "word": "the",
+    "start": 1.5,
+    "end": 1.56,
+    "confidence": 0.995
+  },
+  {
+    "word": "configured",
+    "start": 1.6,
+    "end": 2.121,
+    "confidence": 0.969
+  },
+  {
+    "word": "election",
+    "start": 2.161,
+    "end": 2.461,
+    "confidence": 0.988
+  },
+  {
+    "word": "method",
+    "start": 2.521,
+    "end": 2.761,
+    "confidence": 1.0
+  },
+  {
+    "word": "Choose",
+    "start": 3.381,
+    "end": 3.661,
+    "confidence": 0.927
+  },
+  {
+    "word": "First",
+    "start": 3.741,
+    "end": 3.961,
+    "confidence": 0.931
+  },
+  {
+    "word": "Past",
+    "start": 4.021,
+    "end": 4.241,
+    "confidence": 0.86
+  },
+  {
+    "word": "the",
+    "start": 4.301,
+    "end": 4.381,
+    "confidence": 0.883
+  },
+  {
+    "word": "Post",
+    "start": 4.421,
+    "end": 4.701,
+    "confidence": 0.935
+  },
+  {
+    "word": "Ranked",
+    "start": 5.121,
+    "end": 5.361,
+    "confidence": 0.749
+  },
+  {
+    "word": "Choice",
+    "start": 5.441,
+    "end": 5.761,
+    "confidence": 0.993
+  },
+  {
+    "word": "or",
+    "start": 6.141,
+    "end": 6.221,
+    "confidence": 0.969
+  },
+  {
+    "word": "Single",
+    "start": 6.382,
+    "end": 6.682,
+    "confidence": 0.963
+  },
+  {
+    "word": "Transferable",
+    "start": 6.762,
+    "end": 7.422,
+    "confidence": 0.942
+  },
+  {
+    "word": "Vote",
+    "start": 7.482,
+    "end": 7.682,
+    "confidence": 0.997
+  },
+  {
+    "word": "Rating",
+    "start": 8.442,
+    "end": 8.742,
+    "confidence": 0.948
+  },
+  {
+    "word": "based",
+    "start": 8.822,
+    "end": 9.062,
+    "confidence": 0.927
+  },
+  {
+    "word": "alternatives",
+    "start": 9.102,
+    "end": 9.722,
+    "confidence": 0.947
+  },
+  {
+    "word": "include",
+    "start": 9.822,
+    "end": 10.142,
+    "confidence": 0.943
+  },
+  {
+    "word": "Elo",
+    "start": 10.242,
+    "end": 10.523,
+    "confidence": 0.667
+  },
+  {
+    "word": "and",
+    "start": 10.763,
+    "end": 10.843,
+    "confidence": 0.955
+  },
+  {
+    "word": "Glicko",
+    "start": 10.903,
+    "end": 11.183,
+    "confidence": 0.723
+  },
+  {
+    "word": "two",
+    "start": 11.283,
+    "end": 11.443,
+    "confidence": 0.896
+  },
+  {
+    "word": "plus",
+    "start": 11.943,
+    "end": 12.143,
+    "confidence": 0.876
+  },
+  {
+    "word": "one",
+    "start": 12.323,
+    "end": 12.403,
+    "confidence": 1.0
+  },
+  {
+    "word": "versus",
+    "start": 12.463,
+    "end": 12.803,
+    "confidence": 0.882
+  },
+  {
+    "word": "one",
+    "start": 12.963,
+    "end": 13.063,
+    "confidence": 0.982
+  },
+  {
+    "word": "Elo",
+    "start": 13.103,
+    "end": 13.363,
+    "confidence": 0.659
+  },
+  {
+    "word": "or",
+    "start": 13.663,
+    "end": 13.723,
+    "confidence": 0.997
+  },
+  {
+    "word": "Glicko",
+    "start": 13.803,
+    "end": 14.083,
+    "confidence": 0.694
+  },
+  {
+    "word": "comparisons",
+    "start": 14.183,
+    "end": 14.804,
+    "confidence": 0.998
+  },
+  {
+    "word": "without",
+    "start": 14.884,
+    "end": 15.164,
+    "confidence": 0.997
+  },
+  {
+    "word": "draws",
+    "start": 15.204,
+    "end": 15.544,
+    "confidence": 0.665
+  },
+  {
+    "word": "Each",
+    "start": 16.344,
+    "end": 16.504,
+    "confidence": 0.973
+  },
+  {
+    "word": "method",
+    "start": 16.584,
+    "end": 16.864,
+    "confidence": 0.943
+  },
+  {
+    "word": "has",
+    "start": 16.924,
+    "end": 17.044,
+    "confidence": 0.926
+  },
+  {
+    "word": "its",
+    "start": 17.104,
+    "end": 17.204,
+    "confidence": 0.861
+  },
+  {
+    "word": "own",
+    "start": 17.344,
+    "end": 17.484,
+    "confidence": 0.984
+  },
+  {
+    "word": "published",
+    "start": 17.624,
+    "end": 18.004,
+    "confidence": 0.998
+  },
+  {
+    "word": "calculation",
+    "start": 18.064,
+    "end": 18.624,
+    "confidence": 0.999
+  },
+  {
+    "word": "rules",
+    "start": 18.684,
+    "end": 18.945,
+    "confidence": 0.902
+  },
+  {
+    "word": "they",
+    "start": 19.365,
+    "end": 19.465,
+    "confidence": 0.897
+  },
+  {
+    "word": "are",
+    "start": 19.505,
+    "end": 19.585,
+    "confidence": 0.982
+  },
+  {
+    "word": "not",
+    "start": 19.625,
+    "end": 19.785,
+    "confidence": 0.985
+  },
+  {
+    "word": "interchangeable",
+    "start": 19.905,
+    "end": 20.685,
+    "confidence": 0.984
+  },
+  {
+    "word": "ways",
+    "start": 20.745,
+    "end": 21.045,
+    "confidence": 0.996
+  },
+  {
+    "word": "to",
+    "start": 21.185,
+    "end": 21.265,
+    "confidence": 1.0
+  },
+  {
+    "word": "count",
+    "start": 21.325,
+    "end": 21.545,
+    "confidence": 0.993
+  },
+  {
+    "word": "the",
+    "start": 21.605,
+    "end": 21.685,
+    "confidence": 0.873
+  },
+  {
+    "word": "same",
+    "start": 21.745,
+    "end": 21.945,
+    "confidence": 0.946
+  },
+  {
+    "word": "ballot",
+    "start": 22.025,
+    "end": 22.305,
+    "confidence": 0.731
+  }
+]
