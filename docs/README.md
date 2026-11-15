@@ -7,6 +7,7 @@ Fundicate connects people through communities and records how proposals, funding
 | Audience | Guide | What it covers |
 | --- | --- | --- |
 | New users | [Getting started](guides/getting-started.md) | Local setup, fictional demo, navigation and account security |
+| Demo viewers | [Application walkthrough](media/fundicate-application-demo.mp4) · [Sign-in screenshot](media/fundicate-near-sign-in.png) | See the funding workflow and NEAR testnet wallet sign-in |
 | Community members and staff | [Community governance](guides/community-governance.md) | Discover, apply, admit, manage roles, propose, vote and inspect decisions |
 | Round organizers and voters | [Funding and elections](guides/funding-and-elections.md) | Scheme submissions, round stages, election methods, allocation, veto and settlement |
 | Members and staff | [Payments and reputation](guides/payments-and-reputation.md) | Simulated treasury, external attestations, reviews, moderation and appeals |

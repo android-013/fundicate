@@ -14,9 +14,7 @@ Fundicate gives clubs, collectives, and community groups a shared record of who 
 
 Staff means the Admin and Mods. The syndicate has one Admin at a time. Mod status gives management permissions and adds no voting weight.
 
-## System flow carts
-
-**work flows**
+## System workflows
 
 ### Membership and reputation
 
@@ -223,11 +221,11 @@ For a public demo, configure an HTTPS origin and reverse proxy using the [wallet
 
 ## Application demo
 
-[![Fundicate’s NEAR testnet sign-in screen](docs/media/fundicate-near-sign-in.png)](demo-video/brag.mp4)
+[![Fundicate’s NEAR testnet sign-in screen](docs/media/fundicate-near-sign-in.png)](docs/media/fundicate-application-demo.mp4)
 
-[Watch the application demo (4:36)](demo-video/brag.mp4) · [View the demo cover](docs/media/fundicate-demo-cover.jpg) · [Browse the screenshots](docs/media/)
+[Watch the application demo (4:36)](docs/media/fundicate-application-demo.mp4) · [View the demo cover](docs/media/fundicate-demo-cover.jpg) · [Browse demo media](docs/media/)
 
-The walkthrough follows a collective from setting its rules and admitting members through screening projects, voting, and deciding how to allocate funds. It also explains the rejection window, original-source refunds, transfer records, and payments through the configured NEAR testnet escrow mode.
+The walkthrough follows a community through member admission, proposal screening, voting, and allocation. It shows passwordless NEAR testnet sign-in and explains transfer records, payouts, and refunds in the optional testnet treasury.
 
 The [documentation home](docs/README.md) also indexes the delivery plan, the versioned election specifications and the original verification records.
 
